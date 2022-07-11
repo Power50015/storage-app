@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,5 +40,12 @@ Route::middleware([
 
     Route::resource('/warehouse', WarehouseController::class)->only([
         'index', 'store'
+    ]);
+
+    Route::resource('/product', ProductController::class)->only([
+        'index', 'store'
+    ]);
+    Route::resource('/product-category', ProductCategoryController::class)->only([
+        'store'
     ]);
 });

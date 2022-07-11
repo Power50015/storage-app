@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
-use App\Http\Requests\StoreWarehouseRequest;
-use App\Http\Requests\UpdateWarehouseRequest;
+use App\Models\ProductCategory;
+use App\Http\Requests\StoreProductCategoryRequest;
+use App\Http\Requests\UpdateProductCategoryRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Inertia\Inertia;
 
-class WarehouseController extends Controller
+class ProductCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,9 +17,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Warehouse', [
-            "warehouse" => Warehouse::all()
-        ]);
+        //
     }
 
     /**
@@ -36,14 +33,13 @@ class WarehouseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreWarehouseRequest  $request
+     * @param  \App\Http\Requests\StoreProductCategoryRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreWarehouseRequest $request)
+    public function store(StoreProductCategoryRequest $request)
     {
-        Warehouse::create([
-            'name' => $request->name,
-            'address' => $request->address,
+        ProductCategory::create([
+            'name' => $request->nameProductCategory,
             'user' => Auth::id()
         ]);
         return Redirect::back();
@@ -52,10 +48,10 @@ class WarehouseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(Warehouse $warehouse)
+    public function show(ProductCategory $productCategory)
     {
         //
     }
@@ -63,10 +59,10 @@ class WarehouseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(Warehouse $warehouse)
+    public function edit(ProductCategory $productCategory)
     {
         //
     }
@@ -74,11 +70,11 @@ class WarehouseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateWarehouseRequest  $request
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Http\Requests\UpdateProductCategoryRequest  $request
+     * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateWarehouseRequest $request, Warehouse $warehouse)
+    public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
     {
         //
     }
@@ -86,10 +82,10 @@ class WarehouseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Warehouse $warehouse)
+    public function destroy(ProductCategory $productCategory)
     {
         //
     }

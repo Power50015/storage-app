@@ -25,7 +25,12 @@
                 <li class="mx-5">
                     <Link
                         href="/"
-                        class="py-3 px-4 block rounded-lg my-3 bg-blue-600"
+                        class="py-3 px-4 block rounded-lg my-3"
+                        :class="
+                            route().current('dashboard')
+                                ? 'bg-[#009ef7]'
+                                : 'hover:text-[#009ef7]'
+                        "
                     >
                         <i class="fa-solid fa-file-invoice"></i>
                         <span class="mx-3">لوحه التحكم</span>
@@ -37,7 +42,15 @@
                     الأقل إستخداماً
                 </li>
                 <li class="mx-5">
-                    <Link href="/" class="py-3 px-4 block rounded-lg my-3">
+                    <Link
+                        href="/"
+                        class="py-3 px-4 block rounded-lg my-3"
+                        :class="
+                            route().current('dashboard')
+                                ? 'bg-[#009ef7]'
+                                : 'hover:text-[#009ef7]'
+                        "
+                    >
                         <i class="fa-solid fa-file-invoice"></i>
                         <span class="mx-3">العملاء</span>
                     </Link>
@@ -45,8 +58,27 @@
 
                 <li class="mx-5">
                     <Link
+                        :href="route('product.index')"
+                        class="py-3 px-4 block rounded-lg my-3"
+                        :class="
+                            route().current('product.index')
+                                ? 'bg-[#009ef7]'
+                                : 'hover:text-[#009ef7]'
+                        "
+                    >
+                        <i class="fa-solid fa-box"></i>
+                        <span class="mx-3">المنتجات</span>
+                    </Link>
+                </li>
+                <li class="mx-5">
+                    <Link
                         :href="route('warehouse.index')"
                         class="py-3 px-4 block rounded-lg my-3"
+                        :class="
+                            route().current('warehouse.index')
+                                ? 'bg-[#009ef7]'
+                                : 'hover:text-[#009ef7]'
+                        "
                     >
                         <i class="fas fa-warehouse"></i>
                         <span class="mx-3">المخازن</span>

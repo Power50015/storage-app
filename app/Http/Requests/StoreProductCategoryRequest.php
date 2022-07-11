@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WarehouseRequest extends FormRequest
+class StoreProductCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +25,10 @@ class WarehouseRequest extends FormRequest
     {
 
         return [
-            'name' => 'required|unique:warehouses',
+            'nameProductCategory' => 'required|unique:product_categories,name',
         ];
     }
+
     /**
      * Get the error messages for the defined validation rules.
      *
@@ -35,9 +36,10 @@ class WarehouseRequest extends FormRequest
      */
     public function messages()
     {
+
         return [
-            'name.required' => 'يجب إدخال اسم المخزن',
-            'name.unique' => 'يجب أن يكون الأسم فريد',
+            'nameProductCategory.required' => 'يجب إدخال قسم المنتج',
+            'nameProductCategory.unique' => 'يجب أن يكون أسم القسم فريد',
         ];
     }
 }
