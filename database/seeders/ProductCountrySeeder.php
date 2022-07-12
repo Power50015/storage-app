@@ -14,6 +14,25 @@ class ProductCountrySeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\ProductCountry::factory()->create([
+            'name' => 'مصر',
+            'user' => 1,
+        ]);
+        \App\Models\ProductCountry::factory()->create([
+            'name' => 'الصين',
+            'user' => 1,
+        ]);
+        \App\Models\ProductCountry::factory()->create([
+            'name' => 'السعوديه',
+            'user' => 1,
+        ]);
+        \App\Models\ProductCountry::factory()->create([
+            'name' => 'أمريكا',
+            'user' => 1,
+        ]);
+        \App\Models\ProductCountry::factory()->create([
+            'name' => 'اليابان',
+            'user' => 1,
+        ]);
     }
 }

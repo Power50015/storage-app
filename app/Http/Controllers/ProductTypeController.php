@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\ProductType;
 use App\Http\Requests\StoreProductTypeRequest;
 use App\Http\Requests\UpdateProductTypeRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class ProductTypeController extends Controller
 {
@@ -13,9 +16,9 @@ class ProductTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        return ProductType::where('product_categories', $id)->get();
     }
 
     /**
@@ -36,7 +39,12 @@ class ProductTypeController extends Controller
      */
     public function store(StoreProductTypeRequest $request)
     {
-        //
+        ProductType::create([
+            'name' => $request->nameProductType,
+            'product_categories' => $request->productCategory,
+            'user' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**

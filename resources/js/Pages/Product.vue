@@ -18,15 +18,51 @@
                             <div class="flex">
                                 <select
                                     class="w-full text-base dark:bg-[#1b1b29] bg-[#f5f8fa] dark:active:bg-[#1b1b29] active:bg-[#f5f8fa] dark:focus:bg-[#1b1b29] focus:bg-[#f5f8fa] focus:ring-0 border-0 shadow-sm rounded-r-md py-2"
+                                    v-model="productCategory"
+                                    @change="getProductType"
                                 >
                                     <option disabled selected>
                                         اختار قسم المنتج
                                     </option>
-                                    <option value="">12354</option>
-                                    <option value="">123</option>
-                                    <option value="">123</option>
+                                    <option
+                                        v-for="item in ProductCategory"
+                                        :value="item.id"
+                                        :key="item.id"
+                                    >
+                                        {{ item.name }}
+                                    </option>
                                 </select>
                                 <AddProductCategoryModel />
+                            </div>
+                        </div>
+                        <div class="mb-5">
+                            <label class="px-3 dark:text-gray-300">
+                                نوع المنتج
+                                <span class="text-red-800 font-bold">*</span>
+                            </label>
+                            <div v-if="errors.name" class="text-red-800">
+                                {{ errors.name }}
+                            </div>
+                            <div class="flex">
+                                <select
+                                    class="w-full text-base dark:bg-[#1b1b29] bg-[#f5f8fa] dark:active:bg-[#1b1b29] active:bg-[#f5f8fa] dark:focus:bg-[#1b1b29] focus:bg-[#f5f8fa] focus:ring-0 border-0 shadow-sm rounded-r-md py-2"
+                                    v-model="ProductType"
+                                >
+                                    <option disabled selected>
+                                        اختار نوع المنتج
+                                    </option>
+                                    <option
+                                        v-for="item in ProductTypeData[0]"
+                                        :value="item.name"
+                                        :key="item.id"
+                                    >
+                                        {{ item.name }}
+                                    </option>
+                                </select>
+                                <AddProductTypeModel
+                                    :productType="productCategory"
+                                    @product-type-save-success="getProductType"
+                                />
                             </div>
                         </div>
                         <div class="mb-5">
@@ -70,13 +106,14 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { computed, provide, readonly } from "@vue/runtime-core";
+import axios from "axios";
+import { computed, provide, readonly, ref, reactive } from "@vue/runtime-core";
 import { Inertia } from "@inertiajs/inertia";
 import { createToast } from "mosha-vue-toastify";
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import AddProductCategoryModel from "@/Components/Product/AddProductCategoryModel.vue";
+import AddProductTypeModel from "@/Components/Product/AddProductTypeModel.vue";
 
 provide("title", "المخازن");
 provide(
@@ -87,15 +124,33 @@ provide(
     ])
 );
 
-const props = defineProps(["errors", "warehouse"]);
-const warehouseData = computed(() => {
+const props = defineProps(["errors", "ProductCategory"]);
+
+const productCategory = ref();
+const ProductType = ref();
+const ProductTypeData = reactive([]);
+// const ProductType = computed(() => {
+//     const computedData = reactive([]);
+//     axios.get("/product-type/" + productCategory.value).then((data) => {
+//         computedData.push(data.data);
+//     });
+//     return computedData;
+// });
+
+function getProductType() {
+    ProductTypeData.length = 0;
+    axios
+        .get("/product-type/" + productCategory.value)
+        .then((data) => ProductTypeData.push(data.data));
+}
+/*const warehouseData = computed(() => {
     return props.warehouse;
-});
+});*/
 const warehouseAddForm = reactive({
     name: null,
     address: null,
 });
-
+/*
 function addWarehouse() {
     Inertia.post(route("warehouse.store"), warehouseAddForm, {
         onSuccess: () => {
@@ -132,5 +187,5 @@ function addWarehouse() {
             }
         },
     });
-}
+}*/
 </script>

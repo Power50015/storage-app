@@ -13,7 +13,7 @@ class StoreProductTypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,25 @@ class StoreProductTypeRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            //
+            'nameProductType' => 'required|unique:product_types,name',
+            'productCategory' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'nameProductType.required' => 'يجب إدخال نوع المنتج',
+            'nameProductType.unique' => 'يجب أن يكون أسم النوع فريد',
+            'productCategory.required' => 'يجب إدخال قسم المنتج',
         ];
     }
 }
