@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductColorRequest extends FormRequest
 {
-    /**
+       /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StoreProductColorRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nameProductColor' => 'required|unique:product_colors,name',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'nameProductColor.required' => 'يجب إدخال اللون .',
+            'nameProductColor.unique' => 'يجب أن يكون اللون فريد .',
         ];
     }
 }

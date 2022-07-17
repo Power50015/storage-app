@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductColor;
 use App\Http\Requests\StoreProductColorRequest;
 use App\Http\Requests\UpdateProductColorRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductColorController extends Controller
 {
@@ -36,7 +38,11 @@ class ProductColorController extends Controller
      */
     public function store(StoreProductColorRequest $request)
     {
-        //
+        ProductColor::create([
+            'name' => $request->nameProductColor,
+            'user' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**

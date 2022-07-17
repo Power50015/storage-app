@@ -14,6 +14,12 @@ class ProductBrandSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\ProductBrand::factory()->create([
+            'id' => 1,
+            'name' => 'فتحى محمود',
+            'logo' => 'image/brand/gHO0Hbkf0V0mo43YTO0Gg5p7cHL9Vnz0ZO6ke7Hc.png',
+            'country' => 1,
+            'user' => 1,
+        ]);
     }
 }

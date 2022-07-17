@@ -1,5 +1,6 @@
 import './bootstrap';
 import "mosha-vue-toastify/dist/style.css";
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import '../css/app.css';
 
 import { createApp, h } from 'vue';

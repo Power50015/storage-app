@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductBrand;
 use App\Http\Requests\StoreProductBrandRequest;
 use App\Http\Requests\UpdateProductBrandRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductBrandController extends Controller
 {
@@ -36,7 +38,21 @@ class ProductBrandController extends Controller
      */
     public function store(StoreProductBrandRequest $request)
     {
-        //
+        $image_path = '';
+        if ($request->hasFile('imageProductBrand')) {
+            $image_path = $request->file('imageProductBrand')->store('image/brand', 'public');
+        } else {
+            $image_path = 'no_image.png';
+        }
+
+        ProductBrand::create([
+            'name' => $request->nameProductBrand,
+            'logo' => $image_path,
+            'user' => Auth::id(),
+            'country' => $request->countryProductBrand
+        ]);
+
+        return Redirect::back();
     }
 
     /**

@@ -13,7 +13,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,32 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'category' => 'required|numeric',
+            'type' => 'required|numeric',
+            'name' => 'required',
+            'color' => 'required|numeric',
+            'material' => 'required|numeric',
+            'country' => 'required|numeric',
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif,svg|max:2048'
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'category.required' => 'يجب إدخال قسم المنتج',
+            'type.required' => 'يجب إدخال نوع المنتج',
+            'name.required' => 'يجب إدخال اسم المنتج',
+            'color.required' => 'يجب إدخال لون المنتج',
+            'material.required' => 'يجب إدخال خامه المنتج',
+            'country.required' => 'يجب إدخال بلد المنتج',
+            'image.image' => 'يجب إدخال صوره المنتج',
+            'image.required' => 'يجب إدخال صوره المنتج',
         ];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductMaterial;
 use App\Http\Requests\StoreProductMaterialRequest;
 use App\Http\Requests\UpdateProductMaterialRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductMaterialController extends Controller
 {
@@ -36,7 +38,11 @@ class ProductMaterialController extends Controller
      */
     public function store(StoreProductMaterialRequest $request)
     {
-        //
+        ProductMaterial::create([
+            'name' => $request->nameProductMaterial,
+            'user' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**

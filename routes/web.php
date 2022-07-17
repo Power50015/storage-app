@@ -1,7 +1,15 @@
 <?php
 
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductCollectionController;
+use App\Http\Controllers\ProductColorController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductCountryController;
+use App\Http\Controllers\ProductMaterialController;
+use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Foundation\Application;
@@ -47,8 +55,34 @@ Route::middleware([
         'index', 'store'
     ]);
     Route::resource('/product-category', ProductCategoryController::class)->only([
-        'index', 'store'
+        'store'
     ]);
+
     Route::get('/product-type/{id}', [ProductTypeController::class, 'index']);
     Route::post('/product-type', [ProductTypeController::class, 'store'])->name('product-type.store');
+
+    Route::get('/product-collection/{id}', [ProductCollectionController::class, 'index']);
+    Route::post('/product-collection', [ProductCollectionController::class, 'store'])->name('product-collection.store');
+    
+    Route::get('/product-model/{id}', [ProductModelController::class, 'index']);
+    Route::post('/product-model', [ProductModelController::class, 'store'])->name('product-model.store');
+    
+    Route::resource('/product-brand', ProductBrandController::class)->only([
+        'store'
+    ]);
+    Route::resource('/product-color', ProductColorController::class)->only([
+        'store'
+    ]);
+    Route::resource('/product-material', ProductMaterialController::class)->only([
+        'store'
+    ]);
+    Route::resource('/product-country', ProductCountryController::class)->only([
+        'store'
+    ]);
+    Route::resource('/expense', ExpenseController::class)->only([
+        'index', 'store'
+    ]);
+    Route::resource('/people', PeopleController::class)->only([
+        'index', 'store'
+    ]);
 });

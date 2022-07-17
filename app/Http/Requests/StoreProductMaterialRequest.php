@@ -13,7 +13,7 @@ class StoreProductMaterialRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StoreProductMaterialRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nameProductMaterial' => 'required|unique:product_materials,name',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'nameProductMaterial.required' => 'يجب إدخال الخامه .',
+            'nameProductMaterial.unique' => 'يجب أن يكون الخامه فريدة .',
         ];
     }
 }

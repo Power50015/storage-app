@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductCountry;
 use App\Http\Requests\StoreProductCountryRequest;
 use App\Http\Requests\UpdateProductCountryRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductCountryController extends Controller
 {
@@ -36,7 +38,11 @@ class ProductCountryController extends Controller
      */
     public function store(StoreProductCountryRequest $request)
     {
-        //
+        ProductCountry::create([
+            'name' => $request->nameProductCountry,
+            'user' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**

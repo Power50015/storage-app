@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('product_brands', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('logo')->default('no_image.png');
+            $table->integer('user');
+            $table->integer('country');
             $table->timestamps();
         });
     }

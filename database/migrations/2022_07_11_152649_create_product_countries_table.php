@@ -18,8 +18,6 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->integer('user');
-
-
         });
     }
 

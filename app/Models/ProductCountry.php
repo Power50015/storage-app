@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ProductCountry extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    /**
+     * Get the users for the Warehouses.
+     */
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user');
+    }
 }

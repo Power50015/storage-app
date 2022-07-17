@@ -13,7 +13,7 @@ class StoreProductCountryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StoreProductCountryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nameProductCountry' => 'required|unique:product_countries,name',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'nameProductCountry.required' => 'يجب إدخال البلد .',
+            'nameProductCountry.unique' => 'يجب أن يكون أسم البلد فريد .',
         ];
     }
 }
