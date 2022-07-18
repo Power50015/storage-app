@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\IncomingInvoice;
 use App\Http\Requests\StoreIncomingInvoiceRequest;
 use App\Http\Requests\UpdateIncomingInvoiceRequest;
+use App\Models\Product;
+use Inertia\Inertia;
 
 class IncomingInvoiceController extends Controller
 {
@@ -15,7 +17,6 @@ class IncomingInvoiceController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -25,7 +26,10 @@ class IncomingInvoiceController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('CreateIncomingInvoice', [
+            "products" =>
+            Product::with('users')->with('country')->with('material')->with('color')->with('model')->with('collection')->with('brand')->with('type')->with('category')->get()
+        ]);
     }
 
     /**
@@ -36,7 +40,7 @@ class IncomingInvoiceController extends Controller
      */
     public function store(StoreIncomingInvoiceRequest $request)
     {
-        //
+        dd($request);
     }
 
     /**

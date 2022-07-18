@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cash;
 use App\Http\Requests\StoreCashRequest;
 use App\Http\Requests\UpdateCashRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class CashController extends Controller
 {
@@ -15,7 +18,9 @@ class CashController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Cash', [
+            "cash" => Cash::all()
+        ]);
     }
 
     /**
@@ -36,7 +41,15 @@ class CashController extends Controller
      */
     public function store(StoreCashRequest $request)
     {
-        //
+        $attachment_path = null;
+        if ($request->hasFile('attachment')) {
+            $attachment_path = $request->file('attachment')->store('attachment/cash', 'public');
+        }
+        Cash::create([
+            'title' => $request->title,
+            'user' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**

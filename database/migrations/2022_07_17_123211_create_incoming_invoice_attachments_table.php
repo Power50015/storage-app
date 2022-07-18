@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('incoming_invoice_attachments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->integer('user');
         });
     }
 

@@ -13,7 +13,7 @@ class StoreCashRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,22 @@ class StoreCashRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required|unique:cashes,title',
+            'attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv'
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.required' => 'يجب إدخال بند الكاش',
+            'title.unique' => 'يجب أن يكون بند الكاش فريد',
+            'attachment.mimes' => 'نوع الملف غير صالح .',
         ];
     }
 }

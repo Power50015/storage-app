@@ -69,7 +69,7 @@
               <li v-if="item['linkRoute'] != '#'">
                 <Link
                   :href="route(item['linkRoute'])"
-                  class="dark:text-[#565674] dark:hover:text-blue-[#009ef7]"
+                  class="dark:text-[#565674] dark:hover:text-blue-[#009ef7] dark:hover:text-[#009ef7]"
                   >{{ item["linkTitle"] }}</Link
                 >
               </li>

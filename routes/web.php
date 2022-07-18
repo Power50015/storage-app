@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CashController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\IncomingInvoiceController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductCategoryController;
@@ -84,5 +86,11 @@ Route::middleware([
     ]);
     Route::resource('/people', PeopleController::class)->only([
         'index', 'store'
+    ]);
+    Route::resource('/cash', CashController::class)->only([
+        'index', 'store'
+    ]);
+    Route::resource('/incoming-invoice', IncomingInvoiceController::class)->only([
+        'index','create' ,'store'
     ]);
 });

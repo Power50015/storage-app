@@ -84,10 +84,10 @@
         </li>
         <li class="mx-5">
           <Link
-            :href="route('expense.index')"
+            :href="route('incoming-invoice.create')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('expense.index')
+              route().current('incoming-invoice.create') || route().current('incoming-invoice.index') 
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
@@ -121,7 +121,20 @@
             <span class="mx-3">العملاء و الموردين</span>
           </Link>
         </li>
-
+        <li class="mx-5">
+          <Link
+            :href="route('cash.index')"
+            class="py-3 px-4 block rounded-lg my-3"
+            :class="
+              route().current('cash.index')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            "
+          >
+            <i class="fa-solid fa-wallet"></i>
+            <span class="mx-3">الكاش</span>
+          </Link>
+        </li>
         <li class="mx-5">
           <Link
             :href="route('product.index')"

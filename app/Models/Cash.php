@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Cash extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    /**
+     * Get the users for the Cashs.
+    */
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user');
+    }
 }
