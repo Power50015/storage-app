@@ -16,7 +16,7 @@
         >
           <h2 class="title font-bold mb-4">فاتوره وارده</h2>
           <form action="POST" @submit.prevent="addIncomingInvoice">
-            <!--Pay Type-->
+            <!-- Incoming Invoice Number -->
             <div class="mb-5">
               <label class="px-3 dark:text-gray-300">
                 رقم الفاتوره
@@ -46,6 +46,80 @@
                   py-2
                 "
               />
+            </div>
+            <!-- Supplier -->
+            <div class="mb-5">
+              <label class="px-3 dark:text-gray-300"
+                >الموردون
+                <span class="text-red-800 font-bold">*</span>
+              </label>
+              <div v-if="errors.supplier" class="text-red-800">
+                {{ errors.supplier }}
+              </div>
+              <select
+                v-model="incomingInvoiceAddForm.supplier"
+                class="
+                  w-full
+                  text-base
+                  dark:bg-[#1b1b29]
+                  bg-[#f5f8fa]
+                  dark:active:bg-[#1b1b29]
+                  active:bg-[#f5f8fa]
+                  dark:focus:bg-[#1b1b29]
+                  focus:bg-[#f5f8fa]
+                  mt-3
+                  focus:ring-0
+                  border-0
+                  shadow-sm
+                  rounded-md
+                  py-2
+                "
+              >
+                <option
+                  v-for="item in suppliers"
+                  :key="item.id"
+                  :value="item.id"
+                >
+                  {{ item.name }} | {{ item.address }} | {{ item.phone }}
+                </option>
+              </select>
+            </div>
+            <!--Warehouses-->
+            <div class="mb-5">
+              <label class="px-3 dark:text-gray-300"
+                >المخزن
+                <span class="text-red-800 font-bold">*</span>
+              </label>
+              <div v-if="errors.warehouses" class="text-red-800">
+                {{ errors.warehouses }}
+              </div>
+              <select
+                v-model="incomingInvoiceAddForm.warehouses"
+                class="
+                  w-full
+                  text-base
+                  dark:bg-[#1b1b29]
+                  bg-[#f5f8fa]
+                  dark:active:bg-[#1b1b29]
+                  active:bg-[#f5f8fa]
+                  dark:focus:bg-[#1b1b29]
+                  focus:bg-[#f5f8fa]
+                  mt-3
+                  focus:ring-0
+                  border-0
+                  shadow-sm
+                  rounded-md
+                  py-2
+                "
+              >
+                <option
+                  v-for="item in warehouses"
+                  :key="item.id"
+                  :value="item.id"
+                >
+                  {{ item.name }} | {{ item.address }}
+                </option>
+              </select>
             </div>
             <!--Pay Type-->
             <div class="mb-5">
@@ -107,8 +181,9 @@
                   py-2
                 "
               >
-                <option :value="false">على الحساب</option>
-                <option :value="true">كاش</option>
+                <option v-for="item in cash" :key="item.id" :value="item.id">
+                  {{ item.title }}
+                </option>
               </select>
             </div>
             <!--Date-->
@@ -142,6 +217,118 @@
                 "
               />
             </div>
+            <!--Invoice Attach-->
+            <div
+              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+            >
+              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
+                الملفات
+                <span class="text-red-800 font-bold">*</span>
+              </h2>
+              <div
+                v-for="(i, index) in incomingInvoiceAddForm.attachment"
+                :key="index"
+              >
+                <div class="w-full my-5">
+                  <h3>{{ 1 + index }}</h3>
+                  <label class="px-3 dark:text-gray-300"
+                    >الملف
+                    <span class="text-red-800 font-bold">*</span>
+                  </label>
+                  <div class="flex">
+                    <input
+                      class="
+                        block
+                        w-full
+                        text-sm text-gray-900
+                        rounded-lg
+                        border border-gray-300
+                        cursor-pointer
+                        dark:text-gray-400
+                        focus:outline-none
+                        dark:bg-[#1b1b29]
+                        bg-[#f5f8fa]
+                        dark:border-gray-600 dark:placeholder-gray-400
+                        cursor-pointer
+                      "
+                      id="file_input"
+                      type="file"
+                      @change="
+                        incomingInvoiceAddForm.attachment[index].attachment =
+                          $event.target.files[0]
+                      "
+                    />
+                    <!-- Delete -->
+                    <div class="mb-5">
+                      <div
+                        class="
+                          bg-[#EF305E]
+                          text-lg text-white
+                          hover:bg-[#EF305E]
+                          cursor-pointer
+                          w-full
+                          text-base
+                          mt-3
+                          focus:ring-0
+                          border-0
+                          py-3
+                          w-[80px]
+                          flex
+                          items-center
+                          justify-center
+                          rounded-md
+                        "
+                        @click="
+                          incomingInvoiceAddForm.attachment =
+                            incomingInvoiceAddForm.attachment.filter(
+                              (item) => item.id != i.id
+                            )
+                        "
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr
+                  v-if="
+                    incomingInvoiceAddForm.attachment.length > 1 &&
+                    incomingInvoiceAddForm.attachment.length != index
+                  "
+                />
+              </div>
+
+              <div>
+                <!--New Item-->
+                <div
+                  class="
+                    mt-10
+                    w-full
+                    bg-[#009ef7]
+                    border border-transparent
+                    rounded-md
+                    py-3
+                    px-8
+                    flex
+                    items-center
+                    justify-center
+                    text-base
+                    font-medium
+                    text-white
+                    hover:bg-[#009ef7]
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-offset-2
+                    focus:ring-[#009ef7]
+                    cursor-pointer
+                  "
+                  @click="pushToAttachment"
+                >
+                  أضف ملف
+                </div>
+              </div>
+            </div>
             <!--Invoice Content-->
             <div
               class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
@@ -150,16 +337,16 @@
                 محتوى الفاتوره
                 <span class="text-red-800 font-bold">*</span>
               </h2>
-              <div v-if="errors.pay_type" class="text-red-800">
-                {{ errors.pay_type }}
-              </div>
               <div
                 v-for="(i, index) in incomingInvoiceAddForm.content"
                 :key="index"
               >
                 <div class="w-full my-5">
                   <h3>{{ 1 + index }}</h3>
-                  <label class="px-3 dark:text-gray-300">المنتج</label>
+                  <label class="px-3 dark:text-gray-300"
+                    >المنتج
+                    <span class="text-red-800 font-bold">*</span>
+                  </label>
                   <select
                     v-model="incomingInvoiceAddForm.content[index].product"
                     class="
@@ -202,6 +389,7 @@
                       type="number"
                       min="0.00"
                       step="0.01"
+                      @change="total"
                       v-model="incomingInvoiceAddForm.content[index].price"
                       class="
                         w-full
@@ -230,7 +418,8 @@
                     <input
                       type="number"
                       v-model="incomingInvoiceAddForm.content[index].quantity"
-                      min="1"
+                      @change="total"
+                      min="0"
                       step="1"
                       class="
                         w-full
@@ -274,7 +463,8 @@
                         incomingInvoiceAddForm.content =
                           incomingInvoiceAddForm.content.filter(
                             (item) => item.id != i.id
-                          )
+                          );
+                        total();
                       "
                     >
                       <i class="fa-solid fa-xmark"></i>
@@ -319,33 +509,88 @@
                 </div>
               </div>
             </div>
-            <!--Save Invoice-->
-            <div>
-              <button
-                type="submit"
+
+            <div
+              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+            >
+              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
+                ختام الفاتوره
+              </h2>
+              <div class="flex items-end justify-around">
+                <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
+                  الإجمالى قبل الخصم :<br />{{ totalPrice.toFixed(2) }}
+                </h2>
+                <div class="">
+                  <label class="px-3 dark:text-gray-300">
+                    خصم على الفاتورة </label
+                  ><input
+                    type="number"
+                    min="0.00"
+                    step="0.01"
+                    class="
+                      w-full
+                      text-base
+                      dark:bg-[#1b1b29]
+                      bg-[#f5f8fa]
+                      dark:active:bg-[#1b1b29]
+                      active:bg-[#f5f8fa]
+                      dark:focus:bg-[#1b1b29]
+                      focus:bg-[#f5f8fa]
+                      mt-3
+                      focus:ring-0
+                      border-0
+                      shadow-sm
+                      rounded-md
+                      py-2
+                    "
+                    v-model="incomingInvoiceAddForm.discount"
+                  />
+                </div>
+              </div>
+              <h2
                 class="
-                  mt-10
-                  w-full
-                  bg-[#009ef7]
-                  border border-transparent
-                  rounded-md
-                  py-3
-                  px-8
-                  flex
-                  items-center
-                  justify-center
-                  text-base
-                  font-medium
-                  text-white
-                  hover:bg-[#009ef7]
-                  focus:outline-none
-                  focus:ring-2
-                  focus:ring-offset-2
-                  focus:ring-[#009ef7]
+                m-3
+                  p-5
+                  dark:text-gray-300
+                  title
+                  font-bold
+                  mb-4
+                  dark:bg-[#1b1b29]
+                  bg-[#f5f8fa]
                 "
               >
-                حفظ الفاتوره
-              </button>
+                الإجمالى بعد الخصم :<br />{{
+                  (totalPrice - incomingInvoiceAddForm.discount).toFixed(2)
+                }}
+              </h2>
+              <!--Save Invoice-->
+              <div>
+                <button
+                  type="submit"
+                  class="
+                    mt-10
+                    w-full
+                    bg-[#009ef7]
+                    border border-transparent
+                    rounded-md
+                    py-3
+                    px-8
+                    flex
+                    items-center
+                    justify-center
+                    text-base
+                    font-medium
+                    text-white
+                    hover:bg-[#009ef7]
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-offset-2
+                    focus:ring-[#009ef7]
+                  "
+                >
+                  حفظ الفاتوره
+                </button>
+              </div>
             </div>
           </form>
         </div>
@@ -380,17 +625,24 @@ provide(
   ])
 );
 
-const props = defineProps(["errors", "products"]);
+const props = defineProps([
+  "errors",
+  "products",
+  "cash",
+  "warehouses",
+  "suppliers",
+]);
 
-const numberOfProduct = ref(1);
+const totalPrice = ref(0);
 
 const incomingInvoiceAddForm = reactive({
   number: null,
+  supplier: null,
+  warehouses: null,
   pay_type: false,
   cash_type: null,
   date: new Date().toISOString().slice(0, 10),
   discount: 0.0,
-  total: 0,
   content: [
     {
       id: 1,
@@ -399,9 +651,12 @@ const incomingInvoiceAddForm = reactive({
       quantity: 0,
     },
   ],
+  attachment: [],
 });
 
 function addIncomingInvoice() {
+  if (incomingInvoiceAddForm.pay_type == false)
+    incomingInvoiceAddForm.cash_type = null;
   Inertia.post(route("incoming-invoice.store"), incomingInvoiceAddForm, {
     onSuccess: () => {
       createToast(
@@ -448,6 +703,23 @@ function pushToContent() {
   });
 }
 
+function pushToAttachment() {
+  incomingInvoiceAddForm.attachment.push({
+    id: incomingInvoiceAddForm.attachment.length + 1,
+    attachment: null,
+  });
+}
+
+function total() {
+  totalPrice.value = 0;
+  for (let index = 0; index < incomingInvoiceAddForm.content.length; index++) {
+    var i =
+      incomingInvoiceAddForm.content[index].price *
+      incomingInvoiceAddForm.content[index].quantity;
+
+    totalPrice.value = totalPrice.value + i;
+  }
+}
 </script>
 
 <style scoped>

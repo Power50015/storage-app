@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('user');
+            $table->text('attachment');
+            $table->integer('incoming_invoice');
         });
     }
 

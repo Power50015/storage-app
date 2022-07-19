@@ -22,8 +22,8 @@ return new class extends Migration
             $table->boolean('pay_type')->default(false); //if true pay cash
             $table->integer('cash_type')->nullable();
             $table->decimal('discount', $precision = 8, $scale = 2);
-            $table->decimal('total', $precision = 8, $scale = 2);
             $table->date('date');
+            $table->integer('warehouse');
         });
     }
 

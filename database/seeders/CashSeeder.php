@@ -14,6 +14,20 @@ class CashSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\Cash::factory()->create([
+            'title' => 'الخزنه',
+            'attachment' => null,
+            'user' => 1,
+        ]);
+        \App\Models\Cash::factory()->create([
+            'title' => 'درج',
+            'attachment' => null,
+            'user' => 1,
+        ]);
+        \App\Models\Cash::factory()->create([
+            'title' => 'حساب بنك  مصر رئيسى | 010000000000',
+            'attachment' => null,
+            'user' => 1,
+        ]);
     }
 }

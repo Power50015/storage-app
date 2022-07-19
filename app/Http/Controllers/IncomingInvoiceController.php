@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreIncomingInvoiceContentRequest;
 use App\Models\IncomingInvoice;
 use App\Http\Requests\StoreIncomingInvoiceRequest;
 use App\Http\Requests\UpdateIncomingInvoiceRequest;
+use App\Models\Cash;
+use App\Models\IncomingInvoiceAttachment;
+use App\Models\IncomingInvoiceContent;
+use App\Models\People;
 use App\Models\Product;
+use App\Models\Warehouse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class IncomingInvoiceController extends Controller
@@ -17,6 +26,9 @@ class IncomingInvoiceController extends Controller
      */
     public function index()
     {
+        return Inertia::render('IncomingInvoice/CreateIncomingInvoice', [
+            "incomingInvoice" => IncomingInvoice::with('users')->get(),
+        ]);
     }
 
     /**
@@ -26,9 +38,11 @@ class IncomingInvoiceController extends Controller
      */
     public function create()
     {
-        return Inertia::render('CreateIncomingInvoice', [
-            "products" =>
-            Product::with('users')->with('country')->with('material')->with('color')->with('model')->with('collection')->with('brand')->with('type')->with('category')->get()
+        return Inertia::render('IncomingInvoice/CreateIncomingInvoice', [
+            "products" => Product::with('users')->with('country')->with('material')->with('color')->with('model')->with('collection')->with('brand')->with('type')->with('category')->get(),
+            "cash" => Cash::all(),
+            "warehouses" => Warehouse::all(),
+            "suppliers" => People::where("type", "مورد")->get()
         ]);
     }
 
@@ -40,7 +54,42 @@ class IncomingInvoiceController extends Controller
      */
     public function store(StoreIncomingInvoiceRequest $request)
     {
-        dd($request);
+        // Save the Incoming Invoice
+        $invice = IncomingInvoice::create([
+            'number' => $request->number,
+            'pay_type' => $request->pay_type,
+            'cash_type' => $request->cash_type,
+            'discount' => $request->discount,
+            'date' => $request->date,
+            'supplier' => $request->supplier,
+            'warehouse' => $request->warehouses,
+            'user' => Auth::id()
+        ]);
+
+        // Save Attachment Of Incoming Invoice
+        for ($i = 0; $i <  count($request["attachment"]); $i++) {
+            if($request["attachment"][1]["attachment"] != null)
+            {
+                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
+            IncomingInvoiceAttachment::create([
+                'attachment' =>  $attachment_path,
+                'incoming_invoice' => $invice['id'],
+                'user' => Auth::id()
+            ]);
+            }
+        }
+
+        // Save The Content Of Incoming Invoice
+        for ($i = 0; $i <  count($request["content"]); $i++) {
+            IncomingInvoiceContent::create([
+                'product' => $request["content"][$i]["product"],
+                'price' => $request["content"][$i]["price"],
+                'quantity' => $request["content"][$i]["quantity"],
+                'incoming_invoice' => $invice['id'],
+                'user' => Auth::id()
+            ]);
+        }
+        return Redirect::back();
     }
 
     /**

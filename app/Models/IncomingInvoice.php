@@ -31,7 +31,14 @@ class IncomingInvoice extends Model
     {
         return $this->belongsTo(Cash::class, 'cash_type');
     }
-
+     /**
+     * Get the warehouses for the warehouses.
+     */
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse');
+    }
+    
     /**
      * Get The Total Before Discount
     **/

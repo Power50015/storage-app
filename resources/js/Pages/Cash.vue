@@ -66,7 +66,7 @@
                 "
                 id="file_input"
                 type="file"
-                @change="DetectFiles($event.target.files)"
+                @change="cashAddForm.attachment = ($event.target.files)[0]"
               />
             </div>
             <!--Button-->
@@ -121,7 +121,6 @@ provide(
 
 const props = defineProps(["errors", "cash"]);
 
-const attachment = reactive([]);
 
 const cashAddForm = reactive({
   title: null,
@@ -129,7 +128,6 @@ const cashAddForm = reactive({
 });
 
 function addCash() {
-  cashAddForm.attachment = attachment.value;
   Inertia.post(route("cash.store"), cashAddForm, {
     onSuccess: () => {
       createToast(
@@ -165,9 +163,6 @@ function addCash() {
   });
 }
 
-function DetectFiles(input) {
-  attachment.value = input[0];
-}
 /*const warehouseData = computed(() => {
     return props.warehouse;
 });*/
