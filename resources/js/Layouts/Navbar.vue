@@ -69,7 +69,11 @@
               <li v-if="item['linkRoute'] != '#'">
                 <Link
                   :href="route(item['linkRoute'])"
-                  class="dark:text-[#565674] dark:hover:text-blue-[#009ef7] dark:hover:text-[#009ef7]"
+                  class="
+                    dark:text-[#565674]
+                    dark:hover:text-blue-[#009ef7]
+                    dark:hover:text-[#009ef7]
+                  "
                   >{{ item["linkTitle"] }}</Link
                 >
               </li>
@@ -97,24 +101,27 @@
         >
           روابط سريعه :-
         </h5>
-        <button
+        <Link
+          :href="route('outgoing-invoice.create')"
           class="px-3 dark:text-[#565674] dark:hover:text-[#009ef7]"
-          title="فاتوره جديده"
+          title="فاتوره صادره جديدة"
         >
           <i class="fa-solid fa-file-invoice-dollar"></i>
-        </button>
-        <button
+        </Link>
+        <Link
+          :href="route('debtor-pay.create')"
           class="px-3 dark:text-[#565674] dark:hover:text-[#009ef7]"
-          title="فاتوره جديده"
+          title="دفعه مدين"
         >
-          <i class="fa-solid fa-truck-moving"></i>
-        </button>
-        <button
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+        </Link>
+        <Link
+          :href="route('expense.index')"
           class="px-3 dark:text-[#565674] dark:hover:text-[#009ef7]"
-          title="فاتوره جديده"
+          title="مصاريف"
         >
           <i class="fa-solid fa-coins"></i>
-        </button>
+        </Link>
         <button
           class="px-3 text-slate-600 dark:text-slate-100"
           title="الوضع المظلم"

@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('incoming_invoices', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('user');
-            $table->integer('supplier');
+            $table->foreignId('user');
+            $table->foreignId('supplier');
             $table->string('number');
             $table->boolean('pay_type')->default(false); //if true pay cash
-            $table->integer('cash_type')->nullable();
+            $table->foreignId('cash_type')->nullable();
             $table->decimal('discount', $precision = 8, $scale = 2);
             $table->date('date');
-            $table->integer('warehouse');
+            $table->foreignId('warehouse');
         });
     }
 

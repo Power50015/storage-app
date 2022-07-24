@@ -10,15 +10,15 @@ class IncomingInvoiceAttachment extends Model
     use HasFactory;
     protected $guarded = [];
     /**
-     * Get the users for the IncomingInvoiceContent.
+     * Get the users for the IncomingInvoiceAttachment.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
 
     /**
-     * Get the incoming invoice for the IncomingInvoiceContent.
+     * Get the incoming invoice for the IncomingInvoiceAttachment.
      */
     public function incoming_invoice()
     {

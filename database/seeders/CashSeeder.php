@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,17 +15,18 @@ class CashSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Cash::factory()->create([
+        Cash::truncate();
+        Cash::create([
             'title' => 'الخزنه',
             'attachment' => null,
             'user' => 1,
         ]);
-        \App\Models\Cash::factory()->create([
+        Cash::create([
             'title' => 'درج',
             'attachment' => null,
             'user' => 1,
         ]);
-        \App\Models\Cash::factory()->create([
+        Cash::create([
             'title' => 'حساب بنك  مصر رئيسى | 010000000000',
             'attachment' => null,
             'user' => 1,

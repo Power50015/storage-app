@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('logo')->default('no_image.png');
-            $table->integer('user');
-            $table->integer('country');
+            $table->foreignId('user');
+            $table->foreignId('country');
             $table->timestamps();
         });
     }

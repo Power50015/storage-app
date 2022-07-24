@@ -15,17 +15,17 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->integer('category');
-            $table->integer('type');
-            $table->integer('brand')->nullable();
-            $table->integer('collection')->nullable();
-            $table->integer('model')->nullable();
+            $table->foreignId('category');
+            $table->foreignId('type');
+            $table->foreignId('brand')->nullable();
+            $table->foreignId('collection')->nullable();
+            $table->foreignId('model')->nullable();
             $table->string('name');
-            $table->integer('color');
-            $table->integer('material');
+            $table->foreignId('color');
+            $table->foreignId('material');
             $table->longText('description')->nullable();
             $table->string('sku')->nullable();
-            $table->integer('country');
+            $table->foreignId('country');
             $table->text('image');
             $table->string('user');
             $table->timestamps();

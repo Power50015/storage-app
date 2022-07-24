@@ -26,8 +26,8 @@ class IncomingInvoiceController extends Controller
      */
     public function index()
     {
-        return Inertia::render('IncomingInvoice/CreateIncomingInvoice', [
-            "incomingInvoice" => IncomingInvoice::with('users')->get(),
+        return Inertia::render('IncomingInvoice/IncomingInvoice', [
+            "incomingInvoice" => IncomingInvoice::with('users')->with('supplier')->with('warehouse')->get(),
         ]);
     }
 
@@ -39,10 +39,10 @@ class IncomingInvoiceController extends Controller
     public function create()
     {
         return Inertia::render('IncomingInvoice/CreateIncomingInvoice', [
-            "products" => Product::with('users')->with('country')->with('material')->with('color')->with('model')->with('collection')->with('brand')->with('type')->with('category')->get(),
+            "products" => Product::with('country', 'material', 'color', 'model', 'collection', 'brand', 'type', 'category')->get(),
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
-            "suppliers" => People::where("type", "مورد")->get()
+            "suppliers" => People::orderByDesc("type")->get()
         ]);
     }
 
@@ -68,7 +68,7 @@ class IncomingInvoiceController extends Controller
 
         // Save Attachment Of Incoming Invoice
         for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if($request["attachment"][1]["attachment"] != null)
+            if($request["attachment"][$i]["attachment"] != null)
             {
                 $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
             IncomingInvoiceAttachment::create([

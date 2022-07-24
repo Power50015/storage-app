@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->integer('user');
-            $table->integer('product_brand');
+            $table->foreignId('user');
+            $table->foreignId('product_brand');
         });
     }
 

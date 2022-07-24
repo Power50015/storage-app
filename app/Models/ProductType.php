@@ -13,13 +13,24 @@ class ProductType extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
 
-    public function productType()
+    /**
+     * Get the ProductCategory for the ProductType.
+     */
+    public function product_category()
     {
-        return $this->belongsTo(ProductType::class, 'product_categories');
+        return $this->belongsTo(ProductCategory::class, 'product_categories');
+    }
+
+    /**
+     * Get the Product for the ProductType.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

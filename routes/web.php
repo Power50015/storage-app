@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\DebtorController;
+use App\Http\Controllers\DebtorPayController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomingInvoiceController;
+use App\Http\Controllers\OutgoingInvoiceController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductCategoryController;
@@ -14,6 +17,7 @@ use App\Http\Controllers\ProductMaterialController;
 use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\WarehouseStockController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,7 +56,9 @@ Route::middleware([
     Route::resource('/warehouse', WarehouseController::class)->only([
         'index', 'store'
     ]);
-
+    Route::resource('/warehouse-stock', WarehouseStockController::class)->only([
+        'index','create' ,'store'
+    ]);
     Route::resource('/product', ProductController::class)->only([
         'index', 'store'
     ]);
@@ -92,5 +98,14 @@ Route::middleware([
     ]);
     Route::resource('/incoming-invoice', IncomingInvoiceController::class)->only([
         'index','create' ,'store'
+    ]);
+    Route::resource('/outgoing-invoice', OutgoingInvoiceController::class)->only([
+        'index','create' ,'store'
+    ]);
+    Route::resource('/debtor', DebtorController::class)->only([
+        'index','create' ,'store'
+    ]);
+    Route::resource('/debtor-pay', DebtorPayController::class)->only([
+        'create' ,'store'
     ]);
 });

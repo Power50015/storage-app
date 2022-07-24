@@ -13,8 +13,16 @@ class ProductMaterial extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
+    }
+
+    /**
+     * Get the Product for the ProductMaterial.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

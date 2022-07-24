@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('logo')->nullable();
             $table->text('address')->nullable();
             $table->string('type');
-            $table->integer('user');
+            $table->foreignId('user');
         });
     }
 

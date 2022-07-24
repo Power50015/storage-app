@@ -13,8 +13,24 @@ class Warehouse extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
+    }
+
+    /**
+     * Get the IncomingInvoice for the Warehouse.
+     */
+    public function incoming_invoices()
+    {
+        return $this->hasMany(IncomingInvoice::class);
+    }
+
+    /**
+     * Get the WarehouseStock for the Warehouse.
+     */
+    public function warehouse_stocks()
+    {
+        return $this->hasMany(WarehouseStock::class);
     }
 }

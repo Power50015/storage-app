@@ -13,7 +13,7 @@ class Expense extends Model
     /**
      * Get the users for the Expenseies.
     */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }

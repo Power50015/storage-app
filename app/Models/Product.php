@@ -12,7 +12,7 @@ class Product extends Model
 
     /**
      * Get the category for the Product.
-    */
+     */
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'category');
@@ -20,7 +20,7 @@ class Product extends Model
 
     /**
      * Get the type for the Product.
-    */
+     */
     public function type()
     {
         return $this->belongsTo(ProductType::class, 'type');
@@ -28,7 +28,7 @@ class Product extends Model
 
     /**
      * Get the brand for the Product.
-    */
+     */
     public function brand()
     {
         return $this->belongsTo(ProductBrand::class, 'brand');
@@ -36,7 +36,7 @@ class Product extends Model
 
     /**
      * Get the collection for the Product.
-    */
+     */
     public function collection()
     {
         return $this->belongsTo(ProductCollection::class, 'collection');
@@ -44,7 +44,7 @@ class Product extends Model
 
     /**
      * Get the model for the Product.
-    */
+     */
     public function model()
     {
         return $this->belongsTo(ProductModel::class, 'model');
@@ -52,7 +52,7 @@ class Product extends Model
 
     /**
      * Get the color for the Product.
-    */
+     */
     public function color()
     {
         return $this->belongsTo(ProductColor::class, 'color');
@@ -60,7 +60,7 @@ class Product extends Model
 
     /**
      * Get the material for the Product.
-    */
+     */
     public function material()
     {
         return $this->belongsTo(ProductMaterial::class, 'material');
@@ -68,7 +68,7 @@ class Product extends Model
 
     /**
      * Get the country for the Product.
-    */
+     */
     public function country()
     {
         return $this->belongsTo(ProductCountry::class, 'country');
@@ -76,9 +76,48 @@ class Product extends Model
 
     /**
      * Get the users for the Product.
-    */
-    public function users()
+     */
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
+    }
+
+    /**
+     * Get the IncomingInvoiceContent for the Product.
+     */
+    public function incoming_invoice_contents()
+    {
+        return $this->hasMany(IncomingInvoiceContent::class);
+    }
+
+    /**
+     * Get the OutgoingInvoiceContent for the Product.
+     */
+    public function outgoing_invoice_contents()
+    {
+        return $this->hasMany(OutgoingInvoiceContent::class);
+    }
+
+    /**
+     * Get the WarehouseStockContent for the Product.
+     */
+    public function warehouse_stock_contents()
+    {
+        return $this->hasMany(WarehouseStockContent::class);
+    }
+
+    /**
+     * Get the Total Number Product.
+     */
+    public function totalNumberOfProduct()
+    {
+        //
+    }
+    /**
+     * Get the Total Number Product.
+     */
+    public function totalNumberOfProductWarehouse($warehouse)
+    {
+        //
     }
 }

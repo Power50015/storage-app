@@ -13,15 +13,31 @@ class ProductBrand extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
 
     /**
-     * Get the users for the Warehouses.
+     * Get the Product for the ProductBrand.
      */
-    public function product_countries()
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get the ProductCollection for the ProductBrand.
+     */
+    public function product_collections()
+    {
+        return $this->hasMany(ProductCollection::class);
+    }
+
+    /**
+     * Get the ProductCountry for the ProductBrand.
+     */
+    public function product_country()
     {
         return $this->belongsTo(ProductCountry::class, 'country');
     }

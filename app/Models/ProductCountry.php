@@ -13,8 +13,24 @@ class ProductCountry extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
+    }
+
+    /**
+     * Get the Product for the ProductCountry.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get the ProductBrand for the ProductCountry.
+     */
+    public function product_brands()
+    {
+        return $this->hasMany(ProductBrand::class);
     }
 }

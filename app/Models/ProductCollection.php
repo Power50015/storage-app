@@ -11,18 +11,34 @@ class ProductCollection extends Model
     protected $guarded = [];
 
     /**
-     * Get the users for the Warehouses.
+     * Get the users for the ProductCollection.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
 
     /**
-     * Get the users for the Warehouses.
+     * Get the ProductCollection for the ProductBrand.
      */
     public function product_brand()
     {
         return $this->belongsTo(ProductBrand::class, 'product_brand');
+    }
+
+    /**
+     * Get the Product for the ProductCollection.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get the ProductModel for the ProductCollection.
+     */
+    public function product_models()
+    {
+        return $this->hasMany(ProductModel::class);
     }
 }

@@ -13,7 +13,7 @@ class IncomingInvoice extends Model
     /**
      * Get the users for the IncomingInvoice.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
@@ -32,11 +32,27 @@ class IncomingInvoice extends Model
         return $this->belongsTo(Cash::class, 'cash_type');
     }
      /**
-     * Get the warehouses for the warehouses.
+     * Get the warehouses for the IncomingInvoice.
      */
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class, 'warehouse');
+    }
+
+    /**
+     * Get the IncomingInvoiceAttachment for the IncomingInvoice.
+     */
+    public function incoming_invoice_attachments()
+    {
+        return $this->hasMany(IncomingInvoiceAttachment::class);
+    }
+
+    /**
+     * Get the IncomingInvoiceContent for the IncomingInvoice.
+     */
+    public function incoming_invoice_contents()
+    {
+        return $this->hasMany(IncomingInvoiceContent::class);
     }
     
     /**

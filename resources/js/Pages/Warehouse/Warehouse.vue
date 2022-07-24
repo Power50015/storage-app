@@ -105,12 +105,56 @@
         </div>
       </div>
     </div>
+    <div class="py-6">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div
+          class="
+            dark:bg-[#1e1e2d]
+            bg-white
+            dark:text-white
+            text-black
+            overflow-hidden
+            shadow-xl
+            rounded-md
+            p-4
+          "
+        >
+          <Link
+            :href="route('warehouse-stock.create')"
+            class="
+              mt-6
+              w-full
+              bg-[#009ef7]
+              border border-transparent
+              rounded-md
+              py-3
+              px-8
+              flex
+              items-center
+              justify-center
+              text-base
+              font-medium
+              text-white
+              hover:bg-[#009ef7]
+              focus:outline-none
+              focus:ring-2
+              focus:ring-offset-2
+              focus:ring-[#009ef7]
+              cursor-pointer
+            "
+          >
+            أضف مخزون
+          </Link>
+        </div>
+      </div>
+    </div>
   </AppLayout>
 </template>
 
 <script setup>
 import { reactive } from "vue";
 import { computed, provide, readonly } from "@vue/runtime-core";
+import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import { createToast } from "mosha-vue-toastify";
 import { QuillEditor } from "@vueup/vue-quill";

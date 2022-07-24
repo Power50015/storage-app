@@ -70,30 +70,47 @@
         </li>
         <li class="mx-5">
           <Link
-            :href="route('expense.index')"
-            class="py-3 px-4 block rounded-lg my-3"
-            :class="
-              route().current('expense.index')
-                ? 'bg-[#009ef7]'
-                : 'hover:text-[#009ef7]'
-            "
-          >
-            <i class="fa-regular fa-file-lines"></i>
-            <span class="mx-3">الفاوتير الصادرة</span>
-          </Link>
-        </li>
-        <li class="mx-5">
-          <Link
             :href="route('incoming-invoice.create')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('incoming-invoice.create') || route().current('incoming-invoice.index') 
+              route().current('incoming-invoice.create') ||
+              route().current('incoming-invoice.index')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
           >
             <i class="fa-solid fa-file-lines"></i>
             <span class="mx-3">الفاوتير الوارده</span>
+          </Link>
+        </li>
+        <li class="mx-5">
+          <Link
+            :href="route('outgoing-invoice.create')"
+            class="py-3 px-4 block rounded-lg my-3"
+            :class="
+              route().current('outgoing-invoice.create') ||
+              route().current('outgoing-invoice.index')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            "
+          >
+            <i class="fa-solid fa-file-invoice"></i>
+            <span class="mx-3">الفاوتير الصادرة</span>
+          </Link>
+        </li>
+        <li class="mx-5">
+          <Link
+            :href="route('debtor.create')"
+            class="py-3 px-4 block rounded-lg my-3"
+            :class="
+              route().current('debtor.create') ||
+              route().current('debtor.index')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            "
+          >
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            <span class="mx-3">مدينون</span>
           </Link>
         </li>
         <li
@@ -106,6 +123,21 @@
           "
         >
           الأقل إستخداماً
+        </li>
+        <li class="mx-5">
+          <Link
+            :href="route('debtor.create')"
+            class="py-3 px-4 block rounded-lg my-3"
+            :class="
+              route().current('debtor.create') ||
+              route().current('debtor.index')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            "
+          >
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <span class="mx-3">دائنون</span>
+          </Link>
         </li>
         <li class="mx-5">
           <Link
@@ -131,7 +163,7 @@
                 : 'hover:text-[#009ef7]'
             "
           >
-            <i class="fa-solid fa-wallet"></i>
+            <i class="fa-solid fa-money-bill-1-wave"></i>
             <span class="mx-3">الكاش</span>
           </Link>
         </li>

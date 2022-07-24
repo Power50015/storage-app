@@ -13,8 +13,16 @@ class ProductColor extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
+    }
+
+    /**
+     * Get the Product for the ProductColor.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

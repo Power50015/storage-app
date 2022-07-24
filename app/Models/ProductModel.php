@@ -13,16 +13,24 @@ class ProductModel extends Model
     /**
      * Get the users for the Warehouses.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
 
     /**
-     * Get the users for the Warehouses.
+     * Get the ProductModel for the ProductCollection.
      */
-    public function product_collection()
+    public function product_collections()
     {
         return $this->belongsTo(ProductCollection::class, 'product_collection');
+    }
+
+    /**
+     * Get the Product for the ProductModel.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

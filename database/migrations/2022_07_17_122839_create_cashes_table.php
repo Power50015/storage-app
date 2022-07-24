@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->text('title');
             $table->text('attachment')->nullable();
-            $table->integer('user');
+            $table->foreignId('user');
         });
     }
 

@@ -12,7 +12,7 @@ class IncomingInvoiceContent extends Model
      /**
      * Get the users for the IncomingInvoiceContent.
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user');
     }
@@ -25,7 +25,7 @@ class IncomingInvoiceContent extends Model
         return $this->belongsTo(IncomingInvoice::class, 'incoming_invoice');
     }
     /**
-     * Get the incoming invoice for the IncomingInvoiceContent.
+     * Get the product for the IncomingInvoiceContent.
      */
     public function product()
     {

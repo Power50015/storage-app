@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name')->unique();
             $table->text('address')->nullable();
-            $table->integer('user');
+            $table->foreignId('user');
         });
     }
 

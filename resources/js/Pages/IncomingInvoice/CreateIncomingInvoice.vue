@@ -50,7 +50,7 @@
             <!-- Supplier -->
             <div class="mb-5">
               <label class="px-3 dark:text-gray-300"
-                >الموردون
+                >المورد
                 <span class="text-red-800 font-bold">*</span>
               </label>
               <div v-if="errors.supplier" class="text-red-800">
@@ -549,7 +549,7 @@
               </div>
               <h2
                 class="
-                m-3
+                  m-3
                   p-5
                   dark:text-gray-300
                   title
@@ -674,6 +674,10 @@ function addIncomingInvoice() {
       incomingInvoiceAddForm.number = null;
       incomingInvoiceAddForm.pay_type = false;
       incomingInvoiceAddForm.cash_type = null;
+      incomingInvoiceAddForm.number = null;
+      incomingInvoiceAddForm.customer = null;
+      incomingInvoiceAddForm.warehouses = null;
+      incomingInvoiceAddForm.discount = 0.0;
       incomingInvoiceAddForm.date = new Date().toISOString().slice(0, 10);
     },
     onError: (errors) => {
@@ -721,57 +725,5 @@ function total() {
   }
 }
 </script>
-
-<style scoped>
-/*================== || Date Picker ||==============================*/
-
-/*-------Removes the // Before dd - day------------------------*/
-input[type="date"]::-webkit-datetime-edit-text {
-  color: transparent;
-}
-
-/*------- DatePicker ------------------------*/
-input[type="date"] {
-  font-weight: 900;
-}
-
-/*------- DatePicker - Focus ------------------------*/
-input[type="date"]:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(21, 156, 228, 0.4);
-}
-
-input[type="date"]::-webkit-datetime-edit,
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-clear-button {
-  color: #fff;
-  position: relative;
-}
-
-/*------- Year ------------------------*/
-input[type="date"]::-webkit-datetime-edit-year-field {
-  @apply dark:text-gray-300 text-black;
-  position: absolute !important;
-  border-left: 1px solid #8c8c8c;
-  padding: 2px;
-  /* color: #000; */
-  left: 56px;
-}
-
-/*------- Month ------------------------*/
-input[type="date"]::-webkit-datetime-edit-month-field {
-  @apply dark:text-gray-300 text-black;
-  position: absolute !important;
-  border-left: 1px solid #8c8c8c;
-  padding: 2px;
-  left: 26px;
-}
-
-/*------- Day ------------------------*/
-input[type="date"]::-webkit-datetime-edit-day-field {
-  @apply dark:text-gray-300 text-black;
-  position: absolute !important;
-  padding: 2px;
-  left: 4px;
-}
+<style>
 </style>

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->text('description')->nullable();
             $table->date('date');
-            $table->integer('user');
+            $table->foreignId('user');
         });
     }
 
