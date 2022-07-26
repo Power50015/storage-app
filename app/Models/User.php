@@ -241,4 +241,32 @@ class User extends Authenticatable
     {
         return $this->hasMany(DebtorPayAttachment::class);
     }
+     /**
+     * Get the Creditor for the user.
+     */
+    public function creditor()
+    {
+        return $this->hasMany(Creditor::class);
+    }
+    /**
+     * Get the CreditorAttachment for the user.
+     */
+    public function creditor_attachments()
+    {
+        return $this->hasMany(CreditorAttachment::class);
+    }
+    /**
+     * Get the CreditorPay for the user.
+     */
+    public function creditor_pays()
+    {
+        return $this->hasMany(CreditorPay::class);
+    }
+    /**
+     * Get the CreditorPayAttachment for the user.
+     */
+    public function creditor_pay_attachments()
+    {
+        return $this->hasMany(CreditorPayAttachment::class);
+    }
 }

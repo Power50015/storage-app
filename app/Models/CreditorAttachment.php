@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DebtorPayAttachment extends Model
+class CreditorAttachment extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
     /**
-     * Get the users for the DebtorPayAttachment.
+     * Get the users for the DebtorAttachment.
      */
     public function user()
     {
@@ -19,10 +19,10 @@ class DebtorPayAttachment extends Model
     }
 
     /**
-     * Get the Debtor for the DebtorPayAttachment.
+     * Get the Creditor for the CreditorAttachment.
      */
-    public function debtor_pay()
+    public function Creditor()
     {
-        return $this->belongsTo(DebtorPay::class, 'debtor_pay');
+        return $this->belongsTo(Creditor::class, 'creditor');
     }
 }

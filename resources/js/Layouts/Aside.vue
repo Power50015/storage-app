@@ -126,11 +126,10 @@
         </li>
         <li class="mx-5">
           <Link
-            :href="route('debtor.create')"
+            :href="route('creditor.create')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('debtor.create') ||
-              route().current('debtor.index')
+              route().current('creditor.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\CreditorController;
+use App\Http\Controllers\CreditorPayController;
 use App\Http\Controllers\DebtorController;
 use App\Http\Controllers\DebtorPayController;
 use App\Http\Controllers\ExpenseController;
@@ -106,6 +108,12 @@ Route::middleware([
         'index','create' ,'store'
     ]);
     Route::resource('/debtor-pay', DebtorPayController::class)->only([
+        'create' ,'store'
+    ]);
+    Route::resource('/creditor', CreditorController::class)->only([
+        'index','create' ,'store'
+    ]);
+    Route::resource('/creditor-pay', CreditorPayController::class)->only([
         'create' ,'store'
     ]);
 });
