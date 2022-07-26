@@ -11,11 +11,11 @@ class ProductType extends Model
     protected $guarded = [];
 
     /**
-     * Get the users for the Warehouses.
+     * Get the users for the ProductType.
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -23,7 +23,7 @@ class ProductType extends Model
      */
     public function product_category()
     {
-        return $this->belongsTo(ProductCategory::class, 'product_categories');
+        return $this->belongsTo(ProductCategory::class);
     }
 
     /**

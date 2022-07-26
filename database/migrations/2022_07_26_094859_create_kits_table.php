@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('kits', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->foreignId('product_id')->nullable();
+            $table->foreignId('user_id');
         });
     }
 

@@ -14,7 +14,7 @@ class OutgoingInvoiceAttachment extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -22,6 +22,6 @@ class OutgoingInvoiceAttachment extends Model
      */
     public function outgoing_invoice()
     {
-        return $this->belongsTo(OutgoingInvoice::class, 'outgoing_invoice');
+        return $this->belongsTo(OutgoingInvoice::class);
     }
 }

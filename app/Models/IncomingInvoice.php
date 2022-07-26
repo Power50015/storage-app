@@ -15,28 +15,28 @@ class IncomingInvoice extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
     /**
-     * Get the supplier for the IncomingInvoice.
+     * Get the People for the IncomingInvoice.
      */
-    public function supplier()
+    public function people()
     {
-        return $this->belongsTo(People::class, 'supplier');
+        return $this->belongsTo(People::class);
     }
     /**
      * Get the cash for the IncomingInvoice.
      */
     public function cash_type()
     {
-        return $this->belongsTo(Cash::class, 'cash_type');
+        return $this->belongsTo(Cash::class);
     }
      /**
      * Get the warehouses for the IncomingInvoice.
      */
     public function warehouse()
     {
-        return $this->belongsTo(Warehouse::class, 'warehouse');
+        return $this->belongsTo(Warehouse::class);
     }
 
     /**

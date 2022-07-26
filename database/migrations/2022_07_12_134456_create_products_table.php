@@ -15,19 +15,19 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category');
-            $table->foreignId('type');
-            $table->foreignId('brand')->nullable();
-            $table->foreignId('collection')->nullable();
-            $table->foreignId('model')->nullable();
             $table->string('name');
-            $table->foreignId('color');
-            $table->foreignId('material');
             $table->longText('description')->nullable();
             $table->string('sku')->nullable();
-            $table->foreignId('country');
             $table->text('image');
-            $table->string('user');
+            $table->foreignId('product_category_id');
+            $table->foreignId('product_type_id');
+            $table->foreignId('product_brand_id')->nullable();
+            $table->foreignId('product_collection_id')->nullable();
+            $table->foreignId('product_model_id')->nullable();
+            $table->foreignId('product_color_id');
+            $table->foreignId('product_material_id');
+            $table->foreignId('product_country_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

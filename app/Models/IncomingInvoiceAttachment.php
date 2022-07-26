@@ -14,7 +14,7 @@ class IncomingInvoiceAttachment extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -22,6 +22,6 @@ class IncomingInvoiceAttachment extends Model
      */
     public function incoming_invoice()
     {
-        return $this->belongsTo(IncomingInvoice::class, 'incoming_invoice');
+        return $this->belongsTo(IncomingInvoice::class);
     }
 }

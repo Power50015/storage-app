@@ -244,7 +244,7 @@ class User extends Authenticatable
      /**
      * Get the Creditor for the user.
      */
-    public function creditor()
+    public function creditors()
     {
         return $this->hasMany(Creditor::class);
     }
@@ -268,5 +268,26 @@ class User extends Authenticatable
     public function creditor_pay_attachments()
     {
         return $this->hasMany(CreditorPayAttachment::class);
+    }
+    /**
+     * Get the kit for the user.
+     */
+    public function kits()
+    {
+        return $this->hasMany(Kit::class);
+    }
+    /**
+     * Get the KitAttachment for the user.
+     */
+    public function kit_attachments()
+    {
+        return $this->hasMany(KitAttachment::class);
+    }
+    /**
+     * Get the KitOperation for the user.
+     */
+    public function kit_operations()
+    {
+        return $this->hasMany(KitOperation::class);
     }
 }

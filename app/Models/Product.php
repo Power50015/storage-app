@@ -13,65 +13,65 @@ class Product extends Model
     /**
      * Get the category for the Product.
      */
-    public function category()
+    public function product_category()
     {
-        return $this->belongsTo(ProductCategory::class, 'category');
+        return $this->belongsTo(ProductCategory::class);
     }
 
     /**
      * Get the type for the Product.
      */
-    public function type()
+    public function product_type()
     {
-        return $this->belongsTo(ProductType::class, 'type');
+        return $this->belongsTo(ProductType::class);
     }
 
     /**
      * Get the brand for the Product.
      */
-    public function brand()
+    public function product_brand()
     {
-        return $this->belongsTo(ProductBrand::class, 'brand');
+        return $this->belongsTo(ProductBrand::class);
     }
 
     /**
      * Get the collection for the Product.
      */
-    public function collection()
+    public function product_collection()
     {
-        return $this->belongsTo(ProductCollection::class, 'collection');
+        return $this->belongsTo(ProductCollection::class);
     }
 
     /**
      * Get the model for the Product.
      */
-    public function model()
+    public function product_model()
     {
-        return $this->belongsTo(ProductModel::class, 'model');
+        return $this->belongsTo(ProductModel::class);
     }
 
     /**
      * Get the color for the Product.
      */
-    public function color()
+    public function product_color()
     {
-        return $this->belongsTo(ProductColor::class, 'color');
+        return $this->belongsTo(ProductColor::class);
     }
 
     /**
      * Get the material for the Product.
      */
-    public function material()
+    public function product_material()
     {
-        return $this->belongsTo(ProductMaterial::class, 'material');
+        return $this->belongsTo(ProductMaterial::class);
     }
 
     /**
      * Get the country for the Product.
      */
-    public function country()
+    public function product_country()
     {
-        return $this->belongsTo(ProductCountry::class, 'country');
+        return $this->belongsTo(ProductCountry::class);
     }
 
     /**
@@ -79,7 +79,7 @@ class Product extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -104,6 +104,14 @@ class Product extends Model
     public function warehouse_stock_contents()
     {
         return $this->hasMany(WarehouseStockContent::class);
+    }
+
+    /**
+     * Get the kit for the product.
+     */
+    public function kits()
+    {
+        return $this->hasMany(Kit::class);
     }
 
     /**

@@ -17,22 +17,22 @@ class WarehouseSeeder extends Seeder
         \App\Models\Warehouse::factory()->create([
             'name' => 'المخزن الكبير',
             'address' => 'السيدة زينب',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\Warehouse::factory()->create([
             'name' => 'المخزن رئيسى',
             'address' => 'درب السعادة',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\Warehouse::factory()->create([
             'name' => 'مخزن ترنزيت 1',
             'address' => 'الزاويه',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\Warehouse::factory()->create([
             'name' => 'مخزن ترنزيت 2',
             'address' => 'الزاويه',
-            'user' => 1,
+            'user_id' => 1,
         ]);
     }
 }

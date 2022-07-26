@@ -17,14 +17,14 @@ class ProductCollectionSeeder extends Seeder
         \App\Models\ProductCollection::factory()->create([
             'id' => 1,
             'name' => 'لى لى',
-            'user' => 1,
-            'product_brand' => 1
+            'user_id' => 1,
+            'product_brand_id' => 1
         ]);
         \App\Models\ProductCollection::factory()->create([
             'id' => 2,
             'name' => 'الإمبراطور',
-            'user' => 1,
-            'product_brand' => 1
+            'user_id' => 1,
+            'product_brand_id' => 1
         ]);
     }
 }

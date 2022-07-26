@@ -19,17 +19,17 @@ class CashSeeder extends Seeder
         Cash::create([
             'title' => 'الخزنه',
             'attachment' => null,
-            'user' => 1,
+            'user_id' => 1,
         ]);
         Cash::create([
             'title' => 'درج',
             'attachment' => null,
-            'user' => 1,
+            'user_id' => 1,
         ]);
         Cash::create([
             'title' => 'حساب بنك  مصر رئيسى | 010000000000',
             'attachment' => null,
-            'user' => 1,
+            'user_id' => 1,
         ]);
     }
 }

@@ -51,9 +51,9 @@ class DebtorPayController extends Controller
             'amount' => $request->amount,
             'description' => $request->description,
             'pay_type' => $request->pay_type,
-            'cash_type' => $request->cash_type,
-            'company' => $request->companies,
-            'user' => Auth::id()
+            'cash_id' => $request->cash_type,
+            'people_id' => $request->companies,
+            'user_id' => Auth::id()
         ]);
 
         // Save Attachment Of Debtor
@@ -62,8 +62,8 @@ class DebtorPayController extends Controller
                 $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/debtorPay', 'public');
                 DebtorPayAttachment::create([
                     'attachment' =>  $attachment_path,
-                    'debtor_pay' => $debtorPay['id'],
-                    'user' => Auth::id()
+                    'debtor_pay_id' => $debtorPay['id'],
+                    'user_id' => Auth::id()
                 ]);
             }
         }

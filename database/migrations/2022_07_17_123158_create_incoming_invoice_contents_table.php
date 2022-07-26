@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('incoming_invoice_contents', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user');
-            $table->foreignId('incoming_invoice');
-            $table->foreignId('product');
-            $table->decimal('price', $precision = 8, $scale = 2);
+            $table->decimal('price', $precision = 11, $scale = 2);
             $table->integer('quantity');
+            $table->foreignId('incoming_invoice_id');
+            $table->foreignId('product_id');
+            $table->foreignId('user_id');
         });
     }
 

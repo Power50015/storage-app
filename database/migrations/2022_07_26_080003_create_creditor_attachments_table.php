@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->text('attachment');
-            $table->foreignId('user');
-            $table->foreignId('creditor');
+            $table->foreignId('user_id');
+            $table->foreignId('creditor_id');
         });
     }
 

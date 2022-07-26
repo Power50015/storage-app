@@ -51,9 +51,9 @@ class CreditorPayController extends Controller
             'amount' => $request->amount,
             'description' => $request->description,
             'pay_type' => $request->pay_type,
-            'cash_type' => $request->cash_type,
-            'company' => $request->companies,
-            'user' => Auth::id()
+            'cash_id' => $request->cash_type,
+            'people_id' => $request->companies,
+            'user_id' => Auth::id()
         ]);
 
         // Save Attachment Of Creditor

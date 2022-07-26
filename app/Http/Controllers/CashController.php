@@ -47,7 +47,7 @@ class CashController extends Controller
         }
         Cash::create([
             'title' => $request->title,
-            'user' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

@@ -371,11 +371,15 @@
                       :key="product.index"
                       :value="product.id"
                     >
-                      {{ product.brand.name }} | {{ product.category.name }} |
-                      {{ product.type.name }} | {{ product.collection.name }} |
-                      {{ product.model.name }} | {{ product.color.name }} |
-                      {{ product.material.name }} | {{ product.country.name }} |
-                      {{ product.sku }} | {{ product.name }}
+                      {{ product.product_brand.name }} |
+                      {{ product.product_category.name }} |
+                      {{ product.product_type.name }} |
+                      {{ product.product_collection.name }} |
+                      {{ product.product_model.name }} |
+                      {{ product.product_color.name }} |
+                      {{ product.product_material.name }} |
+                      {{ product.product_country.name }} | {{ product.sku }} |
+                      {{ product.name }}
                     </option>
                   </select>
                 </div>

@@ -59,19 +59,19 @@ class ProductController extends Controller
         }
 
         Product::create([
-            'category' => $request->category,
-            'type' => $request->type,
-            'brand' => $request->brand,
-            'collection' => $request->collection,
-            'model' => $request->model,
+            'category_id' => $request->category,
+            'type_id' => $request->type,
+            'brand_id' => $request->brand,
+            'collection_id' => $request->collection,
+            'model_id' => $request->model,
             'name' => $request->name,
-            'color' => $request->color,
-            'material' => $request->material,
+            'color_id' => $request->color,
+            'material_id' => $request->material,
             'description' => $request->description,
             'sku' => $request->sku,
-            'country' => $request->country,
+            'country_id' => $request->country,
             'image' => $image_path,
-            'user' => Auth::id(),
+            'user_id' => Auth::id(),
         ]);
 
         return Redirect::back();

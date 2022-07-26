@@ -15,7 +15,7 @@ class Warehouse extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -32,5 +32,13 @@ class Warehouse extends Model
     public function warehouse_stocks()
     {
         return $this->hasMany(WarehouseStock::class);
+    }
+
+    /**
+     * Get the KitOperation for the user.
+     */
+    public function kit_operations()
+    {
+        return $this->hasMany(KitOperation::class);
     }
 }

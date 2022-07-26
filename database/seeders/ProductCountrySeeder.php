@@ -16,23 +16,23 @@ class ProductCountrySeeder extends Seeder
     {
         \App\Models\ProductCountry::factory()->create([
             'name' => 'مصر',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\ProductCountry::factory()->create([
             'name' => 'الصين',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\ProductCountry::factory()->create([
             'name' => 'السعوديه',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\ProductCountry::factory()->create([
             'name' => 'أمريكا',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\ProductCountry::factory()->create([
             'name' => 'اليابان',
-            'user' => 1,
+            'user_id' => 1,
         ]);
     }
 }

@@ -48,8 +48,8 @@ class ProductBrandController extends Controller
         ProductBrand::create([
             'name' => $request->nameProductBrand,
             'logo' => $image_path,
-            'user' => Auth::id(),
-            'country' => $request->countryProductBrand
+            'user_id' => Auth::id(),
+            'product_country_id' => $request->countryProductBrand
         ]);
 
         return Redirect::back();

@@ -14,7 +14,7 @@ class WarehouseStockContent extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -22,13 +22,14 @@ class WarehouseStockContent extends Model
      */
     public function warehouse_stock()
     {
-        return $this->belongsTo(WarehouseStock::class, 'warehouse_stocks');
+        return $this->belongsTo(WarehouseStock::class);
     }
+    
     /**
      * Get the product for the IncomingInvoiceContent.
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product');
+        return $this->belongsTo(Product::class);
     }
 }

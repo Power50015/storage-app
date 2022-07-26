@@ -15,7 +15,7 @@ class ProductCollection extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -23,7 +23,7 @@ class ProductCollection extends Model
      */
     public function product_brand()
     {
-        return $this->belongsTo(ProductBrand::class, 'product_brand');
+        return $this->belongsTo(ProductBrand::class);
     }
 
     /**

@@ -33,7 +33,7 @@ class WarehouseStockController extends Controller
     public function create()
     {
         return Inertia::render('Warehouse/WarehouseStock', [
-            "products" => Product::with('country', 'material', 'color', 'model', 'collection', 'brand', 'type', 'category')->get(),
+            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "warehouses" => Warehouse::all(),
         ]);
     }
@@ -49,8 +49,8 @@ class WarehouseStockController extends Controller
         // Save the Incoming Invoice
         $invice = WarehouseStock::create([
             'title' => $request->title,
-            'warehouse' => $request->warehouses,
-            'user' => Auth::id()
+            'warehouse_id' => $request->warehouses,
+            'user_id' => Auth::id()
         ]);
 
         // Save Attachment Of Incoming Invoice
@@ -59,8 +59,8 @@ class WarehouseStockController extends Controller
                 $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/warehouseStock', 'public');
                 WarehouseStockAttachment::create([
                     'attachment' =>  $attachment_path,
-                    'warehouse_stocks' => $invice['id'],
-                    'user' => Auth::id()
+                    'warehouse_stock_id' => $invice['id'],
+                    'user_id' => Auth::id()
                 ]);
             }
         }
@@ -68,10 +68,10 @@ class WarehouseStockController extends Controller
         // Save The Content Of Incoming Invoice
         for ($i = 0; $i <  count($request["content"]); $i++) {
             WarehouseStockContent::create([
-                'product' => $request["content"][$i]["product"],
+                'product_id' => $request["content"][$i]["product"],
                 'quantity' => $request["content"][$i]["quantity"],
-                'warehouse_stocks' => $invice['id'],
-                'user' => Auth::id()
+                'warehouse_stock_id' => $invice['id'],
+                'user_id' => Auth::id()
             ]);
         }
         return redirect()->route('warehouse.index');

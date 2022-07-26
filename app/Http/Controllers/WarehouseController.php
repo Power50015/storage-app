@@ -44,7 +44,7 @@ class WarehouseController extends Controller
         Warehouse::create([
             'name' => $request->name,
             'address' => $request->address,
-            'user' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

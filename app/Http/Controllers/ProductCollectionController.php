@@ -40,8 +40,8 @@ class ProductCollectionController extends Controller
     {
         ProductCollection::create([
             'name' => $request->nameProductCollection,
-            'product_brand' => $request->productBrand,
-            'user' => Auth::id()
+            'product_brand_id' => $request->productBrand,
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

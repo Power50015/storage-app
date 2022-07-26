@@ -50,8 +50,8 @@ class DebtorController extends Controller
             'title' => $request->title,
             'amount' => $request->amount,
             'description' => $request->description,
-            'company' => $request->companies,
-            'user' => Auth::id()
+            'people_id' => $request->companies,
+            'user_id' => Auth::id()
         ]);
         
         // Save Attachment Of Debtor
@@ -60,8 +60,8 @@ class DebtorController extends Controller
                 $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/debtor', 'public');
                 DebtorAttachment::create([
                     'attachment' =>  $attachment_path,
-                    'debtor' => $debtor['id'],
-                    'user' => Auth::id()
+                    'debtor_id' => $debtor['id'],
+                    'user_id' => Auth::id()
                 ]);
             }
         }

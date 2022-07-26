@@ -40,7 +40,7 @@ class ProductMaterialController extends Controller
     {
         ProductMaterial::create([
             'name' => $request->nameProductMaterial,
-            'user' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

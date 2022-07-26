@@ -13,7 +13,7 @@ class CreditorPay extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
     /**
      * Get the CreditorPayAttachment for the Creditor.

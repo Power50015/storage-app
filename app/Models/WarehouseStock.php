@@ -15,7 +15,7 @@ class WarehouseStock extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
      /**
@@ -23,7 +23,7 @@ class WarehouseStock extends Model
      */
     public function warehouse()
     {
-        return $this->belongsTo(Warehouse::class, 'warehouse');
+        return $this->belongsTo(Warehouse::class);
     }
 
     /** 

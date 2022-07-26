@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('warehouse_stocks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user');
             $table->string('title');
-            $table->foreignId('warehouse');
+            $table->foreignId('user_id');
+            $table->foreignId('warehouse_id');
         });
     }
 

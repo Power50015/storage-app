@@ -40,7 +40,7 @@ class ProductCountryController extends Controller
     {
         ProductCountry::create([
             'name' => $request->nameProductCountry,
-            'user' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

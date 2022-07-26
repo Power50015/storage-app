@@ -18,9 +18,9 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->decimal('amount', $precision = 8, $scale = 2);
-            $table->foreignId('company');
-            $table->foreignId('user');
+            $table->decimal('amount', $precision = 11, $scale = 2);
+            $table->foreignId('people_id');
+            $table->foreignId('user_id');
         });
     }
 

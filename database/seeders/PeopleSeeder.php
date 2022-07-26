@@ -20,7 +20,7 @@ class PeopleSeeder extends Seeder
             'logo' => 'image/people/264101_106613776100721_50785_n.jpg',
             'address' => 'مصر إسكندريه الصحراوى',
             'type' => 'مورد',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\People::factory()->create([
             'name' => 'عبد الوهاب',
@@ -28,7 +28,7 @@ class PeopleSeeder extends Seeder
             'logo' => null,
             'address' => 'المقطم',
             'type' => 'عميل',
-            'user' => 1,
+            'user_id' => 1,
         ]);
     }
 }

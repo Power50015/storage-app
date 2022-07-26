@@ -46,7 +46,7 @@ class ExpenseController extends Controller
             'amount' => $request->amount,
             'description' => $request->description,
             'date' => $request->date,
-            'user' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

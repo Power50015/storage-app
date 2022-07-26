@@ -14,7 +14,7 @@ class WarehouseStockAttachment extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -22,7 +22,7 @@ class WarehouseStockAttachment extends Model
      */
     public function warehouse_stock()
     {
-        return $this->belongsTo(WarehouseStock::class, 'warehouse_stock');
+        return $this->belongsTo(WarehouseStock::class);
     }
 
 }

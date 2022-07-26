@@ -15,7 +15,15 @@ class ProductBrand extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
+    }
+    
+    /**
+     * Get the ProductCountry for the ProductBrand.
+     */
+    public function product_country()
+    {
+        return $this->belongsTo(ProductCountry::class);
     }
 
     /**
@@ -32,13 +40,5 @@ class ProductBrand extends Model
     public function product_collections()
     {
         return $this->hasMany(ProductCollection::class);
-    }
-
-    /**
-     * Get the ProductCountry for the ProductBrand.
-     */
-    public function product_country()
-    {
-        return $this->belongsTo(ProductCountry::class, 'country');
     }
 }

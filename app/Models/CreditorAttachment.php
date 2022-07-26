@@ -15,14 +15,14 @@ class CreditorAttachment extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
      * Get the Creditor for the CreditorAttachment.
      */
-    public function Creditor()
+    public function creditor()
     {
-        return $this->belongsTo(Creditor::class, 'creditor');
+        return $this->belongsTo(Creditor::class);
     }
 }

@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('title');
-            $table->decimal('amount', $precision = 8, $scale = 2);
+            $table->decimal('amount', $precision = 11, $scale = 2);
             $table->text('description')->nullable();
             $table->date('date');
-            $table->foreignId('user');
+            $table->foreignId('user_id');
         });
     }
 

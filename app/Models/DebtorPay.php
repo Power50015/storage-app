@@ -15,7 +15,7 @@ class DebtorPay extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
     /**
      * Get the DebtorPayAttachment for the Debtor.

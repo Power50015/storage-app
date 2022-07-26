@@ -20,9 +20,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->boolean('pay_type')->default(false); //if true pay cash
-            $table->foreignId('cash_type')->nullable();
-            $table->foreignId('company');
-            $table->foreignId('user');
+            $table->foreignId('cash_id')->nullable();
+            $table->foreignId('people_id');
+            $table->foreignId('user_id');
         });
     }
 

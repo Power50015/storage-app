@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('incoming_invoice_attachments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user');
             $table->text('attachment');
-            $table->foreignId('incoming_invoice');
+            $table->foreignId('incoming_invoice_id');
+            $table->foreignId('user_id');
         });
     }
 

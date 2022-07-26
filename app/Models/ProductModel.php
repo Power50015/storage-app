@@ -15,15 +15,15 @@ class ProductModel extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * Get the ProductModel for the ProductCollection.
+     * Get the ProductCollection for the ProductModel.
      */
-    public function product_collections()
+    public function product_collection()
     {
-        return $this->belongsTo(ProductCollection::class, 'product_collection');
+        return $this->belongsTo(ProductCollection::class);
     }
 
     /**

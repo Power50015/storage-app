@@ -14,7 +14,7 @@ class IncomingInvoiceContent extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -22,13 +22,13 @@ class IncomingInvoiceContent extends Model
      */
     public function incoming_invoice()
     {
-        return $this->belongsTo(IncomingInvoice::class, 'incoming_invoice');
+        return $this->belongsTo(IncomingInvoice::class);
     }
     /**
      * Get the product for the IncomingInvoiceContent.
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product');
+        return $this->belongsTo(Product::class);
     }
 }

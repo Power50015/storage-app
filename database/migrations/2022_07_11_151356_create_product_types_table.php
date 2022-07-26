@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name')->unique();
-            $table->foreignId('user');
-            $table->foreignId('product_categories');
+            $table->foreignId('user_id');
+            $table->foreignId('product_category_id');
         });
     }
 

@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('kit_operations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('user_id');
+            $table->foreignId('kit_id');
+            $table->foreignId('warehouse_id');
+            $table->foreignId('quantity');
         });
     }
 

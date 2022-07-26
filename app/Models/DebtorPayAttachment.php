@@ -15,7 +15,7 @@ class DebtorPayAttachment extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -23,6 +23,6 @@ class DebtorPayAttachment extends Model
      */
     public function debtor_pay()
     {
-        return $this->belongsTo(DebtorPay::class, 'debtor_pay');
+        return $this->belongsTo(DebtorPay::class);
     }
 }

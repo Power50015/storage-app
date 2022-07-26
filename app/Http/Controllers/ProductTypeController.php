@@ -41,8 +41,8 @@ class ProductTypeController extends Controller
     {
         ProductType::create([
             'name' => $request->nameProductType,
-            'product_categories' => $request->productCategory,
-            'user' => Auth::id()
+            'product_category_id' => $request->productCategory,
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

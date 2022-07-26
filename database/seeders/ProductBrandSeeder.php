@@ -18,8 +18,8 @@ class ProductBrandSeeder extends Seeder
             'id' => 1,
             'name' => 'فتحى محمود',
             'logo' => 'image/brand/gHO0Hbkf0V0mo43YTO0Gg5p7cHL9Vnz0ZO6ke7Hc.png',
-            'country' => 1,
-            'user' => 1,
+            'product_country_id' => 1,
+            'user_id' => 1,
         ]);
     }
 }

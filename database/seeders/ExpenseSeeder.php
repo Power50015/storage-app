@@ -20,14 +20,14 @@ class ExpenseSeeder extends Seeder
             'amount' => 85.5,
             'description' => 'كهرباء',
             'date' => '2022-07-14',
-            'user' => 1,
+            'user_id' => 1,
         ]);
         \App\Models\Expense::factory()->create([
             'title' => 'مصاريف منشاوى',
             'amount' => 5,
             'description' => 'مشاوى راح المخزن',
             'date' => '2022-07-15',
-            'user' => 1,
+            'user_id' => 1,
         ]);
     }
 }

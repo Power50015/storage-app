@@ -53,7 +53,7 @@ class PeopleController extends Controller
             'logo' => $image_path,
             'address' => $request->address,
             'type' => $request->type,
-            'user' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

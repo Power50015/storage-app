@@ -38,7 +38,7 @@ class OutgoingInvoiceController extends Controller
     public function create()
     {
         return Inertia::render('OutgoingInvoice/CreateOutgoingInvoice', [
-            "products" => Product::with('country')->with('country', 'material', 'color', 'model', 'collection', 'brand', 'type', 'category')->get(),
+            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
             "customers" => People::orderBy("type")->get()
@@ -56,12 +56,12 @@ class OutgoingInvoiceController extends Controller
         // Save the Incoming Invoice
         $invice = OutgoingInvoice::create([
             'pay_type' => $request->pay_type,
-            'cash_type' => $request->cash_type,
+            'cash_id' => $request->cash_type,
             'discount' => $request->discount,
             'date' => $request->date,
-            'customer' => $request->customer,
-            'warehouse' => $request->warehouses,
-            'user' => Auth::id()
+            'people_id' => $request->customer,
+            'warehouse_id' => $request->warehouses,
+            'user_id' => Auth::id()
         ]);
 
         // Save Attachment Of Incoming Invoice
@@ -71,8 +71,8 @@ class OutgoingInvoiceController extends Controller
                 $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/outgoingInvoice', 'public');
                 OutgoingInvoiceAttachment::create([
                 'attachment' =>  $attachment_path,
-                'outgoing_invoice' => $invice['id'],
-                'user' => Auth::id()
+                'outgoing_invoice_id' => $invice['id'],
+                'user_id' => Auth::id()
             ]);
             }
         }
@@ -80,11 +80,11 @@ class OutgoingInvoiceController extends Controller
         // Save The Content Of Incoming Invoice
         for ($i = 0; $i <  count($request["content"]); $i++) {
             OutgoingInvoiceContent::create([
-                'product' => $request["content"][$i]["product"],
+                'product_id' => $request["content"][$i]["product"],
                 'price' => $request["content"][$i]["price"],
                 'quantity' => $request["content"][$i]["quantity"],
-                'outgoing_invoice' => $invice['id'],
-                'user' => Auth::id()
+                'outgoing_invoice_id' => $invice['id'],
+                'user_id' => Auth::id()
             ]);
         }
         return Redirect::back();
