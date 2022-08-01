@@ -212,7 +212,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(WarehouseStockContent::class);
     }
-
     /**
      * Get the Debtor for the user.
      */
@@ -289,5 +288,34 @@ class User extends Authenticatable
     public function kit_operations()
     {
         return $this->hasMany(KitOperation::class);
+    }
+    /**
+     * Get the Drivers for the user.
+     */
+    public function drivers()
+    {
+        return $this->hasMany(Driver::class);
+    }
+
+    /**
+     * Get the Transfers for the user.
+     */
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class);
+    }
+    /**
+     * Get the TransferContent for the user.
+     */
+    public function transfer_contents()
+    {
+        return $this->hasMany(TransferContent::class);
+    }
+    /**
+     * Get the TransferAttachment for the user.
+     */
+    public function transfer_attachments()
+    {
+        return $this->hasMany(TransferAttachment::class);
     }
 }

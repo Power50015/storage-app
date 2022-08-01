@@ -140,6 +140,20 @@
         </li>
         <li class="mx-5">
           <Link
+            :href="route('kit.index')"
+            class="py-3 px-4 block rounded-lg my-3"
+            :class="
+              route().current('kit.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            "
+          >
+            <i class="fa-brands fa-buffer"></i>
+            <span class="mx-3">قطع الغيار</span>
+          </Link>
+        </li>
+        <li class="mx-5">
+          <Link
             :href="route('people.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="

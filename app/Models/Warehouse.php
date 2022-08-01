@@ -41,4 +41,20 @@ class Warehouse extends Model
     {
         return $this->hasMany(KitOperation::class);
     }
+
+    /**
+     * Get the Transfer From for the user.
+     */
+    public function transfer_froms()
+    {
+        return $this->hasMany(Transfer::class, "warehouse_from_id");
+    }
+
+    /**
+     * Get the Transfer To for the user.
+     */
+    public function transfer_tos()
+    {
+        return $this->hasMany(Transfer::class, "warehouse_to_id");
+    }
 }

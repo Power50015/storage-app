@@ -5,8 +5,10 @@ use App\Http\Controllers\CreditorController;
 use App\Http\Controllers\CreditorPayController;
 use App\Http\Controllers\DebtorController;
 use App\Http\Controllers\DebtorPayController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomingInvoiceController;
+use App\Http\Controllers\KitController;
 use App\Http\Controllers\OutgoingInvoiceController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ProductBrandController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\ProductCountryController;
 use App\Http\Controllers\ProductMaterialController;
 use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\TransferController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseStockController;
 use Illuminate\Foundation\Application;
@@ -115,5 +118,14 @@ Route::middleware([
     ]);
     Route::resource('/creditor-pay', CreditorPayController::class)->only([
         'create' ,'store'
+    ]);
+    Route::resource('/kit', KitController::class)->only([
+        'index','create' ,'store'
+    ]);
+    Route::resource('/driver', DriverController::class)->only([
+        'store'
+    ]);
+    Route::resource('/transfer', TransferController::class)->only([
+        'index','create' ,'store'
     ]);
 });

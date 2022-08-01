@@ -107,6 +107,14 @@ class Product extends Model
     }
 
     /**
+     * Get the TransferContent for the Product.
+     */
+    public function transfer_contents()
+    {
+        return $this->hasMany(TransferContent::class);
+    }
+
+    /**
      * Get the kit for the product.
      */
     public function kits()

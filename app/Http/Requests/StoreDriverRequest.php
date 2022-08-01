@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreKitRequest extends FormRequest
+class StoreDriverRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,8 @@ class StoreKitRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'product' => 'required|numeric',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'name' => 'required',
+            'phone' => 'required|unique:drivers,phone',
         ];
     }
     /**
@@ -37,11 +35,11 @@ class StoreKitRequest extends FormRequest
      */
     public function messages()
     {
+
         return [
-            'title.required' => 'يجب إدخال بند قطعه الغيار',
-            'product.required' => 'يجب إدخال المنتج',
-            'attachment.*' => 'يجب ملفات قطعه الغيار ',
-            'attachment.*.*' => 'يجب ملفات قطعه الغيار ',
+            'name.required' => 'يجب إدخال أسم السائق',
+            'phone.unique' => 'يجب أن يكون رقم الهاتف للسائق فريد',
+            'phone.required' => 'يجب إدخال رقم الهاتف للسائق',
         ];
     }
 }
