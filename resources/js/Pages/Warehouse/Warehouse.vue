@@ -91,11 +91,11 @@
                   text-base
                   font-medium
                   text-white
-                  hover:bg-[#009ef7]
+                  hover:bg-[#0095e8]
                   focus:outline-none
                   focus:ring-2
                   focus:ring-offset-2
-                  focus:ring-[#009ef7]
+                  focus:ring-[#0095e8]
                 "
               >
                 حفظ المخزن
@@ -119,32 +119,40 @@
             p-4
           "
         >
-          <Link
-            :href="route('warehouse-stock.create')"
-            class="
-              mt-6
-              w-full
-              bg-[#009ef7]
-              border border-transparent
-              rounded-md
-              py-3
-              px-8
-              flex
-              items-center
-              justify-center
-              text-base
-              font-medium
-              text-white
-              hover:bg-[#009ef7]
-              focus:outline-none
-              focus:ring-2
-              focus:ring-offset-2
-              focus:ring-[#009ef7]
-              cursor-pointer
-            "
-          >
-            أضف مخزون
-          </Link>
+          <div class="flex content-center items-center justify-between">
+            <h2 class="title font-bold">بيانات المخازن</h2>
+            <Link
+              :href="route('warehouse-stock.create')"
+              class="
+                bg-[#7239ea]
+                border border-transparent
+                rounded-md
+                py-3
+                px-8
+                flex
+                items-center
+                justify-center
+                text-base
+                font-medium
+                text-white
+                hover:bg-[#7239ea]
+                focus:outline-none
+                focus:ring-2
+                focus:ring-offset-2
+                focus:ring-[#7239ea]
+                cursor-pointer
+              "
+            >
+              أضف مخزون
+            </Link>
+          </div>
+          <warehouse-table
+            v-for="item in warehouses"
+            :key="item.index"
+            :name="item.name"
+            :address="item.address"
+            :id="item.id"
+          />
         </div>
       </div>
     </div>
@@ -160,6 +168,7 @@ import { createToast } from "mosha-vue-toastify";
 import { QuillEditor } from "@vueup/vue-quill";
 
 import AppLayout from "@/Layouts/AppLayout.vue";
+import WarehouseTable from "@/Components/Warehouse/WarehouseTable.vue";
 
 provide("title", "المخازن");
 provide(
@@ -170,7 +179,7 @@ provide(
   ])
 );
 
-const props = defineProps(["errors", "warehouse"]);
+const props = defineProps(["errors", "warehouses"]);
 const warehouseData = computed(() => {
   return props.warehouse;
 });

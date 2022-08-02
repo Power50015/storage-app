@@ -136,4 +136,12 @@ class Product extends Model
     {
         //
     }
+
+    protected $appends = ['readable_created_at'];
+
+
+    public function getReadableCreatedAtAttribute()
+    {
+        return $this->user; //or however you want to manipulate it
+    }
 }

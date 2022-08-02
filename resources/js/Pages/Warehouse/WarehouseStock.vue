@@ -49,14 +49,14 @@
                   :key="item.id"
                   :value="item.id"
                 >
-                  {{ item.name }} | {{ item.address }}
+                  {{ item.name }}
                 </option>
               </select>
             </div>
             <!--Title-->
             <div class="mb-5">
               <label class="px-3 dark:text-gray-300">
-                 البند
+                البند
                 <span class="text-red-800 font-bold">*</span>
               </label>
               <div v-if="errors.title" class="text-red-800">

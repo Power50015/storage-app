@@ -19,7 +19,7 @@ class WarehouseController extends Controller
     public function index()
     {
         return Inertia::render('Warehouse/Warehouse', [
-            "warehouse" => Warehouse::all()
+            "warehouses" => Warehouse::all()
         ]);
     }
 
@@ -57,7 +57,9 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse)
     {
-        //
+        return Inertia::render('Warehouse/ShowWarehouse', [
+            "warehouse" => Warehouse::find($warehouse)
+        ]);
     }
 
     /**
@@ -80,7 +82,13 @@ class WarehouseController extends Controller
      */
     public function update(UpdateWarehouseRequest $request, Warehouse $warehouse)
     {
-        //
+
+        $warehouse = Warehouse::find($warehouse);
+        $warehouse->name = $request->nameEdit;
+        $warehouse->address = $request->address;
+        $warehouse->user_id = Auth::id();
+        $warehouse->save();
+        return Redirect::back();
     }
 
     /**

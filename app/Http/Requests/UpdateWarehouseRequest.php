@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Warehouse;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateWarehouseRequest extends FormRequest
@@ -13,7 +14,7 @@ class UpdateWarehouseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,27 @@ class UpdateWarehouseRequest extends FormRequest
      */
     public function rules()
     {
+        $warehouse = Warehouse::find($this->id);
+        if ($warehouse->name == $this->nameEdit)
+            return [
+                'nameEdit' => 'required',
+            ];
+
         return [
-            //
+            'nameEdit' => 'required|unique:warehouses,name',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'nameEdit.required' => 'يجب إدخال اسم المخزن',
+            'nameEdit.unique' => 'يجب أن يكون الأسم فريد',
         ];
     }
 }

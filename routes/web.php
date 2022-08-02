@@ -59,10 +59,10 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('/warehouse', WarehouseController::class)->only([
-        'index', 'store'
+        'index', 'store', 'show', 'update'
     ]);
     Route::resource('/warehouse-stock', WarehouseStockController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
     Route::resource('/product', ProductController::class)->only([
         'index', 'store'
@@ -76,10 +76,10 @@ Route::middleware([
 
     Route::get('/product-collection/{id}', [ProductCollectionController::class, 'index']);
     Route::post('/product-collection', [ProductCollectionController::class, 'store'])->name('product-collection.store');
-    
+
     Route::get('/product-model/{id}', [ProductModelController::class, 'index']);
     Route::post('/product-model', [ProductModelController::class, 'store'])->name('product-model.store');
-    
+
     Route::resource('/product-brand', ProductBrandController::class)->only([
         'store'
     ]);
@@ -102,30 +102,30 @@ Route::middleware([
         'index', 'store'
     ]);
     Route::resource('/incoming-invoice', IncomingInvoiceController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
     Route::resource('/outgoing-invoice', OutgoingInvoiceController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
     Route::resource('/debtor', DebtorController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
     Route::resource('/debtor-pay', DebtorPayController::class)->only([
-        'create' ,'store'
+        'create', 'store'
     ]);
     Route::resource('/creditor', CreditorController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
     Route::resource('/creditor-pay', CreditorPayController::class)->only([
-        'create' ,'store'
+        'create', 'store'
     ]);
     Route::resource('/kit', KitController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
     Route::resource('/driver', DriverController::class)->only([
         'store'
     ]);
     Route::resource('/transfer', TransferController::class)->only([
-        'index','create' ,'store'
+        'index', 'create', 'store'
     ]);
 });
