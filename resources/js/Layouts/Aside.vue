@@ -1,6 +1,14 @@
 <template>
   <div
-    class="shrink-0 lg:block top-[-210px] lg:top-auto lg:static absolute h-full"
+    class="
+      shrink-0
+      lg:block
+      top-[-210px]
+      lg:top-auto lg:static
+      absolute
+      h-full
+      print:hidden
+    "
     :class="{
       'lg:w-[265px] ': asideOpenStateDesktop,
       'lg:w-0 ': !asideOpenStateDesktop,
@@ -143,9 +151,7 @@
             :href="route('kit.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('kit.*')
-                ? 'bg-[#009ef7]'
-                : 'hover:text-[#009ef7]'
+              route().current('kit.*') ? 'bg-[#009ef7]' : 'hover:text-[#009ef7]'
             "
           >
             <i class="fa-brands fa-buffer"></i>

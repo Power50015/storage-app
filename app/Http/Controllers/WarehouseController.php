@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Warehouse;
 use App\Http\Requests\StoreWarehouseRequest;
 use App\Http\Requests\UpdateWarehouseRequest;
+use App\Models\IncomingInvoiceContent;
+use App\Models\OutgoingInvoiceContent;
+use App\Models\TransferContent;
+use App\Models\WarehouseStockContent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -57,8 +61,10 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse)
     {
+        // Get The Warehouse Data
+        $warehouse = Warehouse::with(['outgoing_invoices', 'outgoing_invoices.people', 'incoming_invoices', 'incoming_invoices.people', 'warehouse_stocks', 'transfer_froms', 'transfer_tos'])->find($warehouse->id);
         return Inertia::render('Warehouse/ShowWarehouse', [
-            "warehouse" => Warehouse::find($warehouse)
+            "warehouse" => $warehouse
         ]);
     }
 

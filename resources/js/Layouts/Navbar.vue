@@ -14,6 +14,7 @@
       lg:py-[40px]
       bg-white
       z-50
+      print:hidden
     "
   >
     <div

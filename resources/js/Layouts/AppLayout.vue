@@ -9,10 +9,10 @@
 
       <!-- Page Content -->
       <main class="flex h-full">
-        <div class="relative lg:top-[80px] top-[210px]">
+        <div class="relative lg:top-[80px] top-[210px] print:hidden">
           <Aside @aside-show-mobile="asideStateMobile" />
         </div>
-        <div class="w-full lg:mt-[80px] mt-[210px]"><slot /></div>
+        <div class="w-full lg:mt-[80px] mt-[210px] print:mt-0"><slot /></div>
       </main>
     </div>
   </div>

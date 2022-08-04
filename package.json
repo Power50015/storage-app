@@ -22,6 +22,15 @@
     },
     "dependencies": {
         "@vueup/vue-quill": "^1.0.0-beta.8",
-        "mosha-vue-toastify": "^1.0.23"
+        "datatables.net-buttons": "^2.2.3",
+        "datatables.net-buttons-dt": "^2.2.3",
+        "datatables.net-dt": "^1.12.1",
+        "datatables.net-select": "^1.4.0",
+        "datatables.net-select-dt": "^1.4.0",
+        "datatables.net-vue3": "^1.0.0",
+        "jspdf": "^2.5.1",
+        "mosha-vue-toastify": "^1.0.23",
+        "vue-html-to-paper": "^1.4.4",
+        "vuejs-paginate-next": "^1.0.2"
     }
 }
