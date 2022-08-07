@@ -21,14 +21,16 @@ class DatabaseSeeder extends Seeder
             'password' => '$2y$10$QCtPNdsiwvpQvC5rYkSG3uXHP8RJs2gtsVUlIqBbh1XT1ZiRchEfG',
             'profile_photo_path' => 'profile-photos/74HRN1ifvWtpIC3sPJJD7swV8JtPN4HgBSoRNHgf.jpg',
         ]);
-        $this->call(ProductBrandSeeder::class);
+
         $this->call(ProductCategorySeeder::class);
-        $this->call(ProductCollectionSeeder::class);
-        $this->call(ProductColorSeeder::class);
-        $this->call(ProductCountrySeeder::class);
-        $this->call(ProductMaterialSeeder::class);
-        $this->call(ProductModelSeeder::class);
         $this->call(ProductTypeSeeder::class);
+        $this->call(ProductCountrySeeder::class);
+        $this->call(ProductBrandSeeder::class);
+        $this->call(ProductColorSeeder::class);
+        $this->call(ProductMaterialSeeder::class);
+
+        $this->call(ProductCollectionSeeder::class);
+        $this->call(ProductModelSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(WarehouseSeeder::class);
         $this->call(ExpenseSeeder::class);

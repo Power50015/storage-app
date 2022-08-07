@@ -62,7 +62,7 @@ class WarehouseController extends Controller
     public function show(Warehouse $warehouse)
     {
         // Get The Warehouse Data
-        $warehouse = Warehouse::with(['outgoing_invoices', 'outgoing_invoices.people', 'incoming_invoices', 'incoming_invoices.people', 'warehouse_stocks', 'transfer_froms', 'transfer_tos'])->find($warehouse->id);
+        $warehouse = Warehouse::with(['outgoing_invoices', 'outgoing_invoices.people', 'incoming_invoices', 'incoming_invoices.people', 'warehouse_stocks', 'transfer_froms', 'transfer_froms.warehouse_to', 'transfer_tos', 'transfer_tos.warehouse_from'])->find($warehouse->id);
         return Inertia::render('Warehouse/ShowWarehouse', [
             "warehouse" => $warehouse
         ]);
@@ -88,8 +88,7 @@ class WarehouseController extends Controller
      */
     public function update(UpdateWarehouseRequest $request, Warehouse $warehouse)
     {
-
-        $warehouse = Warehouse::find($warehouse);
+        $warehouse = Warehouse::find($warehouse["id"]);
         $warehouse->name = $request->nameEdit;
         $warehouse->address = $request->address;
         $warehouse->user_id = Auth::id();

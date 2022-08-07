@@ -4,9 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateIncomingInvoiceRequest extends FormRequest
+class UpdateReturnedIncomingInvoiceRequest extends FormRequest
 {
-    /**
+/**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -24,13 +24,7 @@ class UpdateIncomingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'number' => 'required',
-            'supplier' => 'required',
-            'warehouses' => 'required',
-            'pay_type' => 'required',
-            'cash_type' =>'required_if:pay_type,true',
-            'discount' => 'numeric',
-            'date' => 'required|date',
+            'Rdate' => 'required|date',
             'content' => 'required|array',
             'content.*.product_id' => 'required',
             'content.*.price' => 'required|numeric|min:0.01',
@@ -47,14 +41,8 @@ class UpdateIncomingInvoiceRequest extends FormRequest
     public function messages()
     {
         return [
-            'number.required' => 'يجب إدخال رقم الفاتورة',
-            'supplier.required' => 'يجب إدخال المورد',
-            'warehouses.required' => 'يجب إدخال المخزن المستقبل ',
-            'cash_type.required_if' => 'يجب إدخال نوع الكاش  ',
-            'discount.numeric' => 'يجب أن يكون الخصم رقم',
-            'date.required' => 'يجب إدخال تاريخ الفاتوره',
-            'date.date' => 'يجب إدخال تاريخ الفاتوره',
-            'number.required' => 'يجب إدخال رقم الفاتورة',
+            'Rdate.required' => 'يجب إدخال تاريخ الفاتوره',
+            'Rdate.date' => 'يجب إدخال تاريخ الفاتوره',
             'content.*' => 'يجب إدخال محتوى الفاتورة',
             'content.*.product_id.required' => 'يجب إدخال المنتجات للفاتورة',
             'content.*.price.required' => 'يجب إدخال أسعار المنتجات فى الفاتورة',

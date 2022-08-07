@@ -9,6 +9,7 @@ class IncomingInvoice extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $appends = ['total_before_discount', 'total_after_discount'];
 
     /**
      * Get the users for the IncomingInvoice.
@@ -27,11 +28,11 @@ class IncomingInvoice extends Model
     /**
      * Get the cash for the IncomingInvoice.
      */
-    public function cash_type()
+    public function cash()
     {
         return $this->belongsTo(Cash::class);
     }
-     /**
+    /**
      * Get the warehouses for the IncomingInvoice.
      */
     public function warehouse()
@@ -54,19 +55,48 @@ class IncomingInvoice extends Model
     {
         return $this->hasMany(IncomingInvoiceContent::class);
     }
-    
+
+    /**
+     * Get the ReturnedIncomingInvoice for the IncomingInvoice.
+     */
+    public function returned_incoming_invoices()
+    {
+        return $this->hasMany(ReturnedIncomingInvoice::class);
+    }
     /**
      * Get The Total Before Discount
-    **/
-    public function totalBeforeDiscount()
+     **/
+    public function getTotalBeforeDiscountAttribute()
     {
-        return 0;
+        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
+        $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
+        $total = 0;
+        foreach ($items as $key => $value) {
+            $quantity = 0;
+            foreach ($rItem as $key2 => $value2) {
+                if ($value["product_id"] == $value2["product_id"])
+                    $quantity = $value2["quantity"];
+            }
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+        return floatval($total);
     }
     /**
      * Get The Total After Discount
-    **/
-    public function totalAfterDiscount()
+     **/
+    public function getTotalAfterDiscountAttribute()
     {
-        return 0;
+        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
+        $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
+        $total = 0;
+        foreach ($items as $key => $value) {
+            $quantity = 0;
+            foreach ($rItem as $key2 => $value2) {
+                if ($value["product_id"] == $value2["product_id"])
+                    $quantity = $value2["quantity"];
+            }
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+        return floatval($total - $this->discount);
     }
 }

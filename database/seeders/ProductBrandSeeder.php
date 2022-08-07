@@ -21,5 +21,45 @@ class ProductBrandSeeder extends Seeder
             'product_country_id' => 1,
             'user_id' => 1,
         ]);
+
+        \App\Models\ProductBrand::factory()->create([
+            'id' => 2,
+            'name' => 'فلامنجو',
+            'logo' => 'image/brand/qIEPDS8DOGl58ekl6AshCLmKu2Q1xWH5et41Qh3B.png',
+            'product_country_id' => 1,
+            'user_id' => 1,
+        ]);
+
+        \App\Models\ProductBrand::factory()->create([
+            'id' => 3,
+            'name' => 'قادوس',
+            'logo' => 'image/brand/Xz8HBbCc5GrHInidqnZ4IqKRefAloynRdhktfbnG.png',
+            'product_country_id' => 1,
+            'user_id' => 1,
+        ]);
+
+        \App\Models\ProductBrand::factory()->create([
+            'id' => 4,
+            'name' => 'تيفال',
+            'logo' => 'image/brand/o0FaO4YwUB9kslo3HlisxW3uwd8g0xUYOelXfn40.png',
+            'product_country_id' => 6,
+            'user_id' => 1,
+        ]);
+
+        \App\Models\ProductBrand::factory()->create([
+            'id' => 5,
+            'name' => 'بلو كورل',
+            'logo' => 'image/brand/fYjYnqyNnFXC5sZNbPkdcG71lQVZCmrFDQcb34Oy.png',
+            'product_country_id' => 4,
+            'user_id' => 1,
+        ]);
+
+        \App\Models\ProductBrand::factory()->create([
+            'id' => 6,
+            'name' => 'سيفلون',
+            'logo' => 'image/brand/SibeacJ1S52bTed2KA4MFtwXCQA1jItOMgS9WsrE.png',
+            'product_country_id' => 6,
+            'user_id' => 1,
+        ]);
     }
 }

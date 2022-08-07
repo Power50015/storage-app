@@ -94,6 +94,13 @@ class User extends Authenticatable
         return $this->hasMany(IncomingInvoiceContent::class);
     }
     /**
+     * Get the ReturnedIncomingInvoice for the user.
+     */
+    public function returned_incoming_invoices()
+    {
+        return $this->hasMany(ReturnedIncomingInvoice::class);
+    }
+    /**
      * Get the OutgoingInvoice for the user.
      */
     public function outgoing_invoices()

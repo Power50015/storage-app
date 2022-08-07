@@ -111,6 +111,14 @@
             :outgoing_invoices="warehouse.outgoing_invoices"
             v-if="tab == 'invoiceOutgoing'"
           />
+          <transfer-from-table
+            :transfer_froms="warehouse.transfer_froms"
+            v-if="tab == 'transferIncome'"
+          />
+          <transfer-to-table
+            :transfer_tos="warehouse.transfer_tos"
+            v-if="tab == 'transferOutgoing'"
+          />
         </div>
       </div>
     </div>
@@ -126,6 +134,9 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import StockTable from "@/Components/Warehouse/StockTable.vue";
 import IncomingInvoiceTable from "@/Components/Warehouse/IncomingInvoiceTable.vue";
 import OutgoingInvoiceTable from "@/Components/Warehouse/OutgoingInvoiceTable.vue";
+import TransferFromTable from "@/Components/Warehouse/TransferFromTable.vue";
+import TransferToTable from "@/Components/Warehouse/TransferToTable.vue";
+
 const props = defineProps(["warehouse"]);
 
 const warehouse = props.warehouse;

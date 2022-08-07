@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="إضافه فاتوره وارده">
+  <AppLayout title="تعديل فاتوره وارده">
     <div class="py-6">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div
@@ -226,6 +226,58 @@
                 <span class="text-red-800 font-bold">*</span>
               </h2>
               <div
+                v-for="(i, index) in incomingInvoiceAddForm.oldAttachment"
+                :key="index"
+              >
+                <div class="w-full my-5">
+                  <h3>{{ 1 + index }}</h3>
+                  <label class="px-3 dark:text-gray-300"
+                    >الملف
+                    <span class="text-red-800 font-bold">*</span>
+                  </label>
+                  <div class="flex justify-between">
+                    {{ incomingInvoiceAddForm.oldAttachment[index].attachment }}
+                    <!-- Delete -->
+                    <div class="mb-5">
+                      <div
+                        class="
+                          bg-[#EF305E]
+                          text-lg text-white
+                          hover:bg-[#EF305E]
+                          cursor-pointer
+                          w-full
+                          text-base
+                          mt-3
+                          focus:ring-0
+                          border-0
+                          py-3
+                          w-[80px]
+                          flex
+                          items-center
+                          justify-center
+                          rounded-md
+                        "
+                        @click="
+                          incomingInvoiceAddForm.oldAttachment =
+                            incomingInvoiceAddForm.oldAttachment.filter(
+                              (item) => item.id != i.id
+                            )
+                        "
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr
+                  v-if="
+                    incomingInvoiceAddForm.oldAttachment.length > 1 &&
+                    incomingInvoiceAddForm.oldAttachment.length != index
+                  "
+                />
+              </div>
+              <div
                 v-for="(i, index) in incomingInvoiceAddForm.attachment"
                 :key="index"
               >
@@ -348,7 +400,7 @@
                     <span class="text-red-800 font-bold">*</span>
                   </label>
                   <select
-                    v-model="incomingInvoiceAddForm.content[index].product"
+                    v-model="incomingInvoiceAddForm.content[index].product_id"
                     class="
                       w-full
                       text-base
@@ -513,7 +565,7 @@
                 </div>
               </div>
             </div>
-
+            <!-- Invoice Footer -->
             <div
               class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
             >
@@ -604,14 +656,42 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { computed, provide, readonly, ref } from "@vue/runtime-core";
+import { computed, provide, readonly, ref, reactive } from "@vue/runtime-core";
 import { Inertia } from "@inertiajs/inertia";
 import { createToast } from "mosha-vue-toastify";
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 
-provide("title", "إضافه فاتوره وارده");
+provide("title", "تعديل فاتوره وارده");
+
+const props = defineProps([
+  "errors",
+  "incomingInvoice",
+  "incomingInvoiceContent",
+  "incomingInvoiceAttachment",
+  "products",
+  "cash",
+  "warehouses",
+  "suppliers",
+]);
+
+const incomingInvoice = props.incomingInvoice[0];
+
+const incomingInvoiceAddForm = reactive({
+  _method: "patch",
+  number: incomingInvoice.number,
+  supplier: incomingInvoice.people_id,
+  warehouses: incomingInvoice.warehouse_id,
+  pay_type: Boolean(incomingInvoice.pay_type),
+  cash_type: incomingInvoice.cash_id,
+  date: new Date(incomingInvoice.date).toISOString().slice(0, 10),
+  discount: incomingInvoice.discount,
+  content: props.incomingInvoiceContent,
+  oldAttachment: props.incomingInvoiceAttachment,
+  attachment: [],
+});
+
+const totalPrice = ref(incomingInvoice.total_before_discount);
 provide(
   "breadcrumb",
   readonly([
@@ -623,83 +703,54 @@ provide(
     },
     {
       index: 2,
-      linkTitle: "إضافه فاتوره وارده",
+      linkTitle: "تعديل فاتوره وارده رقم : " + incomingInvoiceAddForm.number,
       linkRoute: "#",
     },
   ])
 );
-
-const props = defineProps([
-  "errors",
-  "products",
-  "cash",
-  "warehouses",
-  "suppliers",
-]);
-
-const totalPrice = ref(0);
-
-const incomingInvoiceAddForm = reactive({
-  number: null,
-  supplier: null,
-  warehouses: null,
-  pay_type: false,
-  cash_type: null,
-  date: new Date().toISOString().slice(0, 10),
-  discount: 0.0,
-  content: [
-    {
-      id: 1,
-      product: null,
-      price: 0.0,
-      quantity: 0,
-    },
-  ],
-  attachment: [],
-});
-
 function addIncomingInvoice() {
   if (incomingInvoiceAddForm.pay_type == false)
     incomingInvoiceAddForm.cash_type = null;
-  Inertia.post(route("incoming-invoice.store"), incomingInvoiceAddForm, {
-    onSuccess: () => {
-      createToast(
-        {
-          title: "تم تسجيل الفاتوره",
-          description: " تم تسجيل الفاتوره " + incomingInvoiceAddForm.number,
-        },
-        {
-          timeout: 3000,
-          transition: "slide",
-          type: "success",
-          showIcon: true,
-        }
-      );
-      incomingInvoiceAddForm.number = null;
-      incomingInvoiceAddForm.pay_type = false;
-      incomingInvoiceAddForm.cash_type = null;
-      incomingInvoiceAddForm.number = null;
-      incomingInvoiceAddForm.customer = null;
-      incomingInvoiceAddForm.warehouses = null;
-      incomingInvoiceAddForm.discount = 0.0;
-      incomingInvoiceAddForm.date = new Date().toISOString().slice(0, 10);
-    },
-    onError: (errors) => {
-      for (const [key, value] of Object.entries(errors)) {
+  /**
+   * PUT/PATCH/DELETE method
+   * https://github.com/inertiajs/inertia/issues/495
+   *
+   */
+  Inertia.post(
+    route("incoming-invoice.update", incomingInvoice.id),
+    incomingInvoiceAddForm,
+    {
+      onSuccess: () => {
         createToast(
           {
-            title: value,
+            title: "تم تعديل الفاتوره",
+            description: " تم تعديل الفاتوره " + incomingInvoiceAddForm.number,
           },
           {
             timeout: 3000,
             transition: "slide",
-            type: "danger",
+            type: "success",
             showIcon: true,
           }
         );
-      }
-    },
-  });
+      },
+      onError: (errors) => {
+        for (const [key, value] of Object.entries(errors)) {
+          createToast(
+            {
+              title: value,
+            },
+            {
+              timeout: 3000,
+              transition: "slide",
+              type: "danger",
+              showIcon: true,
+            }
+          );
+        }
+      },
+    }
+  );
 }
 
 function pushToContent() {

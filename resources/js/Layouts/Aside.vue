@@ -78,11 +78,10 @@
         </li>
         <li class="mx-5">
           <Link
-            :href="route('incoming-invoice.create')"
+            :href="route('incoming-invoice.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('incoming-invoice.create') ||
-              route().current('incoming-invoice.index')
+              route().current('incoming-invoice.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "

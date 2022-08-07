@@ -18,7 +18,7 @@ class ProductTypeController extends Controller
      */
     public function index($id)
     {
-        return ProductType::where('product_categories', $id)->get();
+        return ProductType::where('product_category_id', $id)->get();
     }
 
     /**

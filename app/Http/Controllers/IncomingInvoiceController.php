@@ -11,10 +11,13 @@ use App\Models\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoiceContent;
 use App\Models\People;
 use App\Models\Product;
+use App\Models\ReturnedIncomingInvoice;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class IncomingInvoiceController extends Controller
@@ -26,8 +29,9 @@ class IncomingInvoiceController extends Controller
      */
     public function index()
     {
+
         return Inertia::render('IncomingInvoice/IncomingInvoice', [
-            "incomingInvoice" => IncomingInvoice::with('users')->with('supplier')->with('warehouse')->get(),
+            "incomingInvoice" => IncomingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->get(),
         ]);
     }
 
@@ -97,9 +101,14 @@ class IncomingInvoiceController extends Controller
      * @param  \App\Models\IncomingInvoice  $incomingInvoice
      * @return \Illuminate\Http\Response
      */
-    public function show(IncomingInvoice $incomingInvoice)
+    public function show($incomingInvoice)
     {
-        //
+        return Inertia::render('IncomingInvoice/ShowIncomingInvoice', [
+            "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
+            "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
+            "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        ]);
     }
 
     /**
@@ -108,9 +117,18 @@ class IncomingInvoiceController extends Controller
      * @param  \App\Models\IncomingInvoice  $incomingInvoice
      * @return \Illuminate\Http\Response
      */
-    public function edit(IncomingInvoice $incomingInvoice)
+    public function edit($incomingInvoice)
     {
-        //
+        return Inertia::render('IncomingInvoice/EditIncomingInvoice', [
+            "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
+            "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
+            "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
+            "cash" => Cash::all(),
+            "warehouses" => Warehouse::all(),
+            "suppliers" => People::orderByDesc("type")->get()
+        ]);
     }
 
     /**
@@ -122,7 +140,65 @@ class IncomingInvoiceController extends Controller
      */
     public function update(UpdateIncomingInvoiceRequest $request, IncomingInvoice $incomingInvoice)
     {
-        //
+        // Edit the Incoming Invoice
+        $invice = DB::table('incoming_invoices')->where('id', $incomingInvoice->id)->update([
+            'number' => $request->number,
+            'pay_type' => $request->pay_type,
+            'cash_id' => $request->cash_type,
+            'discount' => $request->discount,
+            'date' => $request->date,
+            'people_id' => $request->supplier,
+            'warehouse_id' => $request->warehouses,
+        ]);
+
+        // Save New Attachment Of Incoming Invoice
+
+        //Delete The old items removed
+
+        if (is_array($request["oldAttachment"])) {
+
+            $oldAttachmentId = [];
+            for ($i = 0; $i <  count($request["oldAttachment"]); $i++) {
+                $oldAttachmentId[] = $request["oldAttachment"][$i]["id"];
+            }
+            $item = IncomingInvoiceAttachment::whereNotIn('id', $oldAttachmentId)->where('incoming_invoice_id', $incomingInvoice->id)->get();
+            for ($i = 0; $i <  count($item); $i++) {
+                Storage::delete("public/" . $item[$i]["attachment"]);
+                $item[$i]->delete();
+            }
+        }
+
+        for ($i = 0; $i <  count($request["attachment"]); $i++) {
+            if ($request["attachment"][$i]["attachment"] != null) {
+                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
+                IncomingInvoiceAttachment::create([
+                    'attachment' =>  $attachment_path,
+                    'incoming_invoice_id' => $incomingInvoice->id,
+                    'user_id' => Auth::id()
+                ]);
+            } else {
+                IncomingInvoiceAttachment::create([
+                    'attachment' =>  $attachment_path,
+                    'incoming_invoice_id' => $incomingInvoice,
+                    'user_id' => Auth::id()
+                ]);
+            }
+        }
+
+        // Save The Content Of Incoming Invoice.
+
+        IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice->id)->delete();
+        for ($i = 0; $i <  count($request["content"]); $i++) {
+            IncomingInvoiceContent::create([
+                'product_id' => $request["content"][$i]["product_id"],
+                'price' => $request["content"][$i]["price"],
+                'quantity' => $request["content"][$i]["quantity"],
+                'incoming_invoice_id' => $incomingInvoice->id,
+                'user_id' => Auth::id()
+            ]);
+        }
+
+        return Redirect::back();
     }
 
     /**

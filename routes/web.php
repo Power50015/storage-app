@@ -20,6 +20,7 @@ use App\Http\Controllers\ProductCountryController;
 use App\Http\Controllers\ProductMaterialController;
 use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\ReturnedIncomingInvoiceController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseStockController;
@@ -101,8 +102,9 @@ Route::middleware([
     Route::resource('/cash', CashController::class)->only([
         'index', 'store'
     ]);
-    Route::resource('/incoming-invoice', IncomingInvoiceController::class)->only([
-        'index', 'create', 'store'
+    Route::resource('/incoming-invoice', IncomingInvoiceController::class);
+    Route::resource('/returned-incoming-invoice', ReturnedIncomingInvoiceController::class)->only([
+        'edit', 'update'
     ]);
     Route::resource('/outgoing-invoice', OutgoingInvoiceController::class)->only([
         'index', 'create', 'store'

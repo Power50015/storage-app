@@ -26,5 +26,23 @@ class ProductCollectionSeeder extends Seeder
             'user_id' => 1,
             'product_brand_id' => 1
         ]);
+        \App\Models\ProductCollection::factory()->create([
+            'id' => 3,
+            'name' => 'جلاكسي',
+            'user_id' => 1,
+            'product_brand_id' => 1
+        ]);
+        \App\Models\ProductCollection::factory()->create([
+            'id' => 4,
+            'name' => 'تريد لاين',
+            'user_id' => 1,
+            'product_brand_id' => 6
+        ]);
+        \App\Models\ProductCollection::factory()->create([
+            'id' => 5,
+            'name' => 'جرانيت',
+            'user_id' => 1,
+            'product_brand_id' => 6
+        ]);
     }
 }

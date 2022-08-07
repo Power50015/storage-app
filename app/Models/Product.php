@@ -91,6 +91,13 @@ class Product extends Model
     }
 
     /**
+     * Get the ReturnedIncomingInvoice for the Product.
+     */
+    public function returned_incoming_invoices()
+    {
+        return $this->hasMany(ReturnedIncomingInvoice::class);
+    }
+    /**
      * Get the OutgoingInvoiceContent for the Product.
      */
     public function outgoing_invoice_contents()
@@ -135,13 +142,5 @@ class Product extends Model
     public function totalNumberOfProductWarehouse($warehouse)
     {
         //
-    }
-
-    protected $appends = ['readable_created_at'];
-
-
-    public function getReadableCreatedAtAttribute()
-    {
-        return $this->user; //or however you want to manipulate it
     }
 }
