@@ -21,9 +21,11 @@ use App\Http\Controllers\ProductMaterialController;
 use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ReturnedIncomingInvoiceController;
+use App\Http\Controllers\ReturnedOutgoingInvoiceController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseStockController;
+use App\Models\ReturnedOutgoingInvoice;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -106,8 +108,9 @@ Route::middleware([
     Route::resource('/returned-incoming-invoice', ReturnedIncomingInvoiceController::class)->only([
         'edit', 'update'
     ]);
-    Route::resource('/outgoing-invoice', OutgoingInvoiceController::class)->only([
-        'index', 'create', 'store'
+    Route::resource('/outgoing-invoice', OutgoingInvoiceController::class);
+    Route::resource('/returned-outgoing-invoice', ReturnedOutgoingInvoiceController::class)->only([
+        'edit', 'update'
     ]);
     Route::resource('/debtor', DebtorController::class)->only([
         'index', 'create', 'store'

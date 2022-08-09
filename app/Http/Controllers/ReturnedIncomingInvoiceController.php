@@ -94,12 +94,6 @@ class ReturnedIncomingInvoiceController extends Controller
                     'incoming_invoice_id' =>  $returnedIncomingInvoice,
                     'user_id' => Auth::id()
                 ]);
-            } else {
-                IncomingInvoiceAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'incoming_invoice_id' =>  $returnedIncomingInvoice,
-                    'user_id' => Auth::id()
-                ]);
             }
         }
 

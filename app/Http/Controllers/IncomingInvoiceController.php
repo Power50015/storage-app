@@ -179,7 +179,7 @@ class IncomingInvoiceController extends Controller
             } else {
                 IncomingInvoiceAttachment::create([
                     'attachment' =>  $attachment_path,
-                    'incoming_invoice_id' => $incomingInvoice,
+                    'incoming_invoice_id' => $incomingInvoice->id,
                     'user_id' => Auth::id()
                 ]);
             }

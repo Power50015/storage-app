@@ -81,7 +81,8 @@
             :href="route('incoming-invoice.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('incoming-invoice.*')
+              route().current('incoming-invoice.*') ||
+              route().current('returned-incoming-invoice.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
@@ -92,11 +93,11 @@
         </li>
         <li class="mx-5">
           <Link
-            :href="route('outgoing-invoice.create')"
+            :href="route('outgoing-invoice.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('outgoing-invoice.create') ||
-              route().current('outgoing-invoice.index')
+              route().current('outgoing-invoice.*') ||
+              route().current('returned-outgoing-invoice.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "

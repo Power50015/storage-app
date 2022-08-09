@@ -104,7 +104,13 @@ class Product extends Model
     {
         return $this->hasMany(OutgoingInvoiceContent::class);
     }
-
+    /**
+     * Get the ReturnedOutgoingInvoice for the user.
+     */
+    public function returned_outgoing_invoices()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoice::class);
+    }
     /**
      * Get the WarehouseStockContent for the Product.
      */

@@ -21,7 +21,7 @@
             "
           >
             <Link
-              :href="route('warehouse.index')"
+              :href="route('incoming-invoice.show', i.id)"
               class="data hover:text-[#009ef7]"
             >
               <h3 class="">رقم الفاتوره : {{ i.number }}</h3>
