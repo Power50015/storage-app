@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreignId('product_color_id');
             $table->foreignId('product_material_id');
             $table->foreignId('product_country_id');
+            $table->decimal('price', $precision = 11, $scale = 2)->nullable();
             $table->foreignId('user_id');
             $table->timestamps();
         });

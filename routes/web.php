@@ -67,9 +67,7 @@ Route::middleware([
     Route::resource('/warehouse-stock', WarehouseStockController::class)->only([
         'index', 'create', 'store'
     ]);
-    Route::resource('/product', ProductController::class)->only([
-        'index', 'store'
-    ]);
+    Route::resource('/product', ProductController::class);
     Route::resource('/product-category', ProductCategoryController::class)->only([
         'store'
     ]);

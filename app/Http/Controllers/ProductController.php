@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\ProductAttachment;
 use App\Models\ProductBrand;
 use App\Models\ProductCategory;
 use App\Models\ProductColor;
 use App\Models\ProductCountry;
 use App\Models\ProductMaterial;
+use App\Models\ProductNote;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -23,13 +25,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Product', [
-            "ProductCategory" => ProductCategory::all(),
-            "ProductBrand" => ProductBrand::all(),
-            "ProductColor" => ProductColor::all(),
-            "ProductMaterial" => ProductMaterial::all(),
-            "ProductCountry" => ProductCountry::all(),
-            "product" => Product::all(),
+        return Inertia::render('Product/Products', [
+            "products" => Product::with(['product_category', 'product_type', 'product_brand', 'product_collection', 'product_model', 'product_color', 'product_material', 'product_country'])->get()
         ]);
     }
 
@@ -40,7 +37,14 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Product/CreateProduct', [
+            "ProductCategory" => ProductCategory::all(),
+            "ProductBrand" => ProductBrand::all(),
+            "ProductColor" => ProductColor::all(),
+            "ProductMaterial" => ProductMaterial::all(),
+            "ProductCountry" => ProductCountry::all(),
+            "product" => Product::all(),
+        ]);
     }
 
     /**
@@ -58,21 +62,57 @@ class ProductController extends Controller
             $image_path = 'no_image.png';
         }
 
-        Product::create([
-            'category_id' => $request->category,
-            'type_id' => $request->type,
-            'brand_id' => $request->brand,
-            'collection_id' => $request->collection,
-            'model_id' => $request->model,
+        $product = Product::create([
+            'product_category_id' => $request->category,
+            'product_type_id' => $request->type,
+            'product_brand_id' => $request->brand,
+            'product_collection_id' => $request->collection,
+            'product_model_id' => $request->model,
             'name' => $request->name,
-            'color_id' => $request->color,
-            'material_id' => $request->material,
+            'product_color_id' => $request->color,
+            'product_material_id' => $request->material,
             'description' => $request->description,
             'sku' => $request->sku,
-            'country_id' => $request->country,
+            'product_country_id' => $request->country,
             'image' => $image_path,
+            'price' => $request->price,
             'user_id' => Auth::id(),
         ]);
+
+        // Save Attachment Of Product
+        for ($i = 0; $i <  count($request["attachment"]); $i++) {
+            if ($request["attachment"][$i]["attachment"] != null) {
+                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/products', 'public');
+                ProductAttachment::create([
+                    'attachment' =>  $attachment_path,
+                    'product_id' => $product['id'],
+                    'user_id' => Auth::id()
+                ]);
+            }
+        }
+
+
+        // Save The Notes Of Product
+        for ($i = 0; $i <  count($request["note"]); $i++) {
+            ProductNote::create([
+                'note' => $request["note"][$i]["note"],
+                'product_id' => $product['id'],
+                'user_id' => Auth::id()
+            ]);
+        }
+
+        // Save The Images Of Product
+        for ($i = 0; $i <  count($request["images"]); $i++) {
+            if ($request["images"][$i]["image"] != null) {
+                $attachment_path = $request["images"][$i]["image"]->store('image/products', 'public');
+                ProductAttachment::create([
+                    'image' =>  $attachment_path,
+                    'product_id' => $product['id'],
+                    'user_id' => Auth::id()
+                ]);
+            }
+        }
+
 
         return Redirect::back();
     }

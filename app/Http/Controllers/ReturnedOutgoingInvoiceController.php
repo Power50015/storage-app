@@ -99,6 +99,7 @@ class ReturnedOutgoingInvoiceController extends Controller
                 // Save The Content Of Incoming Invoice.
                 ReturnedOutgoingInvoice::where('outgoing_invoice_id', $returnedOutgoingInvoice)->delete();
                 for ($i = 0; $i <  count($request["content"]); $i++) {
+                    if ($request["content"][$i]["quantity"] > 0)
                     ReturnedOutgoingInvoice::create([
                         'product_id' => $request["content"][$i]["product_id"],
                         'quantity' => $request["content"][$i]["quantity"],

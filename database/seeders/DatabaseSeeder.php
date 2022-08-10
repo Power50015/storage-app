@@ -25,26 +25,26 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductCategorySeeder::class);
         $this->call(ProductTypeSeeder::class);
         $this->call(ProductCountrySeeder::class);
-        $this->call(ProductBrandSeeder::class);
+        // $this->call(ProductBrandSeeder::class);
         $this->call(ProductColorSeeder::class);
         $this->call(ProductMaterialSeeder::class);
+        // $this->call(ProductCollectionSeeder::class);
 
-        $this->call(ProductCollectionSeeder::class);
-        $this->call(ProductModelSeeder::class);
-        $this->call(ProductSeeder::class);
-        $this->call(WarehouseSeeder::class);
-        $this->call(ExpenseSeeder::class);
-        $this->call(PeopleSeeder::class);
-        $this->call(CashSeeder::class);
-        $this->call(IncomingInvoiceSeeder::class);
-        $this->call(IncomingInvoiceContentSeeder::class);
-        $this->call(IncomingInvoiceAttachmentSeeder::class);
-        $this->call(OutgoingInvoiceSeeder::class);
-        $this->call(OutgoingInvoiceContentSeeder::class);
-        $this->call(OutgoingInvoiceAttachmentSeeder::class);
-        $this->call(WarehouseStockSeeder::class);
-        $this->call(WarehouseStockContentSeeder::class);
-        $this->call(WarehouseStockAttachmentSeeder::class);
+        // $this->call(ProductModelSeeder::class);
+        // $this->call(ProductSeeder::class);
+        // $this->call(WarehouseSeeder::class);
+        // $this->call(ExpenseSeeder::class);
+        // $this->call(PeopleSeeder::class);
+        // $this->call(CashSeeder::class);
+        // $this->call(IncomingInvoiceSeeder::class);
+        // $this->call(IncomingInvoiceContentSeeder::class);
+        // $this->call(IncomingInvoiceAttachmentSeeder::class);
+        // $this->call(OutgoingInvoiceSeeder::class);
+        // $this->call(OutgoingInvoiceContentSeeder::class);
+        // $this->call(OutgoingInvoiceAttachmentSeeder::class);
+        // $this->call(WarehouseStockSeeder::class);
+        // $this->call(WarehouseStockContentSeeder::class);
+        // $this->call(WarehouseStockAttachmentSeeder::class);
 
         // \App\Models\User::factory(10)->create();
         // \App\Models\User::factory()->create([

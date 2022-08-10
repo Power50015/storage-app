@@ -100,13 +100,14 @@ class ReturnedIncomingInvoiceController extends Controller
         // Save The Content Of Incoming Invoice.
         ReturnedIncomingInvoice::where('incoming_invoice_id', $returnedIncomingInvoice)->delete();
         for ($i = 0; $i <  count($request["content"]); $i++) {
-            ReturnedIncomingInvoice::create([
-                'product_id' => $request["content"][$i]["product_id"],
-                'quantity' => $request["content"][$i]["quantity"],
-                'incoming_invoice_id' => $request->id,
-                'date' => $request->Rdate,
-                'user_id' => Auth::id()
-            ]);
+            if ($request["content"][$i]["quantity"] > 0)
+                ReturnedIncomingInvoice::create([
+                    'product_id' => $request["content"][$i]["product_id"],
+                    'quantity' => $request["content"][$i]["quantity"],
+                    'incoming_invoice_id' => $request->id,
+                    'date' => $request->Rdate,
+                    'user_id' => Auth::id()
+                ]);
         }
 
         return Redirect::back();

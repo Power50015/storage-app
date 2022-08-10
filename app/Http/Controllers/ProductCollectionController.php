@@ -17,7 +17,7 @@ class ProductCollectionController extends Controller
      */
     public function index($id)
     {
-        return ProductCollection::where('product_brand', $id)->get();
+        return ProductCollection::where('product_brand_id', $id)->get();
     }
 
     /**

@@ -199,6 +199,29 @@ class User extends Authenticatable
         return $this->hasMany(ProductType::class);
     }
     /**
+     * Get the ProductNote for the product.
+     */
+    public function product_notes()
+    {
+        return $this->hasMany(ProductNote::class);
+    }
+
+    /**
+     * Get the ProductImage for the product.
+     */
+    public function product_images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    /**
+     * Get the ProductAttachment for the product.
+     */
+    public function product_attachments()
+    {
+        return $this->hasMany(ProductAttachment::class);
+    }
+    /**
      * Get the Warehouse for the user.
      */
     public function warehouses()

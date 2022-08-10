@@ -27,6 +27,7 @@
         transition-all
         lg:block
         duration-1000
+        overflow-x-auto overflow-y-scroll
       "
       :class="{
         'lg:right-0 ': asideOpenStateDesktop,
@@ -104,6 +105,20 @@
           >
             <i class="fa-solid fa-file-invoice"></i>
             <span class="mx-3">الفاوتير الصادرة</span>
+          </Link>
+        </li>
+        <li class="mx-5">
+          <Link
+            :href="route('transfer.create')"
+            class="py-3 px-4 block rounded-lg my-3"
+            :class="
+              route().current('transfer.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            "
+          >
+            <i class="fa-solid fa-truck"></i>
+            <span class="mx-3">نقل بضائع</span>
           </Link>
         </li>
         <li class="mx-5">
@@ -191,7 +206,7 @@
             :href="route('product.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('product.index')
+              route().current('product.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
@@ -232,7 +247,6 @@ import { Link } from "@inertiajs/inertia-vue3";
 import UserCard from "@/Layouts/UserCard.vue";
 
 import { inject } from "@vue/runtime-core";
-
 const asideOpenStateDesktop = inject("asideOpenStateDesktop");
 const asideOpenStateMobile = inject("asideOpenStateMobile");
 </script>
