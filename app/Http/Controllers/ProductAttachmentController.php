@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\ProductAttachment;
 use App\Http\Requests\StoreProductAttachmentRequest;
 use App\Http\Requests\UpdateProductAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class ProductAttachmentController extends Controller
 {
@@ -36,7 +39,14 @@ class ProductAttachmentController extends Controller
      */
     public function store(StoreProductAttachmentRequest $request)
     {
-        //
+
+        $attachment_path = $request["attachment"]->store('attachment/products', 'public');
+        ProductAttachment::create([
+            'attachment' =>  $attachment_path,
+            'product_id' => $request->product_id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -81,6 +91,8 @@ class ProductAttachmentController extends Controller
      */
     public function destroy(ProductAttachment $productAttachment)
     {
-        //
+        $productAttachment::destroy($productAttachment->id);
+        Storage::delete("public/" . $productAttachment["attachment"]);
+        return Redirect::back();
     }
 }

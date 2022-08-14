@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductNote;
 use App\Http\Requests\StoreProductNoteRequest;
 use App\Http\Requests\UpdateProductNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductNoteController extends Controller
 {
@@ -36,7 +38,12 @@ class ProductNoteController extends Controller
      */
     public function store(StoreProductNoteRequest $request)
     {
-        //
+        $note = ProductNote::create([
+            'note' => $request->note,
+            'product_id' => $request->product_id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -81,6 +88,7 @@ class ProductNoteController extends Controller
      */
     public function destroy(ProductNote $productNote)
     {
-        //
+        $productNote::destroy($productNote->id);
+        return Redirect::back();
     }
 }

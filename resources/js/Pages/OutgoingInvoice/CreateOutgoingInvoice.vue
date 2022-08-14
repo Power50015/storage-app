@@ -340,14 +340,33 @@
                       :key="product.index"
                       :value="product.id"
                     >
-                      {{ product.product_brand.name }} |
-                      {{ product.product_category.name }} |
-                      {{ product.product_type.name }} |
-                      {{ product.product_collection.name }} |
-                      {{ product.product_model.name }} |
-                      {{ product.product_color.name }} |
-                      {{ product.product_material.name }} |
-                      {{ product.product_country.name }} | {{ product.sku }} |
+                      <template v-if="product.product_brand"
+                        >{{ product.product_brand.name }} |</template
+                      >
+                      <template v-if="product.product_category">
+                        {{ product.product_category.name }}</template
+                      >
+                      <template v-if="product.product_type">
+                        |{{ product.product_type.name }}
+                      </template>
+                      <template v-if="product.product_collection">
+                        |{{ product.product_collection.name }}
+                      </template>
+                      <template v-if="product.product_model">
+                        |{{ product.product_model.name }}
+                      </template>
+                      <template v-if="product.product_color">
+                        |{{ product.product_color.name }}
+                      </template>
+                      <template v-if="product.product_material">
+                        |{{ product.product_material.name }}
+                      </template>
+                      <template v-if="product.product_country">
+                        | {{ product.product_country.name }}</template
+                      >
+                      <template v-if="product.sku">
+                        | {{ product.sku }}</template
+                      >
                       {{ product.name }}
                     </option>
                   </select>

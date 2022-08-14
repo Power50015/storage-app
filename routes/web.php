@@ -11,6 +11,7 @@ use App\Http\Controllers\IncomingInvoiceController;
 use App\Http\Controllers\KitController;
 use App\Http\Controllers\OutgoingInvoiceController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\ProductAttachmentController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductCollectionController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCountryController;
 use App\Http\Controllers\ProductMaterialController;
 use App\Http\Controllers\ProductModelController;
+use App\Http\Controllers\ProductNoteController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ReturnedIncomingInvoiceController;
 use App\Http\Controllers\ReturnedOutgoingInvoiceController;
@@ -68,10 +70,15 @@ Route::middleware([
         'index', 'create', 'store'
     ]);
     Route::resource('/product', ProductController::class);
+    Route::resource('/product-note', ProductNoteController::class)->only([
+        'store', 'destroy'
+    ]);
+    Route::resource('/product-attachment', ProductAttachmentController::class)->only([
+        'store', 'destroy'
+    ]);
     Route::resource('/product-category', ProductCategoryController::class)->only([
         'store'
     ]);
-
     Route::get('/product-type/{id}', [ProductTypeController::class, 'index']);
     Route::post('/product-type', [ProductTypeController::class, 'store'])->name('product-type.store');
 

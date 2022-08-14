@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_number_of_product', 'total_number_of_product_warehouse'];
+    protected $appends = ['total_number_of_product', 'total_number_of_product_warehouse', 'total_sales'];
 
     /**
      * Get the category for the Product.
@@ -178,35 +178,51 @@ class Product extends Model
         // where warehouse is
         foreach ($warehouses as $key => $value) {
 
+
             // Get The income invoice numbers
             $incoming_invoices = IncomingInvoice::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
+            $transfers_to = Transfer::where('warehouse_to_id', $warehouses[$key]['id'])->get()->map->only('id');
+            $warehouse_stocks = WarehouseStock::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
             $incoming_invoice_id = [];
-            foreach ($incoming_invoices as $key => $value) {
-                $incoming_invoice_id[] = $incoming_invoices[$key]["id"];
-            }
 
+            foreach ($incoming_invoices as $key1 => $value1) {
+                $incoming_invoice_id[] = $incoming_invoices[$key1]["id"];
+            }
             // Get The income product quantity
             $incoming_q =
                 (IncomingInvoiceContent::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('product_id', $this->id)->sum('quantity')
                     - ReturnedIncomingInvoice::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('product_id', $this->id)->sum('quantity')
-                ) + WarehouseStockContent::where('product_id', $this->id)->where('warehouse_stock_id', $warehouses[$key]['id'])->sum('quantity');
+                ) + WarehouseStockContent::where('product_id', $this->id)->whereIn('warehouse_stock_id', $warehouse_stocks)->sum('quantity') + TransferContent::whereIn('transfer_id', $transfers_to)->where('product_id', $this->id)->sum('quantity');
 
             // Get The Outgoing invoice numbers
             $outgoing_invoices = OutgoingInvoice::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
+            $transfers_from = Transfer::where('warehouse_from_id', $warehouses[$key]['id'])->get()->map->only('id');
             $outgoing_invoice_id = [];
-            foreach ($outgoing_invoices as $key => $value) {
-                $outgoing_invoice_id[] = $outgoing_invoices[$key]["id"];
+            foreach ($outgoing_invoices as $key2 => $value2) {
+                $outgoing_invoice_id[] = $outgoing_invoices[$key2]["id"];
             }
 
             // Get The Outgoing invoice product quantity
-            $outgoing_q = OutgoingInvoiceContent::whereIn('outgoing_invoice_id', $outgoing_invoice_id)->where('product_id', 3)->sum('quantity') - ReturnedOutgoingInvoice::whereIn('outgoing_invoice_id', $outgoing_invoice_id)->where('product_id', 3)->sum('quantity');
+            $outgoing_q = (OutgoingInvoiceContent::whereIn('outgoing_invoice_id', $outgoing_invoice_id)->where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::whereIn('outgoing_invoice_id', $outgoing_invoice_id)->where('product_id', $this->id)->sum('quantity')) + TransferContent::whereIn('transfer_id', $transfers_from)->where('product_id', $this->id)->sum('quantity');
 
-            $data[] = [
-                "warehouse" => $warehouses[$key],
-                "quantity" => $incoming_q - $outgoing_q
-            ];
+            if ($incoming_q - $outgoing_q > 0) {
+                $data[] = [
+                    "warehouse" => $warehouses[$key],
+                    "quantity" => $incoming_q - $outgoing_q
+                ];
+            }
         }
 
-        return  $data;
+
+        $data = collect($data);
+        $data = $data->sortByDesc('quantity');
+        return $data->values()->all();
+    }
+    /**
+     * Get the totla sales Number Product.
+     */
+    public function getTotalSalesAttribute()
+    {
+        return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
     }
 }

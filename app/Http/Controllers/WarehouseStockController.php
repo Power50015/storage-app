@@ -55,7 +55,7 @@ class WarehouseStockController extends Controller
 
         // Save Attachment Of Incoming Invoice
         for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][1]["attachment"] != null) {
+            if ($request["attachment"][$i]["attachment"] != null) {
                 $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/warehouseStock', 'public');
                 WarehouseStockAttachment::create([
                     'attachment' =>  $attachment_path,

@@ -60,7 +60,9 @@
               "
             >
               <tr v-for="i in products" :key="i.date">
-                <td :value="i.total_number_of_product" class="hidden">{{i.total_number_of_product}}</td>
+                <td :value="i.total_number_of_product" class="hidden">
+                  {{ i.total_number_of_product }}
+                </td>
                 <td>
                   <Link :href="route('product.show', i.id)" class="group">
                     <div
@@ -90,30 +92,30 @@
                     <div>
                       <h3 class="mt-1 text-sm text-[#009ef7]">
                         {{ i.name }} |
-                        <template v-if="i.product_collection.name">
+                        <template v-if="i.product_collection">
                           {{ i.product_collection.name }} |
                         </template>
-                        <template v-if="i.product_model.name">
+                        <template v-if="i.product_model">
                           {{ i.product_model.name }}
                         </template>
                       </h3>
                       <h3 class="text-sm">
-                        <template v-if="i.product_brand.name">
+                        <template v-if="i.product_brand">
                           {{ i.product_brand.name }} |
                         </template>
-                        <template v-if="i.product_category.name">
+                        <template v-if="i.product_category">
                           {{ i.product_category.name }} |
                         </template>
-                        <template v-if="i.product_type.name">
+                        <template v-if="i.product_type">
                           {{ i.product_type.name }} |
                         </template>
-                        <template v-if="i.product_color.name">
+                        <template v-if="i.product_color">
                           {{ i.product_color.name }} |
                         </template>
-                        <template v-if="i.product_material.name">
+                        <template v-if="i.product_material">
                           {{ i.product_material.name }} |
                         </template>
-                        <template v-if="i.product_country.name">
+                        <template v-if="i.product_country">
                           {{ i.product_country.name }} |
                         </template>
                       </h3>

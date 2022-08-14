@@ -75,67 +75,99 @@ class Warehouse extends Model
         $product = [];
 
         // Get The Stock Products Quantity
-        // get all id of out incoming invoice
         $warehouse_stocks_id = array();
         for ($i = 0; $i < count($this->warehouse_stocks); $i++) {
             $warehouse_stocks_id[] = $this->warehouse_stocks[$i]['id'];
         }
         $warehouse_stocks_content = WarehouseStockContent::whereIn('warehouse_stock_id', $warehouse_stocks_id)->get();
-        for ($i = 0; $i < count($warehouse_stocks_content); $i++) {
+        for ($i1 = 0; $i1 < count($warehouse_stocks_content); $i1++) {
             $flag = true; // product not found
             foreach ($product as $key => $value) {
-                if ($warehouse_stocks_content[$i]->product_id == $value['product_id']) {
+                if ($warehouse_stocks_content[$i1]->product_id == $value['product_id']) {
                     // Product Founded
                     $flag = false; // Change Flag
-                    $product[$key]['quantity'] += $warehouse_stocks_content[$i]->quantity;
+                    $product[$key]['quantity'] += $warehouse_stocks_content[$i1]->quantity;
                 }
             }
             if ($flag) {
-                array_push($product, ["product_id" => $warehouse_stocks_content[$i]->product_id, "quantity" =>  $warehouse_stocks_content[$i]->quantity]);
+                array_push($product, ["product_id" => $warehouse_stocks_content[$i1]->product_id, "quantity" =>  $warehouse_stocks_content[$i1]->quantity]);
             }
         }
 
         // Get The Incoming Invoice Products Quantity
         // get all id of out incoming invoice
         $incoming_invoices_id = array();
-        for ($i = 0; $i < count($this->incoming_invoices); $i++) {
-            $incoming_invoices_id[] = $this->incoming_invoices[$i]['id'];
+        for ($i2 = 0; $i2 < count($this->incoming_invoices); $i2++) {
+            $incoming_invoices_id[] = $this->incoming_invoices[$i2]['id'];
         }
         $incoming_invoices_content = IncomingInvoiceContent::whereIn('incoming_invoice_id', $incoming_invoices_id)->get();
-        for ($i = 0; $i < count($incoming_invoices_content); $i++) {
+        for ($i3 = 0; $i3 < count($incoming_invoices_content); $i3++) {
             $flag = true; // product not found
 
             foreach ($product as $key => $value) {
-                if ($incoming_invoices_content[$i]->product_id == $value['product_id']) {
+                if ($incoming_invoices_content[$i3]->product_id == $value['product_id']) {
 
                     // Product Founded
                     $flag = false; // Change Flag
-                    $product[$key]['quantity'] += $incoming_invoices_content[$i]->quantity;
+                    $product[$key]['quantity'] += $incoming_invoices_content[$i3]->quantity;
                 }
             }
             if ($flag) {
-                array_push($product, ["product_id" => $incoming_invoices_content[$i]->product_id, "quantity" => $incoming_invoices_content[$i]->quantity]);
+                array_push($product, ["product_id" => $incoming_invoices_content[$i3]->product_id, "quantity" => $incoming_invoices_content[$i]->quantity]);
+            }
+        }
+        // Get The Returned Incoming Invoice Products Quantity
+        $incoming_invoices_content_returned = ReturnedIncomingInvoice::whereIn('incoming_invoice_id', $incoming_invoices_id)->get();
+        for ($i3 = 0; $i3 < count($incoming_invoices_content_returned); $i3++) {
+            $flag = true; // product not found
+
+            foreach ($product as $key => $value) {
+                if ($incoming_invoices_content_returned[$i3]->product_id == $value['product_id']) {
+
+                    // Product Founded
+                    $flag = false; // Change Flag
+                    $product[$key]['quantity'] -= $incoming_invoices_content_returned[$i3]->quantity;
+                }
+            }
+
+            if ($flag) {
+                array_push($product, ["product_id" => $incoming_invoices_content_returned[$i3]->product_id, "quantity" => -1 * $incoming_invoices_content_returned[$i]->quantity]);
             }
         }
 
         // Get The Outgoing Invoice Products Quantity
         // get all id of out going invoice
         $outgoing_invoices_id = array();
-        for ($i = 0; $i < count($this->outgoing_invoices); $i++) {
-            $outgoing_invoices_id[] = $this->outgoing_invoices[$i]['id'];
+        for ($i4 = 0; $i4 < count($this->outgoing_invoices); $i4++) {
+            $outgoing_invoices_id[] = $this->outgoing_invoices[$i4]['id'];
         }
         $outgoing_invoices_content = OutgoingInvoiceContent::whereIn('outgoing_invoice_id', $outgoing_invoices_id)->get();
-        for ($i = 0; $i < count($outgoing_invoices_content); $i++) {
+        for ($i5 = 0; $i5 < count($outgoing_invoices_content); $i5++) {
             $flag = true; // product not found
             foreach ($product as $key => $value) {
-                if ($outgoing_invoices_content[$i]->product_id == $value['product_id']) {
+                if ($outgoing_invoices_content[$i5]->product_id == $value['product_id']) {
                     // Product Founded
                     $flag = false; // Change Flag
-                    $product[$key]['quantity'] -= $outgoing_invoices_content[$i]->quantity;
+                    $product[$key]['quantity'] -= $outgoing_invoices_content[$i5]->quantity;
                 }
             }
             if ($flag) {
-                array_push($product, ["product_id" => $outgoing_invoices_content[$i]->product_id, "quantity" => -1 * $outgoing_invoices_content[$i]->quantity]);
+                array_push($product, ["product_id" => $outgoing_invoices_content[$i5]->product_id, "quantity" => -1 * $outgoing_invoices_content[$i5]->quantity]);
+            }
+        }
+        // Get The Returned Outgoing Invoice Products Quantity
+        $outgoing_invoices_content_returned = ReturnedOutgoingInvoice::whereIn('outgoing_invoice_id', $outgoing_invoices_id)->get();
+        for ($i5 = 0; $i5 < count($outgoing_invoices_content_returned); $i5++) {
+            $flag = true; // product not found
+            foreach ($product as $key => $value) {
+                if ($outgoing_invoices_content_returned[$i5]->product_id == $value['product_id']) {
+                    // Product Founded
+                    $flag = false; // Change Flag
+                    $product[$key]['quantity'] += $outgoing_invoices_content_returned[$i5]->quantity;
+                }
+            }
+            if ($flag) {
+                array_push($product, ["product_id" => $outgoing_invoices_content_returned[$i5]->product_id, "quantity" =>  $outgoing_invoices_content_returned[$i5]->quantity]);
             }
         }
 
@@ -193,21 +225,25 @@ class Warehouse extends Model
         $productStockData = array();
 
         for ($i = 0; $i < count($productData); $i++) {
-            $productStockData[] = [
-                "product_brand" => $productData[$i]->product_brand->name,
-                "product_category" => $productData[$i]->product_category->name,
-                "product_type" => $productData[$i]->product_type->name,
-                "product_collection" => $productData[$i]->product_collection->name,
-                "product_model" => $productData[$i]->product_model->name,
-                "product_color" => $productData[$i]->product_color->name,
-                "product_material" => $productData[$i]->product_material->name,
-                "product_country" => $productData[$i]->product_country->name,
-                "product_sku" => $productData[$i]->sku,
-                "product_name" => $productData[$i]->name,
-                "product_quantity" => $product[$i]['quantity']
-            ];
+            foreach ($product as $key => $value) {
+                if ($productData[$i]->id == $product[$key]['product_id']) {
+                    $productStockData[$i]["product_id"] = $productData[$i]->id;
+                    $productStockData[$i]["product_sku"] = $productData[$i]->sku;
+                    $productStockData[$i]["product_quantity"] = $product[$i]['quantity'];
+                    $productStockData[$i]["product_name"] = $productData[$i]->name;
+                    if ($productData[$i]->product_brand) $productStockData[$i]["product_brand"] = $productData[$i]->product_brand->name;
+                    if ($productData[$i]->product_category) $productStockData[$i]["product_category"] = $productData[$i]->product_category->name;
+                    if ($productData[$i]->product_type) $productStockData[$i]["product_type"] = $productData[$i]->product_type->name;
+                    if ($productData[$i]->product_collection) $productStockData[$i]["product_collection"] = $productData[$i]->product_collection->name;
+                    if ($productData[$i]->product_model) $productStockData[$i]["product_model"] = $productData[$i]->product_model->name;
+                    if ($productData[$i]->product_color) $productStockData[$i]["product_color"] = $productData[$i]->product_color->name;
+                    if ($productData[$i]->product_material) $productStockData[$i]["product_material"] = $productData[$i]->product_material->name;
+                    if ($productData[$i]->product_country) $productStockData[$i]["product_country"] = $productData[$i]->product_country->name;
+                }
+            }
         }
-
-        return $productStockData;
+        $productStockData = collect($productStockData);
+        $productStockData = $productStockData->sortByDesc('product_quantity');
+        return $productStockData->values()->all();
     }
 }
