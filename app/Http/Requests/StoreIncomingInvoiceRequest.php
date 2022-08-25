@@ -31,12 +31,17 @@ class StoreIncomingInvoiceRequest extends FormRequest
             'cash_type' =>'required_if:pay_type,true',
             'discount' => 'numeric',
             'date' => 'required|date',
-            'content' => 'required|array',
-            'content.*.product' => 'required',
-            'content.*.price' => 'required|numeric|min:0.01',
-            'content.*.quantity' => 'required|numeric|min:1',
+            'content' => 'required_if:kit.*,null|array',
+            'content.*.product' => 'required_if:kit.*,null',
+            'content.*.price' => 'required_if:kit.*,null|numeric|min:0.01',
+            'content.*.quantity' => 'required_if:kit.*,null|numeric|min:1',
             'attachment' => 'nullable|array',
             'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'kit' => 'required_if:content.*,null|array',
+            'kit.*.product' => 'required_if:content.*,null',
+            'kit.*.quantity' => 'required_if:content.*,null|numeric|min:1',
+            'kit.*.price' => 'required_if:content.*,null|numeric|min:0',
+
         ];
     }
     /**
@@ -63,6 +68,9 @@ class StoreIncomingInvoiceRequest extends FormRequest
             'content.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى الفاتورة',
             'content.*.price.min' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
             'content.*.quantity.min' => 'يجب إدخال كميه المنتج فى الفاتورة',
+            'kit.*' => 'يجب إدخال محتوى الفاتورة',
+            'kit.*.product.required' => 'يجب إدخال المنتجات للفاتورة',
+            'kit.*.quantity.required' =>  'يجب إدخال كميه قطع الغيار فى الفاتورة',
         ];
     }
 }

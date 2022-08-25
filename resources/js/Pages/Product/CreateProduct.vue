@@ -462,7 +462,6 @@
                   text-sm text-gray-900
                   rounded-lg
                   border border-gray-300
-                  cursor-pointer
                   dark:text-gray-400
                   focus:outline-none
                   dark:bg-[#1b1b29]
@@ -498,7 +497,6 @@
                         text-sm text-gray-900
                         rounded-lg
                         border border-gray-300
-                        cursor-pointer
                         dark:text-gray-400
                         focus:outline-none
                         dark:bg-[#1b1b29]
@@ -518,10 +516,9 @@
                       <div
                         class="
                           bg-[#EF305E]
-                          text-lg text-white
+                          text-white
                           hover:bg-[#EF305E]
                           cursor-pointer
-                          w-full
                           text-base
                           mt-3
                           focus:ring-0

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWarehouseStockRequest extends FormRequest
 {
-     /**
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -26,11 +26,14 @@ class StoreWarehouseStockRequest extends FormRequest
         return [
             'title' => 'required',
             'warehouses' => 'required',
-            'content' => 'required|array',
-            'content.*.product' => 'required',
-            'content.*.quantity' => 'required|numeric|min:1',
+            'content' => 'required_if:kit.*,null|array',
+            'content.*.product' => 'required_if:kit.*,null',
+            'content.*.quantity' => 'required_if:kit.*,null|numeric|min:1',
             'attachment' => 'nullable|array',
             'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'kit' => 'required_if:content.*,null|array',
+            'kit.*.product' => 'required_if:content.*,null',
+            'kit.*.quantity' => 'required_if:content.*,null|numeric|min:1',
         ];
     }
     /**
@@ -44,8 +47,8 @@ class StoreWarehouseStockRequest extends FormRequest
             'title.required' => 'يجب إدخال البند',
             'warehouses.required' => 'يجب إدخال المخزن  ',
             'content.*' => 'يجب إدخال محتوى المخزون',
-            'content.*.product.required' => 'يجب إدخال المنتجات للمخزون',
-            'content.*.quantity.required' =>  'يجب إدخال كميه المنتج فى المخزون',
+            'content.*.product.required_if' => 'يجب إدخال المنتجات للمخزون',
+            'content.*.quantity.required_if' =>  'يجب إدخال كميه المنتج فى المخزون',
             'content.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى المخزون',
             'content.*.quantity.min' => 'يجب إدخال كميه المنتج فى المخزون',
         ];

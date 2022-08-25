@@ -20,8 +20,7 @@
             items-center
             justify-between
             md:overflow-auto
-            overflow-x-scroll
-            overflow-y-hidden
+            overflow-x-scroll overflow-y-hidden
           "
         >
           <div class="tabs">
@@ -95,6 +94,16 @@
               >
                 <div class="px-5 py-3" @click="tabClick('image')">الصور</div>
               </li>
+              <li
+                class="my-3 mx-5"
+                :class="
+                  tab == 'Sstock'
+                    ? 'border-[#009ef7] text-[#009ef7] border-b-2 font-bold'
+                    : 'hover:border-b-2 cursor-pointer hover:text-[#0095e8] hover:border-[#0095e8] transition-all'
+                "
+              >
+                <div class="px-5 py-3" @click="tabClick('Sstock')">مخزون</div>
+              </li>
             </ul>
           </div>
         </div>
@@ -133,6 +142,7 @@
           v-if="tab == 'attachment'"
           :id="props.id"
         />
+        <product-image :image="image" v-if="tab == 'image'" :id="props.id" />
       </div>
     </div>
   </div>
@@ -146,11 +156,13 @@ import ProductIncomeIvoice from "./ProductIncomeIvoice.vue";
 import ProductOutgoingIvoice from "./ProductOutgoingIvoice.vue";
 import ProductNote from "./ProductNote.vue";
 import ProductAttachment from "./ProductAttachment.vue";
+import ProductImage from "./ProductImage.vue";
 const tab = ref();
 
 const props = defineProps([
   "warehouse",
   "stockData",
+  "Sstock",
   "incomeIvoice",
   "outgoingIvoice",
   "stratStock",
@@ -162,13 +174,14 @@ const props = defineProps([
 ]);
 const warehouse = props.warehouse;
 const stockData = props.stockData;
+const Sstock = props.Sstock;
 const incomeIvoice = props.incomeIvoice;
 const outgoingIvoice = props.outgoingIvoice;
 const stratStock = props.stratStock;
 const transfer = props.transfer;
 const note = computed(() => props.note);
 const attachment = computed(() => props.attachment);
-const image = props.image;
+const image = computed(() => props.image);
 
 if (warehouse.length > 0) {
   tab.value = "stock";

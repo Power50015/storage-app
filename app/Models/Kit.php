@@ -40,4 +40,25 @@ class Kit extends Model
     {
         return $this->hasMany(KitOperation::class);
     }
+    /**
+     * Get the KitImage for the kit.
+     */
+    public function kit_images()
+    {
+        return $this->hasMany(KitImage::class);
+    }
+    /**
+     * Get the KitNote for the kit.
+     */
+    public function kit_notes()
+    {
+        return $this->hasMany(KitNote::class);
+    }
+    /**
+     * Get the IncomingInvoiceKit for the IncomingInvoice.
+     */
+    public function incoming_invoice_kits()
+    {
+        return $this->hasMany(IncomingInvoiceKit::class);
+    }
 }

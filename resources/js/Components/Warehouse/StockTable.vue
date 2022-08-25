@@ -22,7 +22,7 @@
           cursor-pointer
         "
       >
-      طباعه 
+        طباعه
         <i class="fa-solid fa-print mx-3"></i>
       </div>
     </div>
@@ -38,6 +38,72 @@
               class="border border-dashed border-slate-700 py-3 px-3 font-bold"
             >
               المنتج
+            </th>
+            <th
+              class="border border-dashed border-slate-700 py-3 px-3 font-bold"
+            >
+              الكميه
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="product in products" :key="product.index" class="">
+            <td
+              class="
+                border border-dashed border-slate-700
+                py-3
+                px-3
+                hover:text-[#0095e8]
+              "
+            >
+              <Link :href="route('product.show', product.product_id)">
+                <template v-if="product.product_brand"
+                  >{{ product.product_brand }} |</template
+                >
+                <template v-if="product.product_category">
+                  {{ product.product_category }}</template
+                >
+                <template v-if="product.product_type">
+                  |{{ product.product_type }}
+                </template>
+                <template v-if="product.product_collection">
+                  |{{ product.product_collection }}
+                </template>
+                <template v-if="product.product_model">
+                  |{{ product.product_model }}
+                </template>
+                <template v-if="product.product_color">
+                  |{{ product.product_color }}
+                </template>
+                <template v-if="product.product_material">
+                  |{{ product.product_material }}
+                </template>
+                <template v-if="product.product_country">
+                  | {{ product.product_country }}</template
+                >
+                <template v-if="product.sku"> | {{ product.sku }}</template>
+                {{ product.product_name }}
+              </Link>
+            </td>
+            <td class="border border-dashed border-slate-700 py-3 px-3">
+              {{ product.product_quantity }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="font-bold text-md mb-3 mt-5">قطع الغيار</h2>
+    <div class="mt-6 hover:gray-500">
+      <table
+        class="border border-dashed border-slate-700 w-full text-right"
+        id="xyz"
+      >
+        <thead>
+          <tr>
+            <th
+              class="border border-dashed border-slate-700 py-3 px-3 font-bold"
+            >
+              قطعه الغيار
             </th>
             <th
               class="border border-dashed border-slate-700 py-3 px-3 font-bold"
@@ -83,9 +149,10 @@ import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import { onMounted, onUnmounted, reactive, ref } from "@vue/runtime-core";
 
-const props = defineProps(["products"]);
+const props = defineProps(["products", "kits"]);
 
 const products = props.products;
+const kits = props.products;
 
 function print() {
   window.print();

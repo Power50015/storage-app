@@ -327,6 +327,20 @@ class User extends Authenticatable
         return $this->hasMany(KitOperation::class);
     }
     /**
+     * Get the KitImage for the user.
+     */
+    public function kit_images()
+    {
+        return $this->hasMany(KitImage::class);
+    }
+    /**
+     * Get the KitNote for the user.
+     */
+    public function kit_notes()
+    {
+        return $this->hasMany(KitNote::class);
+    }
+    /**
      * Get the Drivers for the user.
      */
     public function drivers()
@@ -354,5 +368,12 @@ class User extends Authenticatable
     public function transfer_attachments()
     {
         return $this->hasMany(TransferAttachment::class);
+    }
+    /**
+     * Get the IncomingInvoiceKit for the IncomingInvoice.
+     */
+    public function incoming_invoice_kits()
+    {
+        return $this->hasMany(IncomingInvoiceKit::class);
     }
 }

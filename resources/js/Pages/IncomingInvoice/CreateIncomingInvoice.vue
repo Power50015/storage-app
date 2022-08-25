@@ -467,10 +467,10 @@
                     <div
                       class="
                         bg-[#EF305E]
-                        text-lg text-white
+                         text-white
                         hover:bg-[#EF305E]
                         cursor-pointer
-                        w-full
+                        
                         text-base
                         mt-3
                         focus:ring-0
@@ -532,7 +532,212 @@
                 </div>
               </div>
             </div>
+            <!-- Kits -->
+            <div
+              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+            >
+              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
+                قطع الغيار
+                <span class="text-red-800 font-bold">*</span>
+              </h2>
+              <div
+                v-for="(i, index) in incomingInvoiceAddForm.kit"
+                :key="index"
+              >
+                <div class="w-full my-5">
+                  <h3>{{ 1 + index }}</h3>
+                  <label class="px-3 dark:text-gray-300"
+                    >المنتج
+                    <span class="text-red-800 font-bold">*</span>
+                  </label>
+                  <select
+                    v-model="incomingInvoiceAddForm.kit[index].kit"
+                    class="
+                      w-full
+                      text-base
+                      dark:bg-[#1b1b29]
+                      bg-[#f5f8fa]
+                      dark:active:bg-[#1b1b29]
+                      active:bg-[#f5f8fa]
+                      dark:focus:bg-[#1b1b29]
+                      focus:bg-[#f5f8fa]
+                      mt-3
+                      focus:ring-0
+                      border-0
+                      shadow-sm
+                      rounded-md
+                      py-2
+                    "
+                  >
+                    <option
+                      v-for="kit in kits"
+                      :key="kit.index"
+                      :value="kit.id"
+                    >
+                      {{ kit.title }}
+                      <template v-if="kit.product">
+                        |
+                        <template v-if="kit.product.product_brand"
+                          >{{ kit.product.product_brand.name }} |</template
+                        >
+                        <template v-if="kit.product.product_category">
+                          {{ kit.product.product_category.name }}</template
+                        >
+                        <template v-if="kit.product.product_type">
+                          |{{ kit.product.product_type.name }}
+                        </template>
+                        <template v-if="kit.product.product_collection">
+                          |{{ kit.product.product_collection.name }}
+                        </template>
+                        <template v-if="kit.product.product_model">
+                          |{{ kit.product.product_model.name }}
+                        </template>
+                        <template v-if="kit.product.product_color">
+                          |{{ kit.product.product_color.name }}
+                        </template>
+                        <template v-if="kit.product.product_material">
+                          |{{ kit.product.product_material.name }}
+                        </template>
+                        <template v-if="kit.product.product_country">
+                          | {{ kit.product.product_country.name }}</template
+                        >
+                        <template v-if="kit.product.sku">
+                          | {{ kit.product.sku }}</template
+                        >
+                        | {{ kit.product.name }}</template
+                      >
+                    </option>
+                  </select>
+                </div>
+                <div class="w-full flex items-end justify-around">
+                  <div class="m-5">
+                    <label class="px-3 dark:text-gray-300">
+                      سعر قطعه الغيار
+                      <span class="text-red-800 font-bold">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="0.00"
+                      step="0.01"
+                      @change="total"
+                      v-model="incomingInvoiceAddForm.kit[index].price"
+                      class="
+                        w-full
+                        text-base
+                        dark:bg-[#1b1b29]
+                        bg-[#f5f8fa]
+                        dark:active:bg-[#1b1b29]
+                        active:bg-[#f5f8fa]
+                        dark:focus:bg-[#1b1b29]
+                        focus:bg-[#f5f8fa]
+                        mt-3
+                        focus:ring-0
+                        border-0
+                        shadow-sm
+                        rounded-md
+                        py-2
+                      "
+                    />
+                  </div>
+                  <!-- Quanty -->
+                  <div class="m-5">
+                    <label class="px-3 dark:text-gray-300">
+                      كميه قطعه الغيار
+                      <span class="text-red-800 font-bold">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      v-model="incomingInvoiceAddForm.kit[index].quantity"
+                      @change="total"
+                      min="0"
+                      step="1"
+                      class="
+                        w-full
+                        text-base
+                        dark:bg-[#1b1b29]
+                        bg-[#f5f8fa]
+                        dark:active:bg-[#1b1b29]
+                        active:bg-[#f5f8fa]
+                        dark:focus:bg-[#1b1b29]
+                        focus:bg-[#f5f8fa]
+                        mt-3
+                        focus:ring-0
+                        border-0
+                        shadow-sm
+                        rounded-md
+                        py-2
+                      "
+                    />
+                  </div>
+                  <!-- Delete -->
+                  <div class="mb-5">
+                    <div
+                      class="
+                        bg-[#EF305E]
+                        text-white
+                        hover:bg-[#EF305E]
+                        cursor-pointer
+                        text-base
+                        mt-3
+                        focus:ring-0
+                        border-0
+                        py-3
+                        w-[80px]
+                        flex
+                        items-center
+                        justify-center
+                        rounded-md
+                      "
+                      @click="
+                        incomingInvoiceAddForm.kit =
+                          incomingInvoiceAddForm.kit.filter(
+                            (item) => item.id != i.id
+                          );
+                        total();
+                      "
+                    >
+                      <i class="fa-solid fa-xmark"></i>
+                    </div>
+                  </div>
+                </div>
+                <hr
+                  v-if="
+                    incomingInvoiceAddForm.kit.length > 1 &&
+                    incomingInvoiceAddForm.kit.length != index
+                  "
+                />
+              </div>
 
+              <div>
+                <!--New Item-->
+                <div
+                  class="
+                    mt-10
+                    w-full
+                    bg-[#009ef7]
+                    border border-transparent
+                    rounded-md
+                    py-3
+                    px-8
+                    flex
+                    items-center
+                    justify-center
+                    text-base
+                    font-medium
+                    text-white
+                    hover:bg-[#009ef7]
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-offset-2
+                    focus:ring-[#009ef7]
+                    cursor-pointer
+                  "
+                  @click="pushToKit"
+                >
+                  أضف بند
+                </div>
+              </div>
+            </div>
             <div
               class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
             >
@@ -654,6 +859,7 @@ const props = defineProps([
   "cash",
   "warehouses",
   "suppliers",
+  "kits",
 ]);
 
 const totalPrice = ref(0);
@@ -666,15 +872,9 @@ const incomingInvoiceAddForm = reactive({
   cash_type: null,
   date: new Date().toISOString().slice(0, 10),
   discount: 0.0,
-  content: [
-    {
-      id: 1,
-      product: null,
-      price: 0.0,
-      quantity: 0,
-    },
-  ],
+  content: [],
   attachment: [],
+  kit: [],
 });
 
 function addIncomingInvoice() {
@@ -746,6 +946,22 @@ function total() {
 
     totalPrice.value = totalPrice.value + i;
   }
+  for (let index = 0; index < incomingInvoiceAddForm.kit.length; index++) {
+    var i =
+      incomingInvoiceAddForm.kit[index].price *
+      incomingInvoiceAddForm.kit[index].quantity;
+
+    totalPrice.value = totalPrice.value + i;
+  }
+}
+
+function pushToKit() {
+  incomingInvoiceAddForm.kit.push({
+    id: incomingInvoiceAddForm.kit.length + 1,
+    kit: null,
+    price: 0.0,
+    quantity: 0,
+  });
 }
 </script>
 <style>

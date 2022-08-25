@@ -27,7 +27,7 @@ class StorePeopleRequest extends FormRequest
             'name' => 'required|unique:people,name',
             'phone' => 'nullable|numeric|unique:people,phone',
             'type' => 'required',
-            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048'
+            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg'
         ];
     }
     /**

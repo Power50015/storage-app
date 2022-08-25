@@ -55,6 +55,13 @@ class IncomingInvoice extends Model
     {
         return $this->hasMany(IncomingInvoiceContent::class);
     }
+     /**
+     * Get the IncomingInvoiceKit for the IncomingInvoice.
+     */
+    public function incoming_invoice_kits()
+    {
+        return $this->hasMany(IncomingInvoiceKit::class);
+    }
 
     /**
      * Get the ReturnedIncomingInvoice for the IncomingInvoice.

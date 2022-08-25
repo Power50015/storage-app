@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductCollectionController;
 use App\Http\Controllers\ProductColorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCountryController;
+use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductMaterialController;
 use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\ProductNoteController;
@@ -76,6 +77,9 @@ Route::middleware([
     Route::resource('/product-attachment', ProductAttachmentController::class)->only([
         'store', 'destroy'
     ]);
+    Route::resource('/product-image', ProductImageController::class)->only([
+        'store', 'destroy'
+    ]);
     Route::resource('/product-category', ProductCategoryController::class)->only([
         'store'
     ]);
@@ -129,9 +133,7 @@ Route::middleware([
     Route::resource('/creditor-pay', CreditorPayController::class)->only([
         'create', 'store'
     ]);
-    Route::resource('/kit', KitController::class)->only([
-        'index', 'create', 'store'
-    ]);
+    Route::resource('/kit', KitController::class);
     Route::resource('/driver', DriverController::class)->only([
         'store'
     ]);

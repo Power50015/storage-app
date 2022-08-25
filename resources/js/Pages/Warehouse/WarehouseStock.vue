@@ -110,7 +110,6 @@
                         text-sm text-gray-900
                         rounded-lg
                         border border-gray-300
-                        cursor-pointer
                         dark:text-gray-400
                         focus:outline-none
                         dark:bg-[#1b1b29]
@@ -130,10 +129,9 @@
                       <div
                         class="
                           bg-[#EF305E]
-                          text-lg text-white
+                           text-white
                           hover:bg-[#EF305E]
                           cursor-pointer
-                          w-full
                           text-base
                           mt-3
                           focus:ring-0
@@ -201,7 +199,7 @@
               class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
             >
               <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
-                محتوى الفاتوره
+                محتوى المخزون من المنتجات
                 <span class="text-red-800 font-bold">*</span>
               </h2>
               <div
@@ -305,10 +303,9 @@
                     <div
                       class="
                         bg-[#EF305E]
-                        text-lg text-white
+                        text-white
                         hover:bg-[#EF305E]
                         cursor-pointer
-                        w-full
                         text-base
                         mt-3
                         focus:ring-0
@@ -370,6 +367,185 @@
                 </div>
               </div>
             </div>
+
+            <!-- Kits -->
+            <div
+              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+            >
+              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
+                قطع الغيار
+                <span class="text-red-800 font-bold">*</span>
+              </h2>
+              <div
+                v-for="(i, index) in warehouseStockAddForm.kit"
+                :key="index"
+              >
+                <div class="w-full my-5">
+                  <h3>{{ 1 + index }}</h3>
+                  <label class="px-3 dark:text-gray-300"
+                    >المنتج
+                    <span class="text-red-800 font-bold">*</span>
+                  </label>
+                  <select
+                    v-model="warehouseStockAddForm.kit[index].kit"
+                    class="
+                      w-full
+                      text-base
+                      dark:bg-[#1b1b29]
+                      bg-[#f5f8fa]
+                      dark:active:bg-[#1b1b29]
+                      active:bg-[#f5f8fa]
+                      dark:focus:bg-[#1b1b29]
+                      focus:bg-[#f5f8fa]
+                      mt-3
+                      focus:ring-0
+                      border-0
+                      shadow-sm
+                      rounded-md
+                      py-2
+                    "
+                  >
+                    <option
+                      v-for="kit in kits"
+                      :key="kit.index"
+                      :value="kit.id"
+                    >
+                      {{ kit.title }}
+                      <template v-if="kit.product">
+                        |
+                        <template v-if="kit.product.product_brand"
+                          >{{ kit.product.product_brand.name }} |</template
+                        >
+                        <template v-if="kit.product.product_category">
+                          {{ kit.product.product_category.name }}</template
+                        >
+                        <template v-if="kit.product.product_type">
+                          |{{ kit.product.product_type.name }}
+                        </template>
+                        <template v-if="kit.product.product_collection">
+                          |{{ kit.product.product_collection.name }}
+                        </template>
+                        <template v-if="kit.product.product_model">
+                          |{{ kit.product.product_model.name }}
+                        </template>
+                        <template v-if="kit.product.product_color">
+                          |{{ kit.product.product_color.name }}
+                        </template>
+                        <template v-if="kit.product.product_material">
+                          |{{ kit.product.product_material.name }}
+                        </template>
+                        <template v-if="kit.product.product_country">
+                          | {{ kit.product.product_country.name }}</template
+                        >
+                        <template v-if="kit.product.sku">
+                          | {{ kit.product.sku }}</template
+                        >
+                        | {{ kit.product.name }}</template
+                      >
+                    </option>
+                  </select>
+                </div>
+                <div class="w-full flex items-end justify-around">
+                  <!-- Quanty -->
+                  <div class="m-5">
+                    <label class="px-3 dark:text-gray-300">
+                      كميه المنتج
+                      <span class="text-red-800 font-bold">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      v-model="warehouseStockAddForm.kit[index].quantity"
+                      @change="total"
+                      min="0"
+                      step="1"
+                      class="
+                        w-full
+                        text-base
+                        dark:bg-[#1b1b29]
+                        bg-[#f5f8fa]
+                        dark:active:bg-[#1b1b29]
+                        active:bg-[#f5f8fa]
+                        dark:focus:bg-[#1b1b29]
+                        focus:bg-[#f5f8fa]
+                        mt-3
+                        focus:ring-0
+                        border-0
+                        shadow-sm
+                        rounded-md
+                        py-2
+                      "
+                    />
+                  </div>
+                  <!-- Delete -->
+                  <div class="mb-5">
+                    <div
+                      class="
+                        bg-[#EF305E]
+                        text-white
+                        hover:bg-[#EF305E]
+                        cursor-pointer
+                        text-base
+                        mt-3
+                        focus:ring-0
+                        border-0
+                        py-3
+                        w-[80px]
+                        flex
+                        items-center
+                        justify-center
+                        rounded-md
+                      "
+                      @click="
+                        warehouseStockAddForm.kit =
+                          warehouseStockAddForm.kit.filter(
+                            (item) => item.id != i.id
+                          );
+                        total();
+                      "
+                    >
+                      <i class="fa-solid fa-xmark"></i>
+                    </div>
+                  </div>
+                </div>
+                <hr
+                  v-if="
+                    warehouseStockAddForm.kit.length > 1 &&
+                    warehouseStockAddForm.kit.length != index
+                  "
+                />
+              </div>
+
+              <div>
+                <!--New Item-->
+                <div
+                  class="
+                    mt-10
+                    w-full
+                    bg-[#009ef7]
+                    border border-transparent
+                    rounded-md
+                    py-3
+                    px-8
+                    flex
+                    items-center
+                    justify-center
+                    text-base
+                    font-medium
+                    text-white
+                    hover:bg-[#009ef7]
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-offset-2
+                    focus:ring-[#009ef7]
+                    cursor-pointer
+                  "
+                  @click="pushToKit"
+                >
+                  أضف بند
+                </div>
+              </div>
+            </div>
+
             <!--Save Invoice-->
             <div>
               <button
@@ -430,21 +606,16 @@ provide(
   ])
 );
 
-const props = defineProps(["errors", "products", "warehouses"]);
+const props = defineProps(["errors", "products", "warehouses", "kits"]);
 
 const totalPrice = ref(0);
 
 const warehouseStockAddForm = reactive({
   title: null,
   warehouses: null,
-  content: [
-    {
-      id: 1,
-      product: null,
-      quantity: 0,
-    },
-  ],
+  content: [],
   attachment: [],
+  kit: [],
 });
 
 function addWarehouseStock() {
@@ -495,6 +666,14 @@ function pushToAttachment() {
   warehouseStockAddForm.attachment.push({
     id: warehouseStockAddForm.attachment.length + 1,
     attachment: null,
+  });
+}
+
+function pushToKit() {
+  warehouseStockAddForm.kit.push({
+    id: warehouseStockAddForm.kit.length + 1,
+    kit: null,
+    quantity: 0,
   });
 }
 </script>

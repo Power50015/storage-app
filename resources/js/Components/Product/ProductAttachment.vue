@@ -362,7 +362,7 @@ function deleteModelOpen(id, note) {
   deleteModel.note = note;
 }
 </script>
-<style>
+<style scoped>
 .model {
   width: 100%;
   height: 100%;

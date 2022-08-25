@@ -25,7 +25,8 @@ class StoreKitRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'product' => 'required|numeric',
+            'product' => 'nullable|numeric',
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif,svg',
             'attachment' => 'nullable|array',
             'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
         ];
@@ -39,9 +40,11 @@ class StoreKitRequest extends FormRequest
     {
         return [
             'title.required' => 'يجب إدخال بند قطعه الغيار',
-            'product.required' => 'يجب إدخال المنتج',
+            'product.numeric' => 'يجب إدخال المنتج',
             'attachment.*' => 'يجب ملفات قطعه الغيار ',
             'attachment.*.*' => 'يجب ملفات قطعه الغيار ',
+            'image.image' => 'يجب إدخال صوره قطعه الغيار',
+            'image.required' => 'يجب إدخال صوره قطعه الغيار',
         ];
     }
 }

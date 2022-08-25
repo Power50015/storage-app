@@ -101,6 +101,7 @@
         >
           <stock-table
             :products="warehouse.stock_products"
+            :kits="warehouse.kits"
             v-if="tab == 'stock'"
           />
           <incoming-invoice-table

@@ -18,7 +18,9 @@ use App\Models\ProductNote;
 use App\Models\TransferContent;
 use App\Models\WarehouseStockContent;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -178,7 +180,14 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return Inertia::render('Product/EditProduct', [
+            "ProductCategory" => ProductCategory::all(),
+            "ProductBrand" => ProductBrand::all(),
+            "ProductColor" => ProductColor::all(),
+            "ProductMaterial" => ProductMaterial::all(),
+            "ProductCountry" => ProductCountry::all(),
+            "Product" => Product::with(['product_category', 'product_type', 'product_brand', 'product_collection', 'product_model', 'product_color', 'product_material', 'product_country', 'product_notes', 'product_images', 'product_attachments'])->where('id', $product->id)->get(),
+        ]);
     }
 
     /**
@@ -190,7 +199,33 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $image_path = '';
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('image/product', 'public');
+
+        } else {
+            Storage::delete("public/" . $request->image);
+            $image_path = $request->oldImage;
+        }
+
+        $product = DB::table('products')->where('id', $product->id)->update([
+            'product_category_id' => $request->category,
+            'product_type_id' => $request->type,
+            'product_brand_id' => $request->brand,
+            'product_collection_id' => $request->collection,
+            'product_model_id' => $request->model,
+            'name' => $request->name,
+            'product_color_id' => $request->color,
+            'product_material_id' => $request->material,
+            'description' => $request->description,
+            'sku' => $request->sku,
+            'product_country_id' => $request->country,
+            'image' => $image_path,
+            'price' => $request->price,
+            'user_id' => Auth::id(),
+        ]);
+
+        return Redirect::back();
     }
 
     /**

@@ -229,7 +229,7 @@ class Warehouse extends Model
                 if ($productData[$i]->id == $product[$key]['product_id']) {
                     $productStockData[$i]["product_id"] = $productData[$i]->id;
                     $productStockData[$i]["product_sku"] = $productData[$i]->sku;
-                    $productStockData[$i]["product_quantity"] = $product[$i]['quantity'];
+                    $productStockData[$i]["product_quantity"] = $product[$key]['quantity'];
                     $productStockData[$i]["product_name"] = $productData[$i]->name;
                     if ($productData[$i]->product_brand) $productStockData[$i]["product_brand"] = $productData[$i]->product_brand->name;
                     if ($productData[$i]->product_category) $productStockData[$i]["product_category"] = $productData[$i]->product_category->name;

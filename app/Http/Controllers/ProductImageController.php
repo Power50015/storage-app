@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\ProductImage;
 use App\Http\Requests\StoreProductImageRequest;
 use App\Http\Requests\UpdateProductImageRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class ProductImageController extends Controller
 {
@@ -36,7 +39,13 @@ class ProductImageController extends Controller
      */
     public function store(StoreProductImageRequest $request)
     {
-        //
+        $attachment_path = $request["image"]->store('image/products', 'public');
+        ProductImage::create([
+            'image' =>  $attachment_path,
+            'product_id' => $request->product_id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -81,6 +90,8 @@ class ProductImageController extends Controller
      */
     public function destroy(ProductImage $productImage)
     {
-        //
+        $productImage::destroy($productImage->id);
+        Storage::delete("public/" . $productImage["image"]);
+        return Redirect::back();
     }
 }

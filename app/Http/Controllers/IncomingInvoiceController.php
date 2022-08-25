@@ -9,6 +9,8 @@ use App\Http\Requests\UpdateIncomingInvoiceRequest;
 use App\Models\Cash;
 use App\Models\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoiceContent;
+use App\Models\IncomingInvoiceKit;
+use App\Models\Kit;
 use App\Models\People;
 use App\Models\Product;
 use App\Models\ReturnedIncomingInvoice;
@@ -42,11 +44,13 @@ class IncomingInvoiceController extends Controller
      */
     public function create()
     {
+
         return Inertia::render('IncomingInvoice/CreateIncomingInvoice', [
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
-            "suppliers" => People::orderByDesc("type")->get()
+            "suppliers" => People::orderByDesc("type")->get(),
+            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
         ]);
     }
 
@@ -92,6 +96,18 @@ class IncomingInvoiceController extends Controller
                 'user_id' => Auth::id()
             ]);
         }
+
+        // Save The Kit Of Incoming Invoice
+        for ($i = 0; $i <  count($request["kit"]); $i++) {
+            IncomingInvoiceKit::create([
+                'kit_id' => $request["kit"][$i]["kit"],
+                'quantity' => $request["kit"][$i]["quantity"],
+                'price' => $request["kit"][$i]["price"],
+                'incoming_invoice_id' => $invice['id'],
+                'user_id' => Auth::id()
+            ]);
+        }
+
         return Redirect::back();
     }
 
@@ -119,6 +135,7 @@ class IncomingInvoiceController extends Controller
      */
     public function edit($incomingInvoice)
     {
+
         return Inertia::render('IncomingInvoice/EditIncomingInvoice', [
             "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
             "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
@@ -127,7 +144,8 @@ class IncomingInvoiceController extends Controller
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
-            "suppliers" => People::orderByDesc("type")->get()
+            "suppliers" => People::orderByDesc("type")->get(),
+            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
         ]);
     }
 

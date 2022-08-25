@@ -26,7 +26,7 @@ class StoreProductBrandRequest extends FormRequest
         return [
             'nameProductBrand' => 'required|unique:product_brands,name',
             'countryProductBrand' => 'required',
-            'imageProductBrand' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048'
+            'imageProductBrand' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg'
         ];
     }
     /**
