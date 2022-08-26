@@ -120,7 +120,7 @@
                       </h3>
                     </div>
                     <p class="mt-1 mb-4 text-lg font-medium">
-                      المتاح : {{ i.product.total_number_of_product }}
+                      المتاح : 88
                     </p>
                   </Link>
                 </td>

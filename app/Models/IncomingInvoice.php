@@ -71,17 +71,35 @@ class IncomingInvoice extends Model
         return $this->hasMany(ReturnedIncomingInvoice::class);
     }
     /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_incoming_invoice_kits()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+    /**
      * Get The Total Before Discount
      **/
     public function getTotalBeforeDiscountAttribute()
     {
         $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
         $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
+        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
+        $rkits = ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
         $total = 0;
         foreach ($items as $key => $value) {
             $quantity = 0;
             foreach ($rItem as $key2 => $value2) {
                 if ($value["product_id"] == $value2["product_id"])
+                    $quantity = $value2["quantity"];
+            }
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+
+        foreach ($kits as $key => $value) {
+            $quantity = 0;
+            foreach ($rkits as $key2 => $value2) {
+                if ($value["kit_id"] == $value2["kit_id"])
                     $quantity = $value2["quantity"];
             }
             $total += ($value["price"] * ($value["quantity"] - $quantity));
@@ -95,11 +113,22 @@ class IncomingInvoice extends Model
     {
         $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
         $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
+        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
+        $rkits = ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
         $total = 0;
         foreach ($items as $key => $value) {
             $quantity = 0;
             foreach ($rItem as $key2 => $value2) {
                 if ($value["product_id"] == $value2["product_id"])
+                    $quantity = $value2["quantity"];
+            }
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+
+        foreach ($kits as $key => $value) {
+            $quantity = 0;
+            foreach ($rkits as $key2 => $value2) {
+                if ($value["kit_id"] == $value2["kit_id"])
                     $quantity = $value2["quantity"];
             }
             $total += ($value["price"] * ($value["quantity"] - $quantity));

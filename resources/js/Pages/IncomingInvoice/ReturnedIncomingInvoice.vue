@@ -97,7 +97,6 @@
                         dark:bg-[#1b1b29]
                         bg-[#f5f8fa]
                         dark:border-gray-600 dark:placeholder-gray-400
-                        cursor-pointer
                       "
                       id="file_input"
                       type="file"
@@ -111,10 +110,9 @@
                       <div
                         class="
                           bg-[#EF305E]
-                          text-lg text-white
+                          text-white
                           hover:bg-[#EF305E]
                           cursor-pointer
-                          w-full
                           text-base
                           mt-3
                           focus:ring-0
@@ -216,6 +214,7 @@
                   "
                 />
               </div>
+              <!--Content-->
               <div
                 v-for="(i, index) in incomingInvoiceAddForm.content"
                 :key="index"
@@ -276,6 +275,87 @@
                     <input
                       type="number"
                       v-model="incomingInvoiceAddForm.content[index].quantity"
+                      @change="total()"
+                      min="0"
+                      step="1"
+                      class="
+                        w-full
+                        text-base
+                        dark:bg-[#1b1b29]
+                        bg-[#f5f8fa]
+                        dark:active:bg-[#1b1b29]
+                        active:bg-[#f5f8fa]
+                        dark:focus:bg-[#1b1b29]
+                        focus:bg-[#f5f8fa]
+                        mt-3
+                        focus:ring-0
+                        border-0
+                        shadow-sm
+                        rounded-md
+                        py-2
+                      "
+                    />
+                  </div>
+                </div>
+                <hr
+                  v-if="
+                    incomingInvoiceAddForm.content.length > 1 &&
+                    incomingInvoiceAddForm.content.length != index
+                  "
+                />
+              </div>
+              <!--Kit-->
+              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
+                محتوى مرتجع قطع غيار
+                <span class="text-red-800 font-bold">*</span>
+              </h2>
+              <div
+                v-for="(i, index) in incomingInvoiceAddForm.kit"
+                :key="index"
+              >
+                <div class="w-full my-5">
+                  <h3>{{ 1 + index }}</h3>
+                  <h3>
+                    {{ i.kit.title }}
+                    <template v-if="i.kit.product">
+                      | {{ i.kit.product.name }} |
+                      <template v-if="i.kit.product.product_collection">
+                        {{ i.kit.product.product_collection.name }} |
+                      </template>
+                      <template v-if="i.kit.product_model">
+                        {{ i.kit.product.product_model.name }}
+                      </template>
+                      <template v-if="i.kit.product.product_brand">
+                        {{ i.kit.product.product_brand.name }} |
+                      </template>
+                      <template v-if="i.kit.product.product_category">
+                        {{ i.kit.product.product_category.name }} |
+                      </template>
+                      <template v-if="i.kit.product.product_type">
+                        {{ i.kit.product.product_type.name }} |
+                      </template>
+                      <template v-if="i.kit.product.product_color">
+                        {{ i.kit.product.product_color.name }} |
+                      </template>
+                      <template v-if="i.kit.product.product_material">
+                        {{ i.kit.product.product_material.name }} |
+                      </template>
+                      <template v-if="i.kit.product.product_country">
+                        {{ i.kit.product.product_country.name }}
+                      </template>
+                    </template>
+                  </h3>
+                </div>
+                <div class="w-full flex items-end justify-around">
+                  <!-- Quanty -->
+                  <div class="m-5">
+                    <label class="px-3 dark:text-gray-300">
+                      كميه المرتجع من المنتج
+                      <span class="text-red-800 font-bold">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      v-model="incomingInvoiceAddForm.kit[index].quantity"
                       @change="total()"
                       min="0"
                       step="1"
@@ -391,6 +471,8 @@ const props = defineProps([
   "incomingInvoiceAttachment",
   "returnedIncomingInvoice",
   "products",
+  "incomingInvoiceKit",
+  "kits",
 ]);
 
 const incomingInvoice = props.incomingInvoice[0];
@@ -407,6 +489,7 @@ const incomingInvoiceAddForm = reactive({
   Rdate: new Date().toISOString().slice(0, 10),
   discount: incomingInvoice.discount,
   content: props.incomingInvoiceContent,
+  kit: props.incomingInvoiceKit,
   attachment: [],
 });
 
@@ -488,9 +571,16 @@ function total() {
       incomingInvoiceAddForm.content[index].price *
       incomingInvoiceAddForm.content[index].quantity;
 
-    totalPrice.value =
-      incomingInvoice.total_before_discount - (totalPrice.value + i);
+    totalPrice.value = totalPrice.value + i;
   }
+  for (let index = 0; index < incomingInvoiceAddForm.kit.length; index++) {
+    var i =
+      incomingInvoiceAddForm.kit[index].price *
+      incomingInvoiceAddForm.kit[index].quantity;
+
+    totalPrice.value = totalPrice.value + i;
+  }
+  totalPrice.value = incomingInvoice.total_before_discount - totalPrice.value;
 }
 
 function dateFormat(x) {

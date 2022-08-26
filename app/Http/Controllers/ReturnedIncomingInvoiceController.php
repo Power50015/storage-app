@@ -8,7 +8,10 @@ use App\Http\Requests\UpdateReturnedIncomingInvoiceRequest;
 use App\Models\IncomingInvoice;
 use App\Models\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoiceContent;
+use App\Models\IncomingInvoiceKit;
+use App\Models\Kit;
 use App\Models\Product;
+use App\Models\ReturnedIncomingInvoiceKit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -71,6 +74,9 @@ class ReturnedIncomingInvoiceController extends Controller
             "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $returnedIncomingInvoice)->get(),
             "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $returnedIncomingInvoice)->get(),
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
+            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
+            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit','kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $returnedIncomingInvoice)->get(),
+
         ]);
     }
 
@@ -96,7 +102,6 @@ class ReturnedIncomingInvoiceController extends Controller
                 ]);
             }
         }
-
         // Save The Content Of Incoming Invoice.
         ReturnedIncomingInvoice::where('incoming_invoice_id', $returnedIncomingInvoice)->delete();
         for ($i = 0; $i <  count($request["content"]); $i++) {
@@ -104,6 +109,19 @@ class ReturnedIncomingInvoiceController extends Controller
                 ReturnedIncomingInvoice::create([
                     'product_id' => $request["content"][$i]["product_id"],
                     'quantity' => $request["content"][$i]["quantity"],
+                    'incoming_invoice_id' => $request->id,
+                    'date' => $request->Rdate,
+                    'user_id' => Auth::id()
+                ]);
+        }
+
+        // Save The Kit Of Incoming Invoice.
+        ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $returnedIncomingInvoice)->delete();
+        for ($i = 0; $i <  count($request["kit"]); $i++) {
+            if ($request["kit"][$i]["quantity"] > 0)
+                ReturnedIncomingInvoiceKit::create([
+                    'kit_id' => $request["kit"][$i]["kit_id"],
+                    'quantity' => $request["kit"][$i]["quantity"],
                     'incoming_invoice_id' => $request->id,
                     'date' => $request->Rdate,
                     'user_id' => Auth::id()

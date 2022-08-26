@@ -61,4 +61,11 @@ class Kit extends Model
     {
         return $this->hasMany(IncomingInvoiceKit::class);
     }
+    /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_incoming_invoice_kits()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
 }

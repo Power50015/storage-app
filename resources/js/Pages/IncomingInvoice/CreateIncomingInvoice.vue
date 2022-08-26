@@ -714,7 +714,7 @@
                   class="
                     mt-10
                     w-full
-                    bg-[#009ef7]
+                    bg-[#7239ea]
                     border border-transparent
                     rounded-md
                     py-3
@@ -725,11 +725,11 @@
                     text-base
                     font-medium
                     text-white
-                    hover:bg-[#009ef7]
+                    hover:bg-[#7239ea]
                     focus:outline-none
                     focus:ring-2
                     focus:ring-offset-2
-                    focus:ring-[#009ef7]
+                    focus:ring-[#7239ea]
                     cursor-pointer
                   "
                   @click="pushToKit"

@@ -62,6 +62,7 @@ class IncomingInvoiceController extends Controller
      */
     public function store(StoreIncomingInvoiceRequest $request)
     {
+
         // Save the Incoming Invoice
         $invice = IncomingInvoice::create([
             'number' => $request->number,
@@ -75,38 +76,43 @@ class IncomingInvoiceController extends Controller
         ]);
 
         // Save Attachment Of Incoming Invoice
-        for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][$i]["attachment"] != null) {
-                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
-                IncomingInvoiceAttachment::create([
-                    'attachment' =>  $attachment_path,
+        if (!is_null($request["attachment"]))
+            for ($i = 0; $i <  count($request["attachment"]); $i++) {
+                if ($request["attachment"][$i]["attachment"] != null) {
+                    $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
+                    IncomingInvoiceAttachment::create([
+                        'attachment' =>  $attachment_path,
+                        'incoming_invoice_id' => $invice['id'],
+                        'user_id' => Auth::id()
+                    ]);
+                }
+            }
+
+
+        // Save The Content Of Incoming Invoice
+        if (!is_null($request["content"]))
+            for ($i = 0; $i <  count($request["content"]); $i++) {
+                IncomingInvoiceContent::create([
+                    'product_id' => $request["content"][$i]["product"],
+                    'price' => $request["content"][$i]["price"],
+                    'quantity' => $request["content"][$i]["quantity"],
                     'incoming_invoice_id' => $invice['id'],
                     'user_id' => Auth::id()
                 ]);
             }
-        }
 
-        // Save The Content Of Incoming Invoice
-        for ($i = 0; $i <  count($request["content"]); $i++) {
-            IncomingInvoiceContent::create([
-                'product_id' => $request["content"][$i]["product"],
-                'price' => $request["content"][$i]["price"],
-                'quantity' => $request["content"][$i]["quantity"],
-                'incoming_invoice_id' => $invice['id'],
-                'user_id' => Auth::id()
-            ]);
-        }
 
         // Save The Kit Of Incoming Invoice
-        for ($i = 0; $i <  count($request["kit"]); $i++) {
-            IncomingInvoiceKit::create([
-                'kit_id' => $request["kit"][$i]["kit"],
-                'quantity' => $request["kit"][$i]["quantity"],
-                'price' => $request["kit"][$i]["price"],
-                'incoming_invoice_id' => $invice['id'],
-                'user_id' => Auth::id()
-            ]);
-        }
+        if (!is_null($request["kit"]))
+            for ($i = 0; $i <  count($request["kit"]); $i++) {
+                IncomingInvoiceKit::create([
+                    'kit_id' => $request["kit"][$i]["kit"],
+                    'quantity' => $request["kit"][$i]["quantity"],
+                    'price' => $request["kit"][$i]["price"],
+                    'incoming_invoice_id' => $invice['id'],
+                    'user_id' => Auth::id()
+                ]);
+            }
 
         return Redirect::back();
     }
