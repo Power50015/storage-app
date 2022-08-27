@@ -9,7 +9,7 @@ class IncomingInvoice extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_before_discount', 'total_after_discount'];
+    protected $appends = ['total_before_discount', 'total_after_discount','total_before_discount_and_returned', 'total_after_discount_befoure_returned'];
 
     /**
      * Get the users for the IncomingInvoice.
@@ -131,6 +131,44 @@ class IncomingInvoice extends Model
                 if ($value["kit_id"] == $value2["kit_id"])
                     $quantity = $value2["quantity"];
             }
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+        return floatval($total - $this->discount);
+    }
+    /**
+     * Get The Total Before Discount And Returned 
+     **/
+    public function getTotalBeforeDiscountAndReturnedAttribute()
+    {
+        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
+        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
+        $total = 0;
+        foreach ($items as $key => $value) {
+            $quantity = 0;
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+
+        foreach ($kits as $key => $value) {
+            $quantity = 0;
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+        return floatval($total);
+    }
+    /**
+     * Get The Total After Discount Befour Returned
+     **/
+    public function getTotalAfterDiscountBefoureReturnedAttribute()
+    {
+        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
+        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
+        $total = 0;
+        foreach ($items as $key => $value) {
+            $quantity = 0;
+            $total += ($value["price"] * ($value["quantity"] - $quantity));
+        }
+
+        foreach ($kits as $key => $value) {
+            $quantity = 0;
             $total += ($value["price"] * ($value["quantity"] - $quantity));
         }
         return floatval($total - $this->discount);

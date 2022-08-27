@@ -92,13 +92,14 @@
                 id="xyz"
               >
                 <thead>
-                  <tr>
+                  <tr v-if="incomingInvoiceContent.length > 0">
                     <th
                       class="
                         border border-dashed border-slate-700
                         py-3
                         px-3
                         font-bold
+                        s-border
                       "
                     >
                       المنتج
@@ -109,9 +110,10 @@
                         py-3
                         px-3
                         font-bold
+                        s-border
                       "
                     >
-                      لسعر
+                      السعر
                     </th>
                     <th
                       class="
@@ -119,6 +121,7 @@
                         py-3
                         px-3
                         font-bold
+                        s-border
                       "
                     >
                       الكميه
@@ -126,6 +129,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!--incomingInvoiceContent-->
                   <tr
                     v-for="product in incomingInvoiceContent"
                     :key="product.index"
@@ -139,7 +143,7 @@
                         hover:text-[#0095e8]
                       "
                     >
-                      <Link :href="route('product.index')">
+                      <Link :href="route('product.show', product.product.id)">
                         <template v-if="product.product.product_brand.name">
                           {{ product.product.product_brand.name }} |
                         </template>
@@ -163,25 +167,18 @@
                       {{ product.quantity }}
                     </td>
                   </tr>
-                </tbody>
-              </table>
-              <h2 class="m-3" v-if="returnedIncomingInvoice.length > 0">المرتجع</h2>
-              <table
-                class="border border-dashed border-slate-700 w-full text-right"
-                id="xyz"
-                v-if="returnedIncomingInvoice.length > 0"
-              >
-                <thead>
-                  <tr>
+                  <!--incomingInvoiceKit-->
+                  <tr v-if="incomingInvoiceKit.length > 0">
                     <th
                       class="
                         border border-dashed border-slate-700
                         py-3
                         px-3
                         font-bold
+                        s-border
                       "
                     >
-                      المنتج
+                      قطع الغيار
                     </th>
                     <th
                       class="
@@ -189,16 +186,26 @@
                         py-3
                         px-3
                         font-bold
+                        s-border
+                      "
+                    >
+                      السعر
+                    </th>
+                    <th
+                      class="
+                        border border-dashed border-slate-700
+                        py-3
+                        px-3
+                        font-bold
+                        s-border
                       "
                     >
                       الكميه
                     </th>
                   </tr>
-                </thead>
-                <tbody>
                   <tr
-                    v-for="product in returnedIncomingInvoice"
-                    :key="product.index"
+                    v-for="kit in incomingInvoiceKit"
+                    :key="kit.index"
                     class=""
                   >
                     <td
@@ -209,29 +216,227 @@
                         hover:text-[#0095e8]
                       "
                     >
-                      <Link :href="route('product.index')">
-                        <template v-if="product.product.product_brand.name">
-                          {{ product.product.product_brand.name }} |
-                        </template>
-                        {{ product.product.product_category.name }} |
-                        {{ product.product.product_type.name }} |
-                        {{ product.product.product_collection.name }} |
-                        {{ product.product.product_model.name }} |
-                        {{ product.product.product_color.name }} |
-                        {{ product.product.product_material.name }} |
-                        {{ product.product.product_country.name }} |
-                        <template v-if="product.product.sku">
-                          {{ product.product.sku }} |
-                        </template>
-                        {{ product.product.name }}
+                      <Link :href="route('kit.show', kit.kit.id)">
+                        {{ kit.kit.title }}
+                        <template v-if="kit.kit.product">
+                          |
+                          <template v-if="kit.kit.product.product_brand"
+                            >{{
+                              kit.kit.product.product_brand.name
+                            }}
+                            |</template
+                          >
+                          <template v-if="kit.kit.product.product_category">
+                            {{
+                              kit.kit.product.product_category.name
+                            }}</template
+                          >
+                          <template v-if="kit.kit.product.product_type">
+                            |{{ kit.kit.product.product_type.name }}
+                          </template>
+                          <template v-if="kit.kit.product.product_collection">
+                            |{{ kit.kit.product.product_collection.name }}
+                          </template>
+                          <template v-if="kit.kit.product.product_model">
+                            |{{ kit.kit.product.product_model.name }}
+                          </template>
+                          <template v-if="kit.kit.product.product_color">
+                            |{{ kit.kit.product.product_color.name }}
+                          </template>
+                          <template v-if="kit.kit.product.product_material">
+                            |{{ kit.kit.product.product_material.name }}
+                          </template>
+                          <template v-if="kit.kit.product.product_country">
+                            |
+                            {{ kit.kit.product.product_country.name }}</template
+                          >
+                          <template v-if="kit.kit.product.sku">
+                            | {{ kit.kit.product.sku }}</template
+                          >
+                          | {{ kit.kit.product.name }}</template
+                        >
                       </Link>
                     </td>
                     <td class="border border-dashed border-slate-700 py-3 px-3">
-                      {{ product.quantity }}
+                      {{ kit.price }}
+                    </td>
+                    <td class="border border-dashed border-slate-700 py-3 px-3">
+                      {{ kit.quantity }}
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <!--returnedIncomingInvoice-->
+              <div
+                class="mt-5"
+                v-if="
+                  returnedIncomingInvoice.length > 0 ||
+                  returnedIncomingInvoiceKit.length > 0
+                "
+              >
+                <h2 class="title font-bold">المرتجع</h2>
+                <table
+                  class="
+                    border border-dashed border-slate-700
+                    w-full
+                    text-right
+                    mt-5
+                  "
+                  id="xyz"
+                >
+                  <tbody>
+                    <!--returnedIncomingInvoice-->
+                    <tr v-if="returnedIncomingInvoice.length > 0">
+                      <th
+                        class="
+                          border border-dashed border-slate-700
+                          py-3
+                          px-3
+                          font-bold
+                          s-border
+                        "
+                      >
+                        مرتجع المنتجات
+                      </th>
+                      <th
+                        class="
+                          border border-dashed border-slate-700
+                          py-3
+                          px-3
+                          font-bold
+                          s-border
+                        "
+                      >
+                        الكميه
+                      </th>
+                    </tr>
+                    <tr
+                      v-for="product in returnedIncomingInvoice"
+                      :key="product.index"
+                      class=""
+                    >
+                      <td
+                        class="
+                          border border-dashed border-slate-700
+                          py-3
+                          px-3
+                          hover:text-[#0095e8]
+                        "
+                      >
+                        <Link :href="route('product.show', product.product.id)">
+                          <template v-if="product.product.product_brand.name">
+                            {{ product.product.product_brand.name }} |
+                          </template>
+                          {{ product.product.product_category.name }} |
+                          {{ product.product.product_type.name }} |
+                          {{ product.product.product_collection.name }} |
+                          {{ product.product.product_model.name }} |
+                          {{ product.product.product_color.name }} |
+                          {{ product.product.product_material.name }} |
+                          {{ product.product.product_country.name }} |
+                          <template v-if="product.product.sku">
+                            {{ product.product.sku }} |
+                          </template>
+                          {{ product.product.name }}
+                        </Link>
+                      </td>
+                      <td
+                        class="border border-dashed border-slate-700 py-3 px-3"
+                      >
+                        {{ product.quantity }}
+                      </td>
+                    </tr>
+                    <!--returnedIncomingInvoiceKit-->
+                    <tr>
+                      <th
+                        class="
+                          border border-dashed border-slate-700
+                          py-3
+                          px-3
+                          font-bold
+                          s-border
+                        "
+                        v-if="returnedIncomingInvoiceKit.length > 0"
+                      >
+                        مرتجع قطع الغيار
+                      </th>
+                      <th
+                        class="
+                          border border-dashed border-slate-700
+                          py-3
+                          px-3
+                          font-bold
+                          s-border
+                        "
+                      >
+                        الكميه
+                      </th>
+                    </tr>
+                    <tr
+                      v-for="kit in returnedIncomingInvoiceKit"
+                      :key="kit.index"
+                      class=""
+                    >
+                      <td
+                        class="
+                          border border-dashed border-slate-700
+                          py-3
+                          px-3
+                          hover:text-[#0095e8]
+                        "
+                      >
+                        <Link :href="route('kit.show', kit.kit.id)">
+                          {{ kit.kit.title }}
+                          <template v-if="kit.kit.product">
+                            |
+                            <template v-if="kit.kit.product.product_brand"
+                              >{{
+                                kit.kit.product.product_brand.name
+                              }}
+                              |</template
+                            >
+                            <template v-if="kit.kit.product.product_category">
+                              {{
+                                kit.kit.product.product_category.name
+                              }}</template
+                            >
+                            <template v-if="kit.kit.product.product_type">
+                              |{{ kit.kit.product.product_type.name }}
+                            </template>
+                            <template v-if="kit.kit.product.product_collection">
+                              |{{ kit.kit.product.product_collection.name }}
+                            </template>
+                            <template v-if="kit.kit.product.product_model">
+                              |{{ kit.kit.product.product_model.name }}
+                            </template>
+                            <template v-if="kit.kit.product.product_color">
+                              |{{ kit.kit.product.product_color.name }}
+                            </template>
+                            <template v-if="kit.kit.product.product_material">
+                              |{{ kit.kit.product.product_material.name }}
+                            </template>
+                            <template v-if="kit.kit.product.product_country">
+                              |
+                              {{
+                                kit.kit.product.product_country.name
+                              }}</template
+                            >
+                            <template v-if="kit.kit.product.sku">
+                              | {{ kit.kit.product.sku }}</template
+                            >
+                            | {{ kit.kit.product.name }}</template
+                          >
+                        </Link>
+                      </td>
+                      <td
+                        class="border border-dashed border-slate-700 py-3 px-3"
+                      >
+                        {{ kit.quantity }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="my-5">
                 <h2 class="p-2 print:w-full print:mb-3">
                   الإجمالى قبل الخصم :
@@ -243,6 +448,7 @@
                   {{ incoming_invoice.total_after_discount }}
                 </h2>
               </div>
+              <!-- Totals Price -->
               <div class="my-5 print:hidden">
                 <h2 class="p-2" v-if="incoming_invoice.pay_type == 0">
                   نوع الدفع : على الحساب
@@ -254,6 +460,7 @@
                   نوع الكاش : {{ incoming_invoice.cash.title }}
                 </h2>
               </div>
+              <!-- Btns -->
               <div class="flex mt-5 print:hidden">
                 <div
                   @click="print"
@@ -312,6 +519,7 @@
         </div>
       </div>
     </div>
+    <!-- Attachment-->
     <div class="mb-5 print:hidden">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div
@@ -381,12 +589,17 @@ const props = defineProps([
   "incomingInvoiceContent",
   "incomingInvoiceAttachment",
   "returnedIncomingInvoice",
+  "incomingInvoiceKit",
+  "returnedIncomingInvoiceKit",
 ]);
 
 const incoming_invoice = props.incomingInvoice[0];
 const incoming_invoice_content = props.incomingInvoiceContent;
 const incoming_invoice_attachment = props.incomingInvoiceAttachment;
 const returnedIncomingInvoice = props.returnedIncomingInvoice;
+const incomingInvoiceKit = props.incomingInvoiceKit;
+const returnedIncomingInvoiceKit = props.returnedIncomingInvoiceKit;
+
 provide("title", "الفواتير الوارده");
 provide(
   "breadcrumb",
@@ -419,3 +632,9 @@ function print() {
   window.print();
 }
 </script>
+<style scoped>
+.s-border {
+  border-top-style: solid;
+  border-top-width: medium;
+}
+</style>

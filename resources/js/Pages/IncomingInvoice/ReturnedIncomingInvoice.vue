@@ -493,7 +493,7 @@ const incomingInvoiceAddForm = reactive({
   attachment: [],
 });
 
-const totalPrice = ref(incomingInvoice.total_before_discount);
+const totalPrice = ref(incomingInvoice.total_before_discount_and_returned);
 total();
 
 provide(
@@ -580,7 +580,7 @@ function total() {
 
     totalPrice.value = totalPrice.value + i;
   }
-  totalPrice.value = incomingInvoice.total_before_discount - totalPrice.value;
+  totalPrice.value = incomingInvoice.total_before_discount_and_returned - totalPrice.value;
 }
 
 function dateFormat(x) {
