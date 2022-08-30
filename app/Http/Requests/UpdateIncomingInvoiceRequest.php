@@ -31,12 +31,16 @@ class UpdateIncomingInvoiceRequest extends FormRequest
             'cash_type' =>'required_if:pay_type,true',
             'discount' => 'numeric',
             'date' => 'required|date',
-            'content' => 'required|array',
-            'content.*.product_id' => 'required',
-            'content.*.price' => 'required|numeric|min:0.01',
-            'content.*.quantity' => 'required|numeric|min:1',
+            'content' => 'required_if:kit,[]|array',
+            'content.*.product' => 'required_if:kit,[]',
+            'content.*.price' => 'required_if:kit,[]|numeric|min:0.01',
+            'content.*.quantity' => 'required_if:kit,[]|numeric|min:1',
             'attachment' => 'nullable|array',
             'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'kit' => 'required_if:content,[]|array',
+            'kit.*.kit' => 'required_if:content,[]',
+            'kit.*.quantity' => 'required_if:content,[]|numeric|min:1',
+            'kit.*.price' => 'required_if:content,[]|numeric|min:0',
         ];
     }
     /**
@@ -56,13 +60,16 @@ class UpdateIncomingInvoiceRequest extends FormRequest
             'date.date' => 'يجب إدخال تاريخ الفاتوره',
             'number.required' => 'يجب إدخال رقم الفاتورة',
             'content.*' => 'يجب إدخال محتوى الفاتورة',
-            'content.*.product_id.required' => 'يجب إدخال المنتجات للفاتورة',
+            'content.*.product.required' => 'يجب إدخال المنتجات للفاتورة',
             'content.*.price.required' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
             'content.*.quantity.required' =>  'يجب إدخال كميه المنتج فى الفاتورة',
             'content.*.price.numeric' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
             'content.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى الفاتورة',
             'content.*.price.min' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
             'content.*.quantity.min' => 'يجب إدخال كميه المنتج فى الفاتورة',
+            'kit.*' => 'يجب إدخال محتوى الفاتورة',
+            'kit.*.kit.required' => 'يجب إدخال المنتجات للفاتورة',
+            'kit.*.quantity.required' =>  'يجب إدخال كميه قطع الغيار فى الفاتورة',
         ];
     }
 }

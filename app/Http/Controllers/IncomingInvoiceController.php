@@ -131,8 +131,8 @@ class IncomingInvoiceController extends Controller
             "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
             "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
             "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
-            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit','kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit','kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
         ]);
     }
 
@@ -155,6 +155,7 @@ class IncomingInvoiceController extends Controller
             "warehouses" => Warehouse::all(),
             "suppliers" => People::orderByDesc("type")->get(),
             "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
+            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
         ]);
     }
 
@@ -213,16 +214,51 @@ class IncomingInvoiceController extends Controller
         }
 
         // Save The Content Of Incoming Invoice.
+        IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice->id)->delete(); // Delete Data
 
-        IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice->id)->delete();
         for ($i = 0; $i <  count($request["content"]); $i++) {
-            IncomingInvoiceContent::create([
-                'product_id' => $request["content"][$i]["product_id"],
-                'price' => $request["content"][$i]["price"],
-                'quantity' => $request["content"][$i]["quantity"],
-                'incoming_invoice_id' => $incomingInvoice->id,
-                'user_id' => Auth::id()
-            ]);
+            if ($request["content"][$i]["quantity"] > 0)
+                IncomingInvoiceContent::create([
+                    'product_id' => $request["content"][$i]["product"],
+                    'price' => $request["content"][$i]["price"],
+                    'quantity' => $request["content"][$i]["quantity"],
+                    'incoming_invoice_id' => $incomingInvoice->id,
+                    'user_id' => Auth::id()
+                ]);
+        }
+        
+        for ($i = 0; $i <  count($request["oldContent"]); $i++) {
+            if ($request["oldContent"][$i]["quantity"] > 0)
+                IncomingInvoiceContent::create([
+                    'product_id' => $request["oldContent"][$i]["product_id"],
+                    'price' => $request["oldContent"][$i]["price"],
+                    'quantity' => $request["oldContent"][$i]["quantity"],
+                    'incoming_invoice_id' => $incomingInvoice->id,
+                    'user_id' => Auth::id()
+                ]);
+        }
+        
+        // Save The Kit Of Incoming Invoice.
+        IncomingInvoiceKit::where('incoming_invoice_id', $incomingInvoice->id)->delete();
+        for ($i = 0; $i <  count($request["kit"]); $i++) {
+            if ($request["kit"][$i]["quantity"] > 0)
+                IncomingInvoiceKit::create([
+                    'kit_id' => $request["kit"][$i]["kit"],
+                    'quantity' => $request["kit"][$i]["quantity"],
+                    'price' => $request["kit"][$i]["price"],
+                    'incoming_invoice_id' => $incomingInvoice->id,
+                    'user_id' => Auth::id()
+                ]);
+        }
+        for ($i = 0; $i <  count($request["oldKit"]); $i++) {
+            if ($request["oldKit"][$i]["quantity"] > 0)
+                IncomingInvoiceKit::create([
+                    'kit_id' => $request["oldKit"][$i]["kit_id"],
+                    'quantity' => $request["oldKit"][$i]["quantity"],
+                    'price' => $request["oldKit"][$i]["price"],
+                    'incoming_invoice_id' => $incomingInvoice->id,
+                    'user_id' => Auth::id()
+                ]);
         }
 
         return Redirect::back();
