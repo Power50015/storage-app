@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\KitNote;
 use App\Http\Requests\StoreKitNoteRequest;
 use App\Http\Requests\UpdateKitNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class KitNoteController extends Controller
 {
@@ -36,7 +38,12 @@ class KitNoteController extends Controller
      */
     public function store(StoreKitNoteRequest $request)
     {
-        //
+        $note = KitNote::create([
+            'note' => $request->note,
+            'kit_id' => $request->kit_id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -81,6 +88,7 @@ class KitNoteController extends Controller
      */
     public function destroy(KitNote $kitNote)
     {
-        //
+        $kitNote::destroy($kitNote->id);
+        return Redirect::back();
     }
 }

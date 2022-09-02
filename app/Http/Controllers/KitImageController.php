@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\KitImage;
 use App\Http\Requests\StoreKitImageRequest;
 use App\Http\Requests\UpdateKitImageRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class KitImageController extends Controller
 {
@@ -36,7 +39,13 @@ class KitImageController extends Controller
      */
     public function store(StoreKitImageRequest $request)
     {
-        //
+        $attachment_path = $request["image"]->store('image/kits', 'public');
+        KitImage::create([
+            'image' =>  $attachment_path,
+            'kit_id' => $request->product_id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -81,6 +90,8 @@ class KitImageController extends Controller
      */
     public function destroy(KitImage $kitImage)
     {
-        //
+        $kitImage::destroy($kitImage->id);
+        Storage::delete("public/" . $kitImage["image"]);
+        return Redirect::back();
     }
 }

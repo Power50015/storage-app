@@ -18,45 +18,45 @@
             <div class="flex w-full justify-between">
               <div class="">
                 <h2 class="title font-bold mt-3">
-                  {{ product.name }}
-                  <template v-if="product.product_collection">
-                    | {{ product.product_collection.name }}
-                  </template>
-                  <template v-if="product.product_model">
-                    | {{ product.product_model.name }}
-                  </template>
+                  {{ kit.title }}
                 </h2>
                 <h2 class="title font-bold mt-3">
-                  <template v-if="product.product_brand">
-                    {{ product.product_brand.name }}
-                  </template>
-                  <template v-if="product.product_category">
-                    | {{ product.product_category.name }}
-                  </template>
-                  <template v-if="product.product_type">
-                    | {{ product.product_type.name }}
-                  </template>
-                  <template v-if="product.product_color">
-                    | {{ product.product_color.name }}
-                  </template>
-                  <template v-if="product.product_material">
-                    | {{ product.product_material.name }}
-                  </template>
-                  <template v-if="product.product_country">
-                    | {{ product.product_country.name }}
-                  </template>
-                </h2>
-                <h2 class="title font-bold mt-3 text-[#009ef7]">
-                  سعر البيع : {{ product.price }}
-                </h2>
-                <h2 class="title font-bold mt-3 text-[#009ef7]">
-                  إجمالى مبيعات المنتج : {{ product.total_sales }}
+                  <template v-if="kit.product">
+                    <template v-if="kit.product.product_brand"
+                      >{{ kit.product.product_brand.name }} |</template
+                    >
+                    <template v-if="kit.product.product_category">
+                      {{ kit.product.product_category.name }}</template
+                    >
+                    <template v-if="kit.product.product_type">
+                      |{{ kit.product.product_type.name }}
+                    </template>
+                    <template v-if="kit.product.product_collection">
+                      |{{ kit.product.product_collection.name }}
+                    </template>
+                    <template v-if="kit.product.product_model">
+                      |{{ kit.product.product_model.name }}
+                    </template>
+                    <template v-if="kit.product.product_color">
+                      |{{ kit.product.product_color.name }}
+                    </template>
+                    <template v-if="kit.product.product_material">
+                      |{{ kit.product.product_material.name }}
+                    </template>
+                    <template v-if="kit.product.product_country">
+                      | {{ kit.product.product_country.name }}</template
+                    >
+                    <template v-if="kit.product.sku">
+                      | {{ kit.product.sku }}</template
+                    >
+                    | {{ kit.product.name }}</template
+                  >
                 </h2>
                 <h2 class="title font-bold mt-3 text-lg text-[#009ef7]">
-                  إجمالى المتاح بالمخازن : {{ product.total_number_of_product }}
+                  إجمالى المتاح بالمخازن : 88
                 </h2>
                 <Link
-                  :href="route('product.edit', product.id)"
+                  :href="route('kit.edit', kit.id)"
                   class="
                     print:hidden
                     mt-5
@@ -83,10 +83,10 @@
                 </Link>
               </div>
               <div>
-                <a :href="`/storage/${product.image}`" target="_blank">
+                <a :href="`/storage/${kit.image}`" target="_blank">
                   <img
-                    :src="`/storage/${product.image}`"
-                    :alt="product.title"
+                    :src="`/storage/${kit.image}`"
+                    :alt="kit.title"
                     class="
                       w-full
                       h-[270px]
@@ -102,17 +102,11 @@
         </div>
       </div>
     </div>
-    <product-tabs
-      :warehouse="product.total_number_of_product_warehouse"
-      :stockData="stockData"
-      :incomeIvoice="incomeIvoice"
-      :outgoingIvoice="outgoingIvoice"
-      :stratStock="stratStock"
-      :transfer="transfer"
-      :note="note"
-      :attachment="attachment"
-      :image="image"
-      :id="product.id"
+    <kit-tabs
+    :id="kit.id"
+    :note="note"
+    :attachment="attachment"
+    :image="image"
     />
   </AppLayout>
 </template>
@@ -123,28 +117,22 @@ import { computed, provide, readonly } from "@vue/runtime-core";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import ProductTabs from "@/Components/Product/ProductTabs.vue";
+import KitTabs from "@/Components/Kit/KitTabs.vue";
 
-const props = defineProps([
-  "product",
-  "stockData",
-  "incomeIvoice",
-  "outgoingIvoice",
-  "stratStock",
-  "transfer",
-  "note",
-  "attachment",
-  "image",
-]);
-const product = computed(() => props.product[0]);
+const props = defineProps(["kit", "note", "attachment", "image"]);
+const kit = computed(() => props.kit[0]);
 
 provide("title", "المنتج");
 provide(
   "breadcrumb",
   readonly([
     { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
-    { index: 1, linkTitle: "المنتجات", linkRoute: "product.index" },
-    { index: 2, linkTitle: " المنتج " + product.name, linkRoute: "#" },
+    { index: 1, linkTitle: "قطع الغيار", linkRoute: "kit.index" },
+    {
+      index: 2,
+      linkTitle: " قطعه الغيار " + props.kit[0].title,
+      linkRoute: "#",
+    },
   ])
 );
 </script>

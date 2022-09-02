@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\KitAttachment;
 use App\Http\Requests\StoreKitAttachmentRequest;
 use App\Http\Requests\UpdateKitAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class KitAttachmentController extends Controller
 {
@@ -36,7 +39,13 @@ class KitAttachmentController extends Controller
      */
     public function store(StoreKitAttachmentRequest $request)
     {
-        //
+        $attachment_path = $request["attachment"]->store('attachment/kits', 'public');
+       KitAttachment::create([
+            'attachment' =>  $attachment_path,
+            'kit_id' => $request->kit_id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -81,6 +90,8 @@ class KitAttachmentController extends Controller
      */
     public function destroy(KitAttachment $kitAttachment)
     {
-        //
+        $kitAttachment::destroy($kitAttachment->id);
+        Storage::delete("public/" . $kitAttachment["attachment"]);
+        return Redirect::back();
     }
 }

@@ -144,7 +144,7 @@ provide(
   readonly([
     { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
     { index: 1, linkTitle: "المنتجات", linkRoute: "product.index" },
-    { index: 2, linkTitle: " المنتج " + product.name, linkRoute: "#" },
+    { index: 2, linkTitle: " المنتج " + props.product[0].name, linkRoute: "#" },
   ])
 );
 </script>

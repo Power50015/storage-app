@@ -6,12 +6,18 @@ use App\Models\Kit;
 use App\Http\Requests\StoreKitRequest;
 use App\Http\Requests\UpdateKitRequest;
 use App\Models\Cash;
+use App\Models\IncomingInvoiceContent;
+use App\Models\IncomingInvoiceKit;
 use App\Models\KitAttachment;
 use App\Models\KitImage;
 use App\Models\KitNote;
+use App\Models\KitStock;
+use App\Models\OutgoingInvoiceContent;
 use App\Models\People;
 use App\Models\Product;
+use App\Models\TransferContent;
 use App\Models\Warehouse;
+use App\Models\WarehouseStockContent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -117,43 +123,31 @@ class KitController extends Controller
      */
     public function show(Kit $kit)
     {
-        // $incomeIvoice = IncomingInvoiceContent::with(['incoming_invoice', 'incoming_invoice.people'])->where('product_id', $product->id)->get();
-        // $outgoingIvoice = OutgoingInvoiceContent::with(['outgoing_invoice', 'outgoing_invoice.people'])->where('product_id', $product->id)->get();
-        // $stratStock = WarehouseStockContent::with('warehouse_stock')->where('product_id', $product->id)->get();
-        // $transfer = TransferContent::with(['transfer', 'transfer.warehouse_from', 'transfer.warehouse_to'])->where('product_id', $product->id)->get();
-        // $stockData = [];
+        $incomeIvoice = IncomingInvoiceKit::with(['incoming_invoice', 'incoming_invoice.people'])->where('kit_id', $kit->id)->get();
+        $stratStock = KitStock::with('warehouse_stock')->where('kit_id', $kit->id)->get();
+        $stockData = [];
 
-        // //incomeIvoice
-        // for ($i = 0; $i < count($incomeIvoice); $i++) {
-        //     $stockData[$i] = $incomeIvoice[$i];
-        //     $stockData[$i]["type"] = "فاتورة وارده";
-        // }
-        // //outgoingIvoice
-        // for ($i = count($incomeIvoice), $x = 0; $i < (count($incomeIvoice) + count($outgoingIvoice)); $i++, $x++) {
-        //     $stockData[$i] = $outgoingIvoice[$x];
-        //     $stockData[$i]["type"] = "فاتورة صادره";
-        // }
-        // //stratStock
-        // for ($i = count($incomeIvoice) + count($outgoingIvoice), $x = 0; $i < (count($incomeIvoice) + count($outgoingIvoice) + count($stratStock)); $i++, $x++) {
-        //     $stockData[$i] = $stratStock[$x];
-        //     $stockData[$i]["type"] = "مخزون";
-        // }
-        // //transfer
-        // for ($i = (count($incomeIvoice) + count($outgoingIvoice) + count($stratStock)), $x = 0; $i < (count($incomeIvoice) + count($outgoingIvoice) + count($stratStock) + count($transfer)); $i++, $x++) {
-        //     $stockData[$i] = $transfer[$x];
-        //     $stockData[$i]["type"] = "نقله";
-        // }
-        // return Inertia::render('Product/ShowProduct', [
-        //     "product" => Product::with(['product_category', 'product_type', 'product_brand', 'product_collection', 'product_model', 'product_color', 'product_material', 'product_country', 'product_notes', 'product_images', 'product_attachments'])->where('id', $product->id)->get(),
-        //     "stockData" => $stockData,
-        //     "incomeIvoice" => $incomeIvoice,
-        //     "outgoingIvoice" => $outgoingIvoice,
-        //     "stratStock" => $stratStock,
-        //     "transfer" => $transfer,
-        //     "note" => ProductNote::where('product_id', $product->id)->get(),
-        //     "attachment" => ProductAttachment::where('product_id', $product->id)->get(),
-        //     "image" => ProductImage::where('product_id', $product->id)->get(),
-        // ]);
+        //incomeIvoice
+        for ($i = 0; $i < count($incomeIvoice); $i++) {
+            $stockData[$i] = $incomeIvoice[$i];
+            $stockData[$i]["type"] = "فاتورة وارده";
+        }
+
+        //stratStock
+        for ($i = count($incomeIvoice) , $x = 0; $i < (count($incomeIvoice)  + count($stratStock)); $i++, $x++) {
+            $stockData[$i] = $stratStock[$x];
+            $stockData[$i]["type"] = "مخزون";
+        }
+
+        return Inertia::render('Kit/ShowKit', [
+            "kit" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('id', $kit->id)->get(),
+            "stockData" => $stockData,
+            "incomeIvoice" => $incomeIvoice,
+            "stratStock" => $stratStock,
+            "note" => KitNote::where('kit_id', $kit->id)->get(),
+            "attachment" => KitAttachment::where('kit_id', $kit->id)->get(),
+            "image" => KitImage::where('kit_id', $kit->id)->get(),
+        ]);
     }
 
     /**
