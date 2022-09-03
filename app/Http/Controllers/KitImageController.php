@@ -42,7 +42,7 @@ class KitImageController extends Controller
         $attachment_path = $request["image"]->store('image/kits', 'public');
         KitImage::create([
             'image' =>  $attachment_path,
-            'kit_id' => $request->product_id,
+            'kit_id' => $request->kit_id,
             'user_id' => Auth::id()
         ]);
         return Redirect::back();

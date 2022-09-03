@@ -143,6 +143,7 @@
           :id="props.id"
         />
         <product-image :image="image" v-if="tab == 'image'" :id="props.id" />
+        
       </div>
     </div>
   </div>

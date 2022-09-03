@@ -19,7 +19,9 @@ use App\Models\TransferContent;
 use App\Models\Warehouse;
 use App\Models\WarehouseStockContent;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class KitController extends Controller
@@ -32,7 +34,7 @@ class KitController extends Controller
     public function index()
     {
         return Inertia::render('Kit/Kits', [
-            "kits" =>  Kit::with('product','product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get()
+            "kits" =>  Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get()
         ]);
     }
 
@@ -134,7 +136,7 @@ class KitController extends Controller
         }
 
         //stratStock
-        for ($i = count($incomeIvoice) , $x = 0; $i < (count($incomeIvoice)  + count($stratStock)); $i++, $x++) {
+        for ($i = count($incomeIvoice), $x = 0; $i < (count($incomeIvoice)  + count($stratStock)); $i++, $x++) {
             $stockData[$i] = $stratStock[$x];
             $stockData[$i]["type"] = "مخزون";
         }
@@ -158,7 +160,11 @@ class KitController extends Controller
      */
     public function edit(Kit $kit)
     {
-        //
+        return Inertia::render('Kit/EditKit', [
+            "kit" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('id', $kit->id)->get(),
+            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
+
+        ]);
     }
 
     /**
@@ -170,7 +176,23 @@ class KitController extends Controller
      */
     public function update(UpdateKitRequest $request, Kit $kit)
     {
-        //
+        $image_path = '';
+        if ($request->hasFile('image')) {
+            Storage::delete("public/" . $request->image);
+            $image_path = $request->file('image')->store('image/kit', 'public');
+        } else {
+            $image_path = $request->oldImage;
+        }
+
+        $kit = DB::table('kits')->where('id', $kit->id)->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'product_id' => $request->product,
+            'image' =>  $image_path,
+            'user_id' => Auth::id()
+        ]);
+
+        return Redirect::back();
     }
 
     /**

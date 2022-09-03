@@ -9,6 +9,7 @@ class Kit extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $appends = ['total_number_of_kit', 'total_number_of_kit_warehouse'];
 
     /**
      * Get the users for the Kit.
@@ -67,5 +68,50 @@ class Kit extends Model
     public function returned_incoming_invoice_kits()
     {
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+    /**
+     * Get the Total Number Product.
+     */
+    public function getTotalNumberOfKitAttribute()
+    {
+        return (IncomingInvoiceKit::where('kit_id', $this->id)->sum('quantity') - ReturnedIncomingInvoiceKit::where('kit_id', $this->id)->sum('quantity')) + KitStock::where('kit_id', $this->id)->sum('quantity');
+    }
+    /**
+     * Get the Total Number Product in Warehuose.
+     */
+    public function getTotalNumberOfKitWarehouseAttribute()
+    {
+        $warehouses = Warehouse::all();
+
+        $data = [];
+
+        // where warehouse is
+        foreach ($warehouses as $key => $value) {
+
+
+            // Get The income invoice numbers
+            $incoming_invoices = IncomingInvoice::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
+            $warehouse_stocks = WarehouseStock::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
+            $incoming_invoice_id = [];
+
+            foreach ($incoming_invoices as $key1 => $value1) {
+                $incoming_invoice_id[] = $incoming_invoices[$key1]["id"];
+            }
+            // Get The income product quantity
+            $incoming_q =
+                (IncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
+                    - ReturnedIncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
+                ) + KitStock::where('kit_id', $this->id)->whereIn('warehouse_stock_id', $warehouse_stocks)->sum('quantity');
+
+            $data[] = [
+                "warehouse" => $warehouses[$key],
+                "quantity" => $incoming_q
+            ];
+        }
+
+
+        $data = collect($data);
+        $data = $data->sortByDesc('quantity');
+        return $data->values()->all();
     }
 }

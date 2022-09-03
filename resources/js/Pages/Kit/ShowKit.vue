@@ -20,40 +20,43 @@
                 <h2 class="title font-bold mt-3">
                   {{ kit.title }}
                 </h2>
-                <h2 class="title font-bold mt-3">
+                <h2 class="title font-bold mt-3 hover:text-[#009ef7] mb-5">
                   <template v-if="kit.product">
-                    <template v-if="kit.product.product_brand"
-                      >{{ kit.product.product_brand.name }} |</template
-                    >
-                    <template v-if="kit.product.product_category">
-                      {{ kit.product.product_category.name }}</template
-                    >
-                    <template v-if="kit.product.product_type">
-                      |{{ kit.product.product_type.name }}
-                    </template>
-                    <template v-if="kit.product.product_collection">
-                      |{{ kit.product.product_collection.name }}
-                    </template>
-                    <template v-if="kit.product.product_model">
-                      |{{ kit.product.product_model.name }}
-                    </template>
-                    <template v-if="kit.product.product_color">
-                      |{{ kit.product.product_color.name }}
-                    </template>
-                    <template v-if="kit.product.product_material">
-                      |{{ kit.product.product_material.name }}
-                    </template>
-                    <template v-if="kit.product.product_country">
-                      | {{ kit.product.product_country.name }}</template
-                    >
-                    <template v-if="kit.product.sku">
-                      | {{ kit.product.sku }}</template
-                    >
-                    | {{ kit.product.name }}</template
+                    <Link :href="route('product.show', kit.product.id)"
+                      ><template v-if="kit.product.product_brand"
+                        >{{ kit.product.product_brand.name }} |</template
+                      >
+                      <template v-if="kit.product.product_category">
+                        {{ kit.product.product_category.name }}</template
+                      >
+                      <template v-if="kit.product.product_type">
+                        |{{ kit.product.product_type.name }}
+                      </template>
+                      <template v-if="kit.product.product_collection">
+                        |{{ kit.product.product_collection.name }}
+                      </template>
+                      <template v-if="kit.product.product_model">
+                        |{{ kit.product.product_model.name }}
+                      </template>
+                      <template v-if="kit.product.product_color">
+                        |{{ kit.product.product_color.name }}
+                      </template>
+                      <template v-if="kit.product.product_material">
+                        |{{ kit.product.product_material.name }}
+                      </template>
+                      <template v-if="kit.product.product_country">
+                        | {{ kit.product.product_country.name }}</template
+                      >
+                      <template v-if="kit.product.sku">
+                        | {{ kit.product.sku }}</template
+                      >
+                      | {{ kit.product.name }}</Link
+                    ></template
                   >
                 </h2>
+                <div v-html="kit.description"></div>
                 <h2 class="title font-bold mt-3 text-lg text-[#009ef7]">
-                  إجمالى المتاح بالمخازن : 88
+                  إجمالى المتاح بالمخازن : {{ kit.total_number_of_kit }}
                 </h2>
                 <Link
                   :href="route('kit.edit', kit.id)"
@@ -103,10 +106,14 @@
       </div>
     </div>
     <kit-tabs
-    :id="kit.id"
-    :note="note"
-    :attachment="attachment"
-    :image="image"
+      :warehouse="kit.total_number_of_kit_warehouse"
+      :stockData="stockData"
+      :incomeIvoice="incomeIvoice"
+      :stratStock="stratStock"
+      :note="note"
+      :attachment="attachment"
+      :image="image"
+      :id="kit.id"
     />
   </AppLayout>
 </template>
@@ -119,7 +126,16 @@ import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import KitTabs from "@/Components/Kit/KitTabs.vue";
 
-const props = defineProps(["kit", "note", "attachment", "image"]);
+const props = defineProps([
+  "kit",
+  "stockData",
+  "incomeIvoice",
+  "stratStock",
+  "note",
+  "attachment",
+  "image",
+  "id",
+]);
 const kit = computed(() => props.kit[0]);
 
 provide("title", "المنتج");

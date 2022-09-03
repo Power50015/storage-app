@@ -47,32 +47,34 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in warehouse" :key="product.index" class="">
-            <td
-              class="
-                border border-dashed border-slate-700
-                py-3
-                px-3
-                hover:text-[#0095e8]
-              "
-            >
-              <Link
-                :href="route('warehouse.show', product.warehouse.id)"
-                class="data hover:text-[#009ef7]"
+          <template v-for="product in warehouse" :key="product.index">
+            <tr class="" v-if="product.quantity > 0">
+              <td
+                class="
+                  border border-dashed border-slate-700
+                  py-3
+                  px-3
+                  hover:text-[#0095e8]
+                "
               >
-                {{ product.warehouse.name }}
-              </Link>
-            </td>
-            <td class="border border-dashed border-slate-700 py-3 px-3">
-              {{ product.quantity }}
-            </td>
-          </tr>
+                <Link
+                  :href="route('warehouse.show', product.warehouse.id)"
+                  class="data hover:text-[#009ef7]"
+                >
+                  {{ product.warehouse.name }}
+                </Link>
+              </td>
+              <td class="border border-dashed border-slate-700 py-3 px-3">
+                {{ product.quantity }}
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
   </div>
 </template>
-<script setup>
+  <script setup>
 import { computed, provide, readonly, reactive, ref } from "@vue/runtime-core";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";

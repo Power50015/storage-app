@@ -120,7 +120,7 @@
                       </h3>
                     </div>
                     <p class="mt-1 mb-4 text-lg font-medium">
-                      المتاح : 88
+                      المتاح : {{ i.total_number_of_kit }}
                     </p>
                   </Link>
                 </td>
