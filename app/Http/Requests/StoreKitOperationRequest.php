@@ -13,7 +13,7 @@ class StoreKitOperationRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class StoreKitOperationRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'quantity' => 'required|numeric|min:1',
+            'action' => 'required|numeric',
+        ];
+    }
+     /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.required' => 'يجب إدخال الملاحظه .',
+            'quantity.required' => 'يجب إدخال الملاحظه .',
+            'action.required' => 'يجب إدخال الملاحظه .',
         ];
     }
 }

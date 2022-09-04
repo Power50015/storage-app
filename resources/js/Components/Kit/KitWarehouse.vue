@@ -44,6 +44,11 @@
             >
               الكميه
             </th>
+            <th
+              class="border border-dashed border-slate-700 py-3 px-3 font-bold"
+            >
+              استخدام / اعدام
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -67,6 +72,9 @@
               <td class="border border-dashed border-slate-700 py-3 px-3">
                 {{ product.quantity }}
               </td>
+              <td class="border border-dashed border-slate-700 py-3 px-3">
+                <kit-action-model/>
+              </td>
             </tr>
           </template>
         </tbody>
@@ -78,6 +86,7 @@
 import { computed, provide, readonly, reactive, ref } from "@vue/runtime-core";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
+import KitActionModel from "./KitActionModel.vue";
 
 const tab = ref("stock");
 

@@ -28,7 +28,6 @@ createInertiaApp({
             .use(PerfectScrollbar)
             .use(plugin)
             .use(ZiggyVue, Ziggy)
-
             .mount(el);
     },
 });

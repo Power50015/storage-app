@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('kit_operations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('action');
+            $table->string('title');
+            $table->boolean('action');
             $table->foreignId('user_id');
             $table->foreignId('kit_id');
             $table->foreignId('warehouse_id');

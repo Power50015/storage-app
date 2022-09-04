@@ -29,12 +29,27 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+
+            $middleware = [
+                'web',
+                'auth:sanctum',
+                config('jetstream.auth_session'),
+                'verified',
+            ];
+
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+
+            // App Routes
+            Route::middleware($middleware)->group(base_path('routes/app/product.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/kit.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/incoming-invoice.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/outgoing-invoice.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/warehouse.php'));
         });
     }
 
