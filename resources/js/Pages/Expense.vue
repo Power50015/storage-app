@@ -15,7 +15,7 @@
           "
         >
           <h2 class="title font-bold mb-4">إضافه مصروف</h2>
-          <form action="POST" @submit.prevent="addExpense">
+          <form action="POST" @submit.prevent="addExpense" autocomplete="off">
             <div class="mb-5">
               <label class="px-3 dark:text-gray-300">
                 بند المصروف
@@ -44,6 +44,7 @@
                   rounded-md
                   py-2
                 "
+                name="name"
               />
             </div>
             <div class="mb-5">
