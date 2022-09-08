@@ -89,7 +89,7 @@ class WarehouseController extends Controller
     public function update(UpdateWarehouseRequest $request, Warehouse $warehouse)
     {
         $warehouse = Warehouse::find($warehouse["id"]);
-        $warehouse->name = $request->nameEdit;
+        $warehouse->name = $request->name;
         $warehouse->address = $request->address;
         $warehouse->user_id = Auth::id();
         $warehouse->save();

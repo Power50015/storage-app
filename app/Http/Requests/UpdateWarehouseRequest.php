@@ -25,13 +25,13 @@ class UpdateWarehouseRequest extends FormRequest
     public function rules()
     {
         $warehouse = Warehouse::find($this->id);
-        if ($warehouse->name == $this->nameEdit)
+        if ($warehouse->name == $this->name)
             return [
-                'nameEdit' => 'required',
+                'name' => 'required',
             ];
 
         return [
-            'nameEdit' => 'required|unique:warehouses,name',
+            'name' => 'required|unique:warehouses,name',
         ];
     }
 
@@ -43,8 +43,8 @@ class UpdateWarehouseRequest extends FormRequest
     public function messages()
     {
         return [
-            'nameEdit.required' => 'يجب إدخال اسم المخزن',
-            'nameEdit.unique' => 'يجب أن يكون الأسم فريد',
+            'name.required' => 'يجب إدخال اسم المخزن',
+            'name.unique' => 'يجب أن يكون الأسم فريد',
         ];
     }
 }

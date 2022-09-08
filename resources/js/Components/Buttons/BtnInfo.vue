@@ -2,7 +2,7 @@
   <component
     :is="element"
     :type="type"
-    :to="to"
+    :href="to"
     class="btn"
     :class="customClass"
   >
@@ -31,6 +31,6 @@ const props = defineProps({
 </script>
 <style scoped>
 .btn {
-  @apply text-white bg-[#009ef7] hover:bg-[#0095e8] focus:bg-[#0095e8];
+  @apply text-white bg-[#7239ea] hover:bg-[#5014d0] focus:bg-[#5014d0];
 }
 </style>

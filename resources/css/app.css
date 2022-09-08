@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.btn {
+    @apply mt-6 border border-transparent rounded-md
+    py-3 px-8 flex items-center justify-center text-base
+    font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 cursor-pointer;
+}
+
 .ql-toolbar.ql-snow,
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
     border: none;

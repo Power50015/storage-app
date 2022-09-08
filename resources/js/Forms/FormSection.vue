@@ -16,17 +16,20 @@
         <h2 class="title font-bold mb-4" v-if="title">{{ title }}</h2>
         <form @submit.prevent="submit" autocomplete="off">
           <slot />
-          <btn-primary type="submit" :title="btnTitle" />
+          <btn-primary element="button" type="submit" customClass="w-full">{{
+            btnTitle
+          }}</btn-primary>
         </form>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
+import { useForm } from "@inertiajs/inertia-vue3";
 import { createToast } from "mosha-vue-toastify";
 import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
-import { ref } from "@vue/reactivity";
+import { reactive, ref } from "@vue/reactivity";
+import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps({
   title: {
@@ -34,7 +37,6 @@ const props = defineProps({
     required: true,
   },
   formRoute: {
-    type: String,
     required: true,
   },
   formData: {
@@ -57,44 +59,54 @@ const props = defineProps({
 
 const submit = () => {
   const form = useForm(props.formData);
-  form.post(route(props.formRoute), {
-    onProgress: (progress) => {},
-    onSuccess: () => {
-      createToast(
-        {
-          title: props.toastMsg,
-          description: props.toastDescription,
-        },
-        {
-          timeout: 3000,
-          transition: "slide",
-          type: "success",
-          showIcon: true,
+  form.post(
+    form.id ? route(props.formRoute, form.id) : route(props.formRoute),
+    {
+      onProgress: (progress) => {},
+      onSuccess: () => {
+        createToast(
+          {
+            title: props.toastMsg,
+            description: props.toastDescription,
+          },
+          {
+            timeout: 3000,
+            transition: "slide",
+            type: "success",
+            showIcon: true,
+          }
+        );
+      },
+      onError: (errors) => {
+        for (const [key, value] of Object.entries(errors)) {
+          for (const key in errors) {
+            createToast(
+              {
+                title: value,
+              },
+              {
+                timeout: 3000,
+                transition: "slide",
+                type: "danger",
+                showIcon: true,
+              }
+            );
+          }
         }
-      );
-    },
-    onError: (errors) => {
-      for (const [key, value] of Object.entries(errors)) {
-        for (const key in errors) {
-          createToast(
-            {
-              title: value,
-            },
-            {
-              timeout: 3000,
-              transition: "slide",
-              type: "danger",
-              showIcon: true,
-            }
-          );
+      },
+      onFinish: () => {
+        form.reset();
+        window.scrollTo(0, document.body.scrollHeight);
+        if (!form._method) {
+          if (document.getElementsByClassName("ql-editor")[0])
+            document.getElementsByClassName("ql-editor")[0].innerHTML = null;
+          for (const [key, value] of Object.entries(props.formData)) {
+            props.formData[key] = null;
+          }
         }
-      }
-    },
-    onFinish: () => {
-      form.reset();
-    },
-  });
+        
+      },
+    }
+  );
 };
-
-defineEmits(["submitted"]);
 </script>

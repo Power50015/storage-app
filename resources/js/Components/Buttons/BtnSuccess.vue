@@ -2,14 +2,14 @@
   <component
     :is="element"
     :type="type"
-    :to="to"
+    :href="to"
     class="btn"
     :class="customClass"
   >
     <slot />
   </component>
 </template>
-<script setup>
+  <script setup>
 const props = defineProps({
   element: {
     required: false,
@@ -29,8 +29,8 @@ const props = defineProps({
   },
 });
 </script>
-<style scoped>
+  <style scoped>
 .btn {
-  @apply text-white bg-[#009ef7] hover:bg-[#0095e8] focus:bg-[#0095e8];
+  @apply text-white bg-[#50cd89] hover:bg-[#47be7d] focus:bg-[#47be7d];
 }
 </style>
