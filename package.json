@@ -31,6 +31,7 @@
         "jspdf": "^2.5.1",
         "mosha-vue-toastify": "^1.0.23",
         "vue-html-to-paper": "^1.4.4",
+        "vue-select": "^4.0.0-beta.5",
         "vue3-perfect-scrollbar": "^1.6.0",
         "vuejs-paginate-next": "^1.0.2"
     }

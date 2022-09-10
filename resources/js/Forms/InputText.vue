@@ -7,6 +7,7 @@
       @input="$emit('update:modelValue', $event.target.value)"
       class="
         w-full
+        mt-3
         text-base
         dark:bg-[#1b1b29]
         bg-[#f5f8fa]
@@ -14,7 +15,7 @@
         active:bg-[#f5f8fa]
         dark:focus:bg-[#1b1b29]
         focus:bg-[#f5f8fa]
-        mt-3
+        
         focus:ring-0
         border-0
         shadow-sm

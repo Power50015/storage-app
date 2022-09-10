@@ -11,6 +11,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
 import PerfectScrollbar from "vue3-perfect-scrollbar";
 import "vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css";
+import "vue-select/dist/vue-select.css";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||

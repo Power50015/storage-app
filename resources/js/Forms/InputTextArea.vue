@@ -24,7 +24,7 @@
         toolbar="minimal"
         contentType="html"
         v-model:content="textArea"
-        @input="$emit('update:modelValue', textArea)"
+        @update:content="$emit('update:modelValue', textArea)"
       />
     </div>
   </div>
@@ -34,6 +34,7 @@
 import { QuillEditor } from "@vueup/vue-quill";
 import FromLabel from "@/Forms/FromLabel.vue";
 import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },

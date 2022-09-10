@@ -97,6 +97,7 @@ const submit = () => {
       onFinish: () => {
         form.reset();
         window.scrollTo(0, document.body.scrollHeight);
+        // Reset Any Editor
         if (!form._method) {
           if (document.getElementsByClassName("ql-editor")[0])
             document.getElementsByClassName("ql-editor")[0].innerHTML = null;
@@ -104,7 +105,9 @@ const submit = () => {
             props.formData[key] = null;
           }
         }
-        
+        // Reset Any Model
+        if (props.formData["modelToggle"])
+          props.formData["modelToggle"] = false;
       },
     }
   );

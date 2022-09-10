@@ -11,18 +11,24 @@
     </Link>
 
     <div class="action">
-      <Modal>
-        <FormSection
-          title="تعديل بيانات المخزن"
-          btnTitle="تعديل المخزن"
-          :formData="form"
-          formRoute="warehouse.update"
-          toastMsg="تم تعديل المخزن"
-          :toastDescription="`تم تعديل المخزن : `"
+      <Modal v-model="form.modelToggle">
+        <template #btn
+          ><i class="fa-solid fa-pen-to-square"></i>
+          <span class="mx-3">تعديل</span></template
         >
-          <InputText v-model="form.name" title="أسم المخزن" :require="true" />
-          <InputTextArea v-model="form.address" title="عنوان المخزن" />
-        </FormSection>
+        <template #default>
+          <FormSection
+            title="تعديل بيانات المخزن"
+            btnTitle="تعديل المخزن"
+            :formData="form"
+            formRoute="warehouse.update"
+            toastMsg="تم تعديل المخزن"
+            :toastDescription="`تم تسجيل المخزن : ${form.name}`"
+          >
+            <InputText v-model="form.name" title="أسم المخزن" :require="true" />
+            <InputTextArea v-model="form.address" title="عنوان المخزن" />
+          </FormSection>
+        </template>
       </Modal>
     </div>
   </div>
@@ -55,5 +61,6 @@ const form = reactive({
   id: props.id,
   name: props.name,
   address: props.address,
+  modelToggle: false,
 });
 </script>
