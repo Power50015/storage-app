@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .btn {
-    @apply mt-6 border border-transparent rounded-md
+    @apply border border-transparent rounded-md
     py-3 px-8 flex items-center justify-center text-base
     font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 cursor-pointer;
 }
@@ -59,11 +59,25 @@ input[type="date"]::-webkit-datetime-edit-month-field {
     padding: 2px;
     left: 26px;
 }
-
 /*------- Day ------------------------*/
 input[type="date"]::-webkit-datetime-edit-day-field {
     @apply dark:text-gray-300 text-black;
     position: absolute !important;
     padding: 2px;
     left: 4px;
+}
+
+/*------------- vSelect -----------------*/
+.vs__dropdown-toggle {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+.vs__dropdown-menu,
+.vs__selected {
+    @apply dark:bg-[#1b1b29] bg-[#f5f8fa] dark:active:bg-[#1b1b29] active:bg-[#f5f8fa]
+          dark:focus:bg-[#1b1b29] focus:bg-[#f5f8fa] dark:text-white text-black text-base;
+}
+.vs__dropdown-menu li {
+    @apply px-2 py-3 hover:bg-[#0095e8] focus:bg-[#0095e8] active:bg-[#0095e8];
 }

@@ -2,42 +2,34 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ProductAttachmentController;
-use App\Http\Controllers\ProductBrandController;
-use App\Http\Controllers\ProductCategoryController;
-use App\Http\Controllers\ProductCollectionController;
-use App\Http\Controllers\ProductColorController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductCountryController;
-use App\Http\Controllers\ProductImageController;
-use App\Http\Controllers\ProductMaterialController;
-use App\Http\Controllers\ProductModelController;
-use App\Http\Controllers\ProductNoteController;
-use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\Product\ProductCategoryController;
+use App\Http\Controllers\Product\ProductTypeController;
+use App\Http\Controllers\Product\ProductBrandController;
+use App\Http\Controllers\Product\ProductCollectionController;
+use App\Http\Controllers\Product\ProductModelController;
+use App\Http\Controllers\Product\ProductColorController;
+use App\Http\Controllers\Product\ProductMaterialController;
 
-Route::resource('/product', ProductController::class);
-Route::resource('/product-note', ProductNoteController::class)->only([
-    'store', 'destroy'
-]);
-Route::resource('/product-attachment', ProductAttachmentController::class)->only([
-    'store', 'destroy'
-]);
-Route::resource('/product-image', ProductImageController::class)->only([
-    'store', 'destroy'
-]);
+use App\Http\Controllers\Product\ProductAttachmentController;
+use App\Http\Controllers\Product\ProductCountryController;
+use App\Http\Controllers\Product\ProductImageController;
+
+use App\Http\Controllers\Product\ProductNoteController;
+use App\Http\Controllers\Product\ProductController;
+
 Route::resource('/product-category', ProductCategoryController::class)->only([
     'store'
 ]);
-Route::get('/product-type/{id}', [ProductTypeController::class, 'index']);
-Route::post('/product-type', [ProductTypeController::class, 'store'])->name('product-type.store');
-
-Route::get('/product-collection/{id}', [ProductCollectionController::class, 'index']);
-Route::post('/product-collection', [ProductCollectionController::class, 'store'])->name('product-collection.store');
-
-Route::get('/product-model/{id}', [ProductModelController::class, 'index']);
-Route::post('/product-model', [ProductModelController::class, 'store'])->name('product-model.store');
-
+Route::resource('/product-type', ProductTypeController::class)->only([
+    'store'
+]);
 Route::resource('/product-brand', ProductBrandController::class)->only([
+    'store'
+]);
+Route::resource('/product-collection', ProductCollectionController::class)->only([
+    'store'
+]);
+Route::resource('/product-model', ProductModelController::class)->only([
     'store'
 ]);
 Route::resource('/product-color', ProductColorController::class)->only([
@@ -49,3 +41,15 @@ Route::resource('/product-material', ProductMaterialController::class)->only([
 Route::resource('/product-country', ProductCountryController::class)->only([
     'store'
 ]);
+
+Route::resource('/product', ProductController::class);
+Route::resource('/product-note', ProductNoteController::class)->only([
+    'store', 'destroy'
+]);
+Route::resource('/product-attachment', ProductAttachmentController::class)->only([
+    'store', 'destroy'
+]);
+Route::resource('/product-image', ProductImageController::class)->only([
+    'store', 'destroy'
+]);
+

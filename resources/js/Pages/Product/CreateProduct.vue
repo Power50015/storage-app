@@ -1,863 +1,289 @@
 <template>
   <AppLayout title="المنتجات">
-    <div class="py-6">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div
-          class="
-            dark:bg-[#1e1e2d]
-            bg-white
-            dark:text-white
-            text-black
-            overflow-hidden
-            shadow-xl
-            rounded-md
-            p-4
-          "
+    <FormSection
+      title="إضافه منتج"
+      btnTitle="حفظ المنتج"
+      :formData="form"
+      formRoute="product.store"
+      toastMsg="تم تسجيل المنتج"
+    >
+      <!-- Product Category -->
+      <FormSelect
+        v-model="form.product_category_id"
+        title="قسم المنتج"
+        :error="errors.product_category_id"
+        :require="true"
+        :options="category"
+        @change-select="categoryChange"
+      >
+        <Modal v-model="categoryForm.modelToggle">
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ قسم"
+              btnTitle="حفظ القسم"
+              :formData="categoryForm"
+              formRoute="product-category.store"
+              toastMsg="تم حفظ القسم"
+              :toastDescription="`تم تسجيل القسم : ${categoryForm.name}`"
+            >
+              <InputText
+                v-model="categoryForm.name"
+                title="أسم القسم"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Type -->
+      <FormSelect
+        v-model="form.product_type_id"
+        title="نوع المنتج"
+        :error="errors.product_type_id"
+        :require="true"
+        :options="type"
+      >
+        <Modal
+          v-model="typeForm.modelToggle"
+          :disabledClass="form.product_category_id == null"
         >
-          <h2 class="title font-bold mb-4">إضافه منتج</h2>
-          <form action="POST" @submit.prevent="addProduct">
-            <!--ProductCategory-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                قسم المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <div v-if="errors.category" class="text-red-800">
-                {{ errors.category }}
-              </div>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.category"
-                  @change="getProductType"
-                >
-                  <option disabled selected>اختار قسم المنتج</option>
-                  <option
-                    v-for="item in ProductCategory"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-category-model />
-              </div>
-            </div>
-            <!--ProductType-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                نوع المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <div v-if="errors.type" class="text-red-800">
-                {{ errors.type }}
-              </div>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.type"
-                >
-                  <option disabled selected>اختار نوع المنتج</option>
-                  <option
-                    v-for="item in ProductTypeData[0]"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-type-model
-                  :productType="productAddForm.category"
-                  @product-type-save-success="getProductType"
-                />
-              </div>
-            </div>
-            <!--ProductBrand-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300"> الماركه </label>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.brand"
-                  @change="getProductCollection"
-                >
-                  <option disabled selected>اختار ماركه المنتج</option>
-                  <option
-                    v-for="item in ProductBrand"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-brand-model
-                  :productCountry="props.ProductCountry"
-                />
-              </div>
-            </div>
-            <!--ProductCollection-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300"> عائله المنتج </label>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.collection"
-                  @change="getProductModel"
-                >
-                  <option disabled selected>اختار نوع المنتج</option>
-                  <option
-                    v-for="item in ProductCollectionData[0]"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-collection-model
-                  :productBrand="productAddForm.brand"
-                  @product-collection-save-success="getProductCollection"
-                />
-              </div>
-            </div>
-            <!--ProductModel-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300"> موديل المنتج </label>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.model"
-                >
-                  <option disabled selected>اختار موديل المنتج</option>
-                  <option
-                    v-for="item in ProductModelData[0]"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-model-model
-                  :productCollection="productAddForm.collection"
-                  @product-model-save-success="getProductModel"
-                />
-              </div>
-            </div>
-            <!--ProductName-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                أسم المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <div v-if="errors.name" class="text-red-800">
-                {{ errors.name }}
-              </div>
-              <input
-                type="text"
-                v-model="productAddForm.name"
-                class="
-                  w-full
-                  text-base
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:active:bg-[#1b1b29]
-                  active:bg-[#f5f8fa]
-                  dark:focus:bg-[#1b1b29]
-                  focus:bg-[#f5f8fa]
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  shadow-sm
-                  rounded-md
-                  py-2
-                "
-              />
-            </div>
-            <!--ProductColor-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                لون المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <div v-if="errors.color" class="text-red-800">
-                {{ errors.color }}
-              </div>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.color"
-                >
-                  <option disabled selected>اختار لون المنتج</option>
-                  <option
-                    v-for="item in ProductColor"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-color-model />
-              </div>
-            </div>
-            <!--ProductMaterial-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                خامه المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <div v-if="errors.material" class="text-red-800">
-                {{ errors.material }}
-              </div>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.material"
-                >
-                  <option disabled selected>اختار خامه المنتج</option>
-                  <option
-                    v-for="item in ProductMaterial"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-material-model />
-              </div>
-            </div>
-            <!--ProductCountry-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                بلد التصنيع للمنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <div v-if="errors.country" class="text-red-800">
-                {{ errors.country }}
-              </div>
-              <div class="flex">
-                <select
-                  class="
-                    w-full
-                    text-base
-                    dark:bg-[#1b1b29]
-                    bg-[#f5f8fa]
-                    dark:active:bg-[#1b1b29]
-                    active:bg-[#f5f8fa]
-                    dark:focus:bg-[#1b1b29]
-                    focus:bg-[#f5f8fa] focus:ring-0
-                    border-0
-                    shadow-sm
-                    rounded-r-md
-                    py-2
-                  "
-                  v-model="productAddForm.country"
-                >
-                  <option disabled selected>اختار بلد المنتج</option>
-                  <option
-                    v-for="item in ProductCountry"
-                    :value="item.id"
-                    :key="item.id"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <add-product-country-model />
-              </div>
-            </div>
-            <!--ProductDescription-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">وصف المنتج</label>
-              <div
-                class="
-                  w-full
-                  text-base
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:active:bg-[#1b1b29]
-                  active:bg-[#f5f8fa]
-                  dark:focus:bg-[#1b1b29]
-                  focus:bg-[#f5f8fa]
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  shadow-sm
-                  py-2
-                  min-h-[100px]
-                  rounded-r-md
-                "
-                dir="ltr"
-              >
-                <QuillEditor
-                  theme="snow"
-                  toolbar="minimal"
-                  v-model:content="productAddForm.description"
-                  contentType="html"
-                />
-              </div>
-            </div>
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300">
-                سعر البيع المتوقع للمنتج
-              </label>
-              <input
-                type="number"
-                min="0.00"
-                step="0.01"
-                v-model="productAddForm.price"
-                class="
-                  w-full
-                  text-base
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:active:bg-[#1b1b29]
-                  active:bg-[#f5f8fa]
-                  dark:focus:bg-[#1b1b29]
-                  focus:bg-[#f5f8fa]
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  shadow-sm
-                  rounded-md
-                  py-2
-                "
-              />
-            </div>
-            <!--ProductSKU-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300"> SKU </label>
-              <input
-                type="text"
-                v-model="productAddForm.sku"
-                class="
-                  w-full
-                  text-base
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:active:bg-[#1b1b29]
-                  active:bg-[#f5f8fa]
-                  dark:focus:bg-[#1b1b29]
-                  focus:bg-[#f5f8fa]
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  shadow-sm
-                  rounded-md
-                  py-2
-                "
-              />
-            </div>
-            <!--ProductImages-->
-            <div class="mb-5">
-              <label class="px-3 dark:text-gray-300" for="file_input"
-                >الصوره الرئيسيه للمنتج<span class="text-red-800 font-bold"
-                  >*</span
-                >
-              </label>
-              <template v-if="imgPreview">
-                <img
-                  :src="imgPreview"
-                  class="img-fluid"
-                  height="300"
-                  width="300"
-                />
-                <p class="mb-0">أسم الملف: {{ imgData.value.name }}</p>
-                <p class="mb-0">
-                  حجم الملف: {{ Math.round(imgData.value.size / 1024) }}KB
-                </p>
-              </template>
-              <input
-                class="
-                  block
-                  w-full
-                  text-sm text-gray-900
-                  rounded-lg
-                  border border-gray-300
-                  dark:text-gray-400
-                  focus:outline-none
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:border-gray-600 dark:placeholder-gray-400
-                  cursor-pointer
-                "
-                id="file_input"
-                type="file"
-                @change="DetectFiles($event.target.files)"
-              />
-            </div>
-            <!--Invoice Images-->
-            <div
-              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ نوع منتجات"
+              btnTitle="حفظ نوع منتجات"
+              :formData="typeForm"
+              formRoute="product-type.store"
+              toastMsg="تم حفظ نوع منتجات"
+              :toastDescription="`تم تسجيل نوع منتجات : ${typeForm.name}`"
             >
-              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
-                الصور
-                <span class="text-red-800 font-bold">*</span>
-              </h2>
-              <div v-for="(i, index) in productAddForm.images" :key="index">
-                <div class="w-full my-5">
-                  <h3>{{ 1 + index }}</h3>
-                  <label class="px-3 dark:text-gray-300"
-                    >الصورة
-                    <span class="text-red-800 font-bold">*</span>
-                  </label>
-                  <div class="flex">
-                    <input
-                      class="
-                        block
-                        w-full
-                        text-sm text-gray-900
-                        rounded-lg
-                        border border-gray-300
-                        dark:text-gray-400
-                        focus:outline-none
-                        dark:bg-[#1b1b29]
-                        bg-[#f5f8fa]
-                        dark:border-gray-600 dark:placeholder-gray-400
-                        cursor-pointer
-                      "
-                      id="file_input"
-                      type="file"
-                      @change="
-                        productAddForm.images[index].image =
-                          $event.target.files[0]
-                      "
-                    />
-                    <!-- Delete -->
-                    <div class="mb-5">
-                      <div
-                        class="
-                          bg-[#EF305E]
-                          text-white
-                          hover:bg-[#EF305E]
-                          cursor-pointer
-                          text-base
-                          mt-3
-                          focus:ring-0
-                          border-0
-                          py-3
-                          w-[80px]
-                          flex
-                          items-center
-                          justify-center
-                          rounded-md
-                        "
-                        @click="
-                          productAddForm.images = productAddForm.images.filter(
-                            (item) => item.id != i.id
-                          )
-                        "
-                      >
-                        <i class="fa-solid fa-xmark"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <hr
-                  v-if="
-                    productAddForm.images.length > 1 &&
-                    productAddForm.images.length != index
-                  "
-                />
-              </div>
-
-              <div>
-                <!--New Item-->
-                <div
-                  class="
-                    mt-10
-                    w-full
-                    bg-[#009ef7]
-                    border border-transparent
-                    rounded-md
-                    py-3
-                    px-8
-                    flex
-                    items-center
-                    justify-center
-                    text-base
-                    font-medium
-                    text-white
-                    hover:bg-[#009ef7]
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-offset-2
-                    focus:ring-[#009ef7]
-                    cursor-pointer
-                  "
-                  @click="pushToImage"
-                >
-                  أضف صورة
-                </div>
-              </div>
-            </div>
-            <!--Invoice Attach-->
-            <div
-              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+              <InputText
+                v-model="typeForm.name"
+                title="نوع منتجات"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Brand -->
+      <FormSelect
+        v-model="form.product_brand_id"
+        title="ماركه المنتج"
+        :options="brand"
+        @change-select="brandChange"
+      >
+        <Modal v-model="brandForm.modelToggle">
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ الماركه"
+              btnTitle="حفظ الماركه"
+              :formData="brandForm"
+              formRoute="product-brand.store"
+              toastMsg="تم حفظ الماركه"
+              :toastDescription="`تم تسجيل الماركه : ${brandForm.name}`"
             >
-              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
-                الملفات
-                <span class="text-red-800 font-bold">*</span>
-              </h2>
-              <div v-for="(i, index) in productAddForm.attachment" :key="index">
-                <div class="w-full my-5">
-                  <h3>{{ 1 + index }}</h3>
-                  <label class="px-3 dark:text-gray-300"
-                    >الملف
-                    <span class="text-red-800 font-bold">*</span>
-                  </label>
-                  <div class="flex">
-                    <input
-                      class="
-                        block
-                        w-full
-                        text-sm text-gray-900
-                        rounded-lg
-                        border border-gray-300
-                        cursor-pointer
-                        dark:text-gray-400
-                        focus:outline-none
-                        dark:bg-[#1b1b29]
-                        bg-[#f5f8fa]
-                        dark:border-gray-600 dark:placeholder-gray-400
-                        cursor-pointer
-                      "
-                      id="file_input"
-                      type="file"
-                      @change="
-                        productAddForm.attachment[index].attachment =
-                          $event.target.files[0]
-                      "
-                    />
-                    <!-- Delete -->
-                    <div class="mb-5">
-                      <div
-                        class="
-                          bg-[#EF305E]
-                          text-lg text-white
-                          hover:bg-[#EF305E]
-                          cursor-pointer
-                          w-full
-                          text-base
-                          mt-3
-                          focus:ring-0
-                          border-0
-                          py-3
-                          w-[80px]
-                          flex
-                          items-center
-                          justify-center
-                          rounded-md
-                        "
-                        @click="
-                          productAddForm.attachment =
-                            productAddForm.attachment.filter(
-                              (item) => item.id != i.id
-                            )
-                        "
-                      >
-                        <i class="fa-solid fa-xmark"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <hr
-                  v-if="
-                    productAddForm.attachment.length > 1 &&
-                    productAddForm.attachment.length != index
-                  "
-                />
-              </div>
-
-              <div>
-                <!--New Item-->
-                <div
-                  class="
-                    mt-10
-                    w-full
-                    bg-[#009ef7]
-                    border border-transparent
-                    rounded-md
-                    py-3
-                    px-8
-                    flex
-                    items-center
-                    justify-center
-                    text-base
-                    font-medium
-                    text-white
-                    hover:bg-[#009ef7]
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-offset-2
-                    focus:ring-[#009ef7]
-                    cursor-pointer
-                  "
-                  @click="pushToAttachment"
-                >
-                  أضف ملف
-                </div>
-              </div>
-            </div>
-
-            <!--Invoice Note-->
-            <div
-              class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3"
+              <InputText
+                v-model="brandForm.name"
+                title="أسم الماركه"
+                :error="errors.name"
+                :require="true"
+              />
+              <FormSelect
+                v-model="brandForm.product_country_id"
+                title="بلد الماركه"
+                :error="errors.product_country_id"
+                :require="true"
+                :options="country"
+              />
+              <InputImage v-model="brandForm.image" title="شعار الماركه" />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Collection -->
+      <FormSelect
+        v-model="form.product_collection_id"
+        title="عائله المنتج"
+        :options="collection"
+        @change-select="collectionChange"
+      >
+        <Modal
+          v-model="collectionForm.modelToggle"
+          :disabledClass="form.product_brand_id == null"
+        >
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ عائله منتج"
+              btnTitle="حفظ عائله منتج "
+              :formData="collectionForm"
+              formRoute="product-collection.store"
+              toastMsg="تم حفظ  عائله منتج"
+              :toastDescription="`تم تسجيل  عائله منتج : ${collectionForm.name}`"
             >
-              <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
-                ملاحظات
-                <span class="text-red-800 font-bold">*</span>
-              </h2>
-              <div v-for="(i, index) in productAddForm.note" :key="index">
-                <div class="w-full my-5">
-                  <h3>{{ 1 + index }}</h3>
-                  <label class="px-3 dark:text-gray-300"
-                    >الملاحظه
-                    <span class="text-red-800 font-bold">*</span>
-                  </label>
-                  <div class="">
-                    <div class="mb-5">
-                      <label class="px-3 dark:text-gray-300">وصف المنتج</label>
-                      <div
-                        class="
-                          w-full
-                          text-base
-                          dark:bg-[#1b1b29]
-                          bg-[#f5f8fa]
-                          dark:active:bg-[#1b1b29]
-                          active:bg-[#f5f8fa]
-                          dark:focus:bg-[#1b1b29]
-                          focus:bg-[#f5f8fa]
-                          mt-3
-                          focus:ring-0
-                          border-0
-                          shadow-sm
-                          py-2
-                          min-h-[100px]
-                          rounded-r-md
-                        "
-                        dir="ltr"
-                      >
-                        <QuillEditor
-                          theme="snow"
-                          toolbar="minimal"
-                          v-model:content="productAddForm.note[index].note"
-                          contentType="html"
-                        />
-                      </div>
-                    </div>
-                    <!-- Delete -->
-                    <div class="mb-5">
-                      <div
-                        class="
-                          bg-[#EF305E]
-                          text-lg text-white
-                          hover:bg-[#EF305E]
-                          cursor-pointer
-                          w-full
-                          text-base
-                          mt-3
-                          focus:ring-0
-                          border-0
-                          py-3
-                          w-[80px]
-                          flex
-                          items-center
-                          justify-center
-                          rounded-md
-                        "
-                        @click="
-                          productAddForm.note = productAddForm.note.filter(
-                            (item) => item.id != i.id
-                          )
-                        "
-                      >
-                        <i class="fa-solid fa-xmark"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <hr
-                  v-if="
-                    productAddForm.note.length > 1 &&
-                    productAddForm.note.length != index
-                  "
-                />
-              </div>
-
-              <div>
-                <!--New Item-->
-                <div
-                  class="
-                    mt-10
-                    w-full
-                    bg-[#009ef7]
-                    border border-transparent
-                    rounded-md
-                    py-3
-                    px-8
-                    flex
-                    items-center
-                    justify-center
-                    text-base
-                    font-medium
-                    text-white
-                    hover:bg-[#009ef7]
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-offset-2
-                    focus:ring-[#009ef7]
-                    cursor-pointer
-                  "
-                  @click="pushToNote"
-                >
-                  أضف ملاحظه
-                </div>
-              </div>
-            </div>
-
-            <!--Button-->
-            <div>
-              <button
-                type="submit"
-                class="
-                  mt-6
-                  w-full
-                  bg-[#009ef7]
-                  border border-transparent
-                  rounded-md
-                  py-3
-                  px-8
-                  flex
-                  items-center
-                  justify-center
-                  text-base
-                  font-medium
-                  text-white
-                  hover:bg-[#009ef7]
-                  focus:outline-none
-                  focus:ring-2
-                  focus:ring-offset-2
-                  focus:ring-[#009ef7]
-                "
-              >
-                حفظ المنتج
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+              <InputText
+                v-model="collectionForm.name"
+                title="عائله منتج"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Model -->
+      <FormSelect
+        v-model="form.product_model_id"
+        title="موديل المنتج"
+        :options="model"
+      >
+        <Modal
+          v-model="modelForm.modelToggle"
+          :disabledClass="form.product_collection_id == null"
+        >
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ موديل منتج"
+              btnTitle="حفظ موديل منتج "
+              :formData="modelForm"
+              formRoute="product-model.store"
+              toastMsg="تم حفظ  موديل المنتج"
+              :toastDescription="`تم تسجيل موديل منتج : ${modelForm.name}`"
+            >
+              <InputText
+                v-model="modelForm.name"
+                title="موديل المنتج"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Name -->
+      <InputText
+        v-model="form.name"
+        title="أسم المنتج"
+        :error="errors.name"
+        :require="true"
+      />
+      <!-- Product Color -->
+      <FormSelect
+        v-model="form.product_color_id"
+        title="لون المنتج"
+        :error="errors.product_color_id"
+        :require="true"
+        :options="color"
+      >
+        <Modal v-model="colorForm.modelToggle">
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ اللون"
+              btnTitle="حفظ اللون"
+              :formData="colorForm"
+              formRoute="product-color.store"
+              toastMsg="تم حفظ اللون"
+              :toastDescription="`تم تسجيل اللون : ${colorForm.name}`"
+            >
+              <InputText
+                v-model="colorForm.name"
+                title="أسم اللون"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Material -->
+      <FormSelect
+        v-model="form.product_material_id"
+        title="خامه المنتج"
+        :error="errors.product_material_id"
+        :require="true"
+        :options="material"
+      >
+        <Modal v-model="materialForm.modelToggle">
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ الخامه"
+              btnTitle="حفظ الخامه"
+              :formData="materialForm"
+              formRoute="product-material.store"
+              toastMsg="تم حفظ الخامه"
+              :toastDescription="`تم تسجيل الخامه : ${materialForm.name}`"
+            >
+              <InputText
+                v-model="materialForm.name"
+                title="أسم الخامه"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Country -->
+      <FormSelect
+        v-model="form.product_country_id"
+        title="بلد التصنيع للمنتج"
+        :error="errors.product_country_id"
+        :require="true"
+        :options="country"
+      >
+        <Modal v-model="countryForm.modelToggle">
+          <template #btn> <i class="fa-solid fa-plus"></i> </template>
+          <template #default>
+            <FormSection
+              title="حفظ البلد"
+              btnTitle="حفظ البلد"
+              :formData="countryForm"
+              formRoute="product-country.store"
+              toastMsg="تم حفظ البلد"
+              :toastDescription="`تم تسجيل البلد : ${countryForm.name}`"
+            >
+              <InputText
+                v-model="countryForm.name"
+                title="أسم البلد"
+                :require="true"
+              />
+            </FormSection>
+          </template>
+        </Modal>
+      </FormSelect>
+      <!-- Product Description -->
+      <InputTextArea v-model="form.description" title="وصف المنتج" />
+      <!-- Product Price -->
+      <InputNumber
+        v-model="form.price"
+        title="سعر البيع المتوقع للمنتج"
+        step="0.01"
+      />
+      <!--ProductSKU-->
+      <InputText v-model="form.sku" title="sku" />
+      <!--ProductImages-->
+      <InputImage
+        v-model="form.image"
+        title="الصوره الرئيسيه للمنتج"
+        :error="errors.image"
+        :require="true"
+      />
+    </FormSection>
   </AppLayout>
 </template>
 
 <script setup>
-import axios from "axios";
-import { computed, provide, readonly, ref, reactive } from "@vue/runtime-core";
-import { Inertia } from "@inertiajs/inertia";
-import { createToast } from "mosha-vue-toastify";
-import { QuillEditor } from "@vueup/vue-quill";
-
+import { computed, provide, readonly,reactive } from "@vue/runtime-core";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import AddProductCategoryModel from "@/Components/Product/AddProductCategoryModel.vue";
-import AddProductBrandModel from "@/Components/Product/AddProductBrandModel.vue";
-import AddProductCollectionModel from "@/Components/Product/AddProductCollectionModel.vue";
-import AddProductModelModel from "@/Components/Product/AddProductModelModel.vue";
-import AddProductTypeModel from "@/Components/Product/AddProductTypeModel.vue";
-import AddProductColorModel from "@/Components/Product/AddProductColorModel.vue";
-import AddProductMaterialModel from "@/Components/Product/AddProductMaterialModel.vue";
-import AddProductCountryModel from "@/Components/Product/AddProductCountryModel.vue";
+import FormSection from "@/Forms/FormSection.vue";
+import FormSelect from "@/Forms/FormSelect.vue";
+import InputText from "@/Forms/InputText.vue";
+import InputTextArea from "@/Forms/InputTextArea.vue";
+import InputNumber from "@/Forms/InputNumber.vue";
+import InputImage from "@/Forms/InputImage.vue";
+import Modal from "@/Components/Modals/Modal.vue";
 
 provide("title", "المنتجات");
 provide(
@@ -872,144 +298,131 @@ provide(
 const props = defineProps([
   "errors",
   "ProductCategory",
+  "ProductType",
   "ProductBrand",
+  "ProductCollection",
+  "ProductModel",
   "ProductColor",
   "ProductMaterial",
   "ProductCountry",
 ]);
-const imgData = reactive([]);
-const imgPreview = ref();
-
-const productAddForm = reactive({
-  category: null,
-  type: null,
-  brand: null,
-  collection: null,
-  model: null,
+const form = reactive({
+  product_category_id: null,
+  product_type_id: null,
+  product_brand_id: null, //nullable
+  product_collection_id: null, //nullable
+  product_model_id: null, //nullable
   name: null,
-  color: null,
-  material: null,
-  description: null,
-  sku: null,
-  price: 0.0,
-  country: null,
+  product_color_id: null,
+  product_material_id: null,
+  description: null, //nullable
+  sku: null, //nullable
+  price: 0.0, //nullable
+  product_country_id: null,
   image: null,
-  attachment: [],
-  note: [],
-  images: [],
 });
 
-function addProduct() {
-  productAddForm.image = imgData.value;
-  Inertia.post(route("product.store"), productAddForm, {
-    onSuccess: () => {
-      createToast(
-        {
-          title: "تم تسجيل المنتج",
-          description: `تم تسجيل المنتج ${productAddForm.type} ${productAddForm.model} ${productAddForm.name}`,
-        },
-        {
-          timeout: 3000,
-          transition: "slide",
-          type: "success",
-          showIcon: true,
-        }
-      );
-      productAddForm.category = null;
-      productAddForm.type = null;
-      productAddForm.brand = null;
-      productAddForm.collection = null;
-      productAddForm.model = null;
-      productAddForm.name = null;
-      productAddForm.color = null;
-      productAddForm.material = null;
-      productAddForm.description = "";
-      productAddForm.sku = null;
-      productAddForm.country = null;
-      productAddForm.image = null;
-      imgData.length = 0;
-      imgPreview.value = null;
-      getProductType();
-      getProductCollection();
-      getProductModel();
-      document.getElementsByClassName("ql-editor")[0].innerHTML = "";
-    },
-    onError: (errors) => {
-      for (const [key, value] of Object.entries(errors)) {
-        createToast(
-          {
-            title: value,
-          },
-          {
-            timeout: 3000,
-            transition: "slide",
-            type: "danger",
-            showIcon: true,
-          }
-        );
-      }
-    },
+const categoryForm = reactive({
+  modelToggle: false,
+  name: null,
+});
+const category = computed(() => {
+  return props.ProductCategory.map((item) => {
+    return { label: item.name, index: item.id };
   });
-}
+});
 
-const ProductTypeData = reactive([]);
-const ProductCollectionData = reactive([]);
-const ProductModelData = reactive([]);
-
-function getProductType() {
-  ProductTypeData.length = 0;
-  axios
-    .get("/product-type/" + productAddForm.category)
-    .then((data) => ProductTypeData.push(data.data));
-}
-
-function getProductCollection() {
-  ProductCollectionData.length = 0;
-  axios
-    .get("/product-collection/" + productAddForm.brand)
-    .then((data) => ProductCollectionData.push(data.data));
-}
-
-function getProductModel() {
-  ProductModelData.length = 0;
-  axios
-    .get("/product-model/" + productAddForm.collection)
-    .then((data) => ProductModelData.push(data.data));
-}
-
-function DetectFiles(input) {
-  imgData.value = input[0];
-
-  imgPreview.value = input[0];
-  if (input) {
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      imgPreview.value = e.target.result;
-    };
-    reader.readAsDataURL(input[0]);
-  }
-}
-
-function pushToAttachment() {
-  productAddForm.attachment.push({
-    id: productAddForm.attachment.length + 1,
-    attachment: null,
+const typeForm = reactive({
+  modelToggle: false,
+  name: null,
+  product_category_id: null,
+});
+const type = computed(() => {
+  return props.ProductType.filter(
+    (item) => item.product_category_id == form.product_category_id
+  ).map((item) => {
+    return { label: item.name, index: item.id };
   });
-}
+});
 
-function pushToNote() {
-  productAddForm.note.push({
-    id: productAddForm.attachment.length + 1,
-    note: null,
+const brandForm = reactive({
+  modelToggle: false,
+  name: null,
+  product_country_id: null,
+});
+
+const brand = computed(() => {
+  return props.ProductBrand.map((item) => {
+    return { label: item.name, index: item.id, image: item.logo };
   });
-}
-function pushToImage() {
-  productAddForm.images.push({
-    id: productAddForm.images.length + 1,
-    image: null,
+});
+
+const collectionForm = reactive({
+  modelToggle: false,
+  name: null,
+  product_brand_id: null,
+});
+const collection = computed(() => {
+  return props.ProductCollection.filter(
+    (item) => item.product_brand_id == form.product_brand_id
+  ).map((item) => {
+    return { label: item.name, index: item.id };
   });
+});
+
+const modelForm = reactive({
+  modelToggle: false,
+  name: null,
+  product_collection_id: null,
+});
+const model = computed(() => {
+  return props.ProductModel.filter(
+    (item) => item.product_collection_id == form.product_collection_id
+  ).map((item) => {
+    return { label: item.name, index: item.id };
+  });
+});
+
+const colorForm = reactive({
+  modelToggle: false,
+  name: null,
+});
+const color = computed(() => {
+  return props.ProductColor.map((item) => {
+    return { label: item.name, index: item.id };
+  });
+});
+
+const materialForm = reactive({
+  modelToggle: false,
+  name: null,
+});
+const material = computed(() => {
+  return props.ProductMaterial.map((item) => {
+    return { label: item.name, index: item.id };
+  });
+});
+
+const countryForm = reactive({
+  modelToggle: false,
+  name: null,
+});
+const country = computed(() => {
+  return props.ProductCountry.map((item) => {
+    return { label: item.name, index: item.id };
+  });
+});
+
+function categoryChange() {
+  form.product_type_id = null;
+  typeForm.product_category_id = form.product_category_id;
 }
-/*const warehouseData = computed(() => {
-    return props.warehouse;
-});*/
+function brandChange() {
+  form.product_collection_id = null;
+  collectionForm.product_brand_id = form.product_brand_id;
+}
+function collectionChange() {
+  form.product_model_id = null;
+  modelForm.product_collection_id = form.product_collection_id;
+}
 </script>

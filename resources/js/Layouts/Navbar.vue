@@ -17,7 +17,7 @@
       print:hidden
     "
   >
-    <div
+    <!-- <div
       class="
         bg-[#1e1e2d]
         logo-section
@@ -131,7 +131,7 @@
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
       </div>
-    </div>
+    </div> -->
   </nav>
 </template>
 

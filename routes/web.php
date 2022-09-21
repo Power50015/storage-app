@@ -42,7 +42,7 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-
+    /*
     // Expense
     Route::resource('/expense', ExpenseController::class)->only([
         'index', 'store'
@@ -78,5 +78,5 @@ Route::middleware([
     // Transfer
     Route::resource('/transfer', TransferController::class)->only([
         'index', 'create', 'store'
-    ]);
+    ]);*/
 });

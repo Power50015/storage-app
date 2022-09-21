@@ -4,7 +4,7 @@
     :type="type"
     :href="to"
     class="btn"
-    :class="customClass"
+    :class="[{ disabledClass: disabledClass }, customClass]"
   >
     <slot />
   </component>
@@ -27,10 +27,14 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  disabledClass: {},
 });
 </script>
   <style scoped>
 .btn {
   @apply text-white bg-[#50cd89] hover:bg-[#47be7d] focus:bg-[#47be7d];
+}
+.disabledClass {
+  @apply bg-slate-50 text-slate-500 hover:bg-slate-50 focus:bg-slate-50 cursor-default;
 }
 </style>

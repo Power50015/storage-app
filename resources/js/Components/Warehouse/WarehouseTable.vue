@@ -38,7 +38,7 @@
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import { reactive } from "@vue/runtime-core";
-import Modal from "@/Components/Modal.vue";
+import Modal from "@/Components/Modals/Modal.vue";
 import FormSection from "@/Forms/FormSection.vue";
 import InputText from "@/Forms/InputText.vue";
 import InputTextArea from "@/Forms/InputTextArea.vue";

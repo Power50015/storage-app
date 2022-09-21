@@ -45,5 +45,7 @@ const props = defineProps({
 defineEmits(["update:modelValue"]);
 
 const textArea = ref(props.modelValue);
+
+// const textArea = computed(() => props.modelValue);
 </script>
   

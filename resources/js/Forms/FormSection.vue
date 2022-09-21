@@ -76,27 +76,8 @@ const submit = () => {
             showIcon: true,
           }
         );
-      },
-      onError: (errors) => {
-        for (const [key, value] of Object.entries(errors)) {
-          for (const key in errors) {
-            createToast(
-              {
-                title: value,
-              },
-              {
-                timeout: 3000,
-                transition: "slide",
-                type: "danger",
-                showIcon: true,
-              }
-            );
-          }
-        }
-      },
-      onFinish: () => {
         form.reset();
-        window.scrollTo(0, document.body.scrollHeight);
+        if (form.scroll) window.scrollTo(0, document.body.scrollHeight);
         // Reset Any Editor
         if (!form._method) {
           if (document.getElementsByClassName("ql-editor")[0])
@@ -109,6 +90,22 @@ const submit = () => {
         if (props.formData["modelToggle"])
           props.formData["modelToggle"] = false;
       },
+      onError: (errors) => {
+        for (const key in errors) {
+          createToast(
+            {
+              title: errors[key],
+            },
+            {
+              timeout: 3000,
+              transition: "slide",
+              type: "danger",
+              showIcon: true,
+            }
+          );
+        }
+      },
+      onFinish: () => {},
     }
   );
 };

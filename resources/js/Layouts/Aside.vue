@@ -49,7 +49,7 @@
         >
           الأكثر إستخداماً
         </li>
-        <li class="mx-5">
+        <!-- <li class="mx-5">
           <Link
             href="/"
             class="py-3 px-4 block rounded-lg my-3"
@@ -62,8 +62,8 @@
             <i class="fa-solid fa-gauge-high"></i>
             <span class="mx-3">لوحه التحكم</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('expense.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -76,8 +76,8 @@
             <i class="fa-solid fa-coins"></i>
             <span class="mx-3">المصاريف</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('incoming-invoice.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -91,8 +91,8 @@
             <i class="fa-solid fa-file-lines"></i>
             <span class="mx-3">الفاوتير الوارده</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('outgoing-invoice.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -106,8 +106,8 @@
             <i class="fa-solid fa-file-invoice"></i>
             <span class="mx-3">الفاوتير الصادرة</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('transfer.create')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -120,8 +120,8 @@
             <i class="fa-solid fa-truck"></i>
             <span class="mx-3">نقل بضائع</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('debtor.create')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -135,7 +135,7 @@
             <i class="fa-solid fa-hand-holding-dollar"></i>
             <span class="mx-3">مدينون</span>
           </Link>
-        </li>
+        </li> -->
         <li
           class="
             pt-5
@@ -147,7 +147,7 @@
         >
           الأقل إستخداماً
         </li>
-        <li class="mx-5">
+        <!-- <li class="mx-5">
           <Link
             :href="route('creditor.create')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -160,8 +160,8 @@
             <i class="fa-solid fa-money-check-dollar"></i>
             <span class="mx-3">دائنون</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('kit.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -172,8 +172,8 @@
             <i class="fa-brands fa-buffer"></i>
             <span class="mx-3">قطع الغيار</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('people.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -186,8 +186,8 @@
             <i class="fas fa-user-friends"></i>
             <span class="mx-3">العملاء و الموردين</span>
           </Link>
-        </li>
-        <li class="mx-5">
+        </li> -->
+        <!-- <li class="mx-5">
           <Link
             :href="route('cash.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -200,7 +200,7 @@
             <i class="fa-solid fa-money-bill-1-wave"></i>
             <span class="mx-3">الكاش</span>
           </Link>
-        </li>
+        </li> -->
         <li class="mx-5">
           <Link
             :href="route('product.index')"
@@ -215,7 +215,7 @@
             <span class="mx-3">المنتجات</span>
           </Link>
         </li>
-        <li class="mx-5">
+        <!-- <li class="mx-5">
           <Link
             :href="route('warehouse.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -228,7 +228,7 @@
             <i class="fas fa-warehouse"></i>
             <span class="mx-3">المخازن</span>
           </Link>
-        </li>
+        </li> -->
       </ul>
     </aside>
     <div
