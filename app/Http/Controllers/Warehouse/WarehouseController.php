@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreWarehouseRequest;
-use App\Http\Requests\UpdateWarehouseRequest;
-use App\Models\Warehouse;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Warehouse\StoreWarehouseRequest;
+use App\Http\Requests\Warehouse\UpdateWarehouseRequest;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -19,7 +18,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Warehouse/Warehouse', [
+        return Inertia::render('Warehouse/Index', [
             "warehouses" => Warehouse::all()
         ]);
     }
@@ -42,11 +41,7 @@ class WarehouseController extends Controller
      */
     public function store(StoreWarehouseRequest $request)
     {
-        Warehouse::create([
-            'name' => $request->name,
-            'address' => $request->address,
-            'user_id' => Auth::id()
-        ]);
+        Warehouse::create($request->all());
         return Redirect::back();
     }
 
@@ -88,7 +83,6 @@ class WarehouseController extends Controller
         $warehouse = Warehouse::find($warehouse["id"]);
         $warehouse->name = $request->name;
         $warehouse->address = $request->address;
-        $warehouse->user_id = Auth::id();
         $warehouse->save();
         return Redirect::back();
     }

@@ -40,6 +40,7 @@ class ProductColorController extends Controller
     {
         ProductColor::create([
             'name' => $request->name,
+            'user_id' => auth()->user()->id,
         ]);
         return Redirect::back();
     }

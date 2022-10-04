@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\IncomingInvoice;
 
-use App\Models\IncomingInvoiceContent;
-use App\Http\Requests\StoreIncomingInvoiceContentRequest;
-use App\Http\Requests\UpdateIncomingInvoiceContentRequest;
+use App\Http\Controllers\Controller;
+use App\Models\IncomingInvoice\IncomingInvoiceContent;
+use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceContentRequest;
+use App\Http\Requests\IncomingInvoice\UpdateIncomingInvoiceContentRequest;
 
 class IncomingInvoiceContentController extends Controller
 {

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kit;
 
-use App\Models\KitOperation;
-use App\Http\Requests\StoreKitOperationRequest;
-use App\Http\Requests\UpdateKitOperationRequest;
+
+use App\Http\Controllers\Controller;
+use App\Models\Kit\KitOperation;
+use App\Http\Requests\Kit\StoreKitOperationRequest;
+use App\Http\Requests\Kit\UpdateKitOperationRequest;
 
 class KitOperationController extends Controller
 {

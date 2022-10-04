@@ -4,16 +4,14 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\WarehouseStock;
-use App\Http\Requests\StoreWarehouseStockRequest;
-use App\Http\Requests\UpdateWarehouseStockRequest;
-use App\Models\Kit;
-use App\Models\KitStock;
-use App\Models\Product;
-use App\Models\Warehouse;
-use App\Models\WarehouseStockAttachment;
-use App\Models\WarehouseStockContent;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Warehouse\StoreWarehouseStockRequest;
+use App\Http\Requests\Warehouse\UpdateWarehouseStockRequest;
+use App\Models\Warehouse\WarehouseStock;
+use App\Models\Kit\Kit;
+use App\Models\Product\Product;
+use App\Models\Warehouse\KitStock;
+use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseStockContent;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -39,7 +37,7 @@ class WarehouseStockController extends Controller
         return Inertia::render('Warehouse/WarehouseStock', [
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "warehouses" => Warehouse::all(),
-            "kits" => Kit::with('product','product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
+            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
         ]);
     }
 
@@ -55,39 +53,24 @@ class WarehouseStockController extends Controller
         $invice = WarehouseStock::create([
             'title' => $request->title,
             'warehouse_id' => $request->warehouses,
-            'user_id' => Auth::id()
+            'user_id' => auth()->user()->id,
         ]);
 
-        // Save Attachment Of Incoming Invoice
-        for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][$i]["attachment"] != null) {
-                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/warehouseStock', 'public');
-                WarehouseStockAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'warehouse_stock_id' => $invice['id'],
-                    'user_id' => Auth::id()
-                ]);
-            }
-        }
 
         // Save The Content Of Incoming Invoice
         for ($i = 0; $i <  count($request["content"]); $i++) {
-            WarehouseStockContent::create([
-                'product_id' => $request["content"][$i]["product"],
-                'quantity' => $request["content"][$i]["quantity"],
-                'warehouse_stock_id' => $invice['id'],
-                'user_id' => Auth::id()
-            ]);
+            WarehouseStockContent::create(array_merge(
+                $request["content"][$i],
+                ['warehouse_stock_id' => $invice['id'], 'user_id' => auth()->user()->id]
+            ));
         }
 
         // Save The Kit Of Incoming Invoice
         for ($i = 0; $i <  count($request["kit"]); $i++) {
-            KitStock::create([
-                'kit_id' => $request["kit"][$i]["kit"],
-                'quantity' => $request["kit"][$i]["quantity"],
-                'warehouse_stock_id' => $invice['id'],
-                'user_id' => Auth::id()
-            ]);
+            KitStock::create(array_merge(
+                $request["kit"][$i],
+                ['warehouse_stock_id' => $invice['id'], 'user_id' => auth()->user()->id]
+            ));
         }
         return redirect()->route('warehouse.index');
     }

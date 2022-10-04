@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KitStock;
-use App\Http\Requests\StoreKitStockRequest;
-use App\Http\Requests\UpdateKitStockRequest;
+use App\Http\Requests\Warehouse\StoreKitStockRequest;
+use App\Http\Requests\Warehouse\UpdateKitStockRequest;
+use App\Models\Warehouse\KitStock ;
 
 class KitStockController extends Controller
 {

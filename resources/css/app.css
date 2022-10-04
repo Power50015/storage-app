@@ -81,3 +81,28 @@ input[type="date"]::-webkit-datetime-edit-day-field {
 .vs__dropdown-menu li {
     @apply px-2 py-3 hover:bg-[#0095e8] focus:bg-[#0095e8] active:bg-[#0095e8];
 }
+
+/**/
+.dataTables_filter input {
+    @apply text-sm text-gray-900 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-[#1b1b29] bg-[#f5f8fa] dark:border-gray-600 dark:placeholder-gray-400 mx-2;
+}
+.dataTables_paginate {
+    @apply my-3 flex;
+    justify-content: flex-start;
+}
+.dataTables_paginate span {
+    @apply flex;
+}
+.paginate_button {
+    @apply mx-2 bg-[#009ef7] border border-transparent rounded-md py-3 px-5 flex items-center justify-center text-base  text-sm text-white hover:bg-[#009ef7] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#009ef7] cursor-pointer;
+}
+.disabled,
+.disabled:hover,
+.current,
+.current:hover {
+  background: #151521;
+  cursor: auto;
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+}

@@ -40,6 +40,7 @@ class ProductCategoryController extends Controller
     {
         ProductCategory::create([
             'name' => $request->name,
+            'user_id' => auth()->user()->id,
         ]);
         return Redirect::back();
     }

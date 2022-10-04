@@ -9,13 +9,13 @@ use App\Http\Controllers\Product\ProductCollectionController;
 use App\Http\Controllers\Product\ProductModelController;
 use App\Http\Controllers\Product\ProductColorController;
 use App\Http\Controllers\Product\ProductMaterialController;
+use App\Http\Controllers\Product\ProductCountryController;
+use App\Http\Controllers\Product\ProductController;
 
 use App\Http\Controllers\Product\ProductAttachmentController;
-use App\Http\Controllers\Product\ProductCountryController;
 use App\Http\Controllers\Product\ProductImageController;
-
 use App\Http\Controllers\Product\ProductNoteController;
-use App\Http\Controllers\Product\ProductController;
+
 
 Route::resource('/product-category', ProductCategoryController::class)->only([
     'store'
@@ -43,7 +43,7 @@ Route::resource('/product-country', ProductCountryController::class)->only([
 ]);
 
 Route::resource('/product', ProductController::class);
-Route::resource('/product-note', ProductNoteController::class)->only([
+/*Route::resource('/product-note', ProductNoteController::class)->only([
     'store', 'destroy'
 ]);
 Route::resource('/product-attachment', ProductAttachmentController::class)->only([
@@ -51,5 +51,5 @@ Route::resource('/product-attachment', ProductAttachmentController::class)->only
 ]);
 Route::resource('/product-image', ProductImageController::class)->only([
     'store', 'destroy'
-]);
+]);*/
 

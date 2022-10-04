@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('number');
             $table->boolean('pay_type')->default(false); //if true pay cash and cash_id = null
             $table->decimal('discount', $precision = 11, $scale = 2);
-            $table->date('date');
+            $table->timestamp('date')->nullable();
             $table->foreignId('cash_id')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('people_id');

@@ -46,10 +46,11 @@ class RouteServiceProvider extends ServiceProvider
 
             // App Routes
             Route::middleware($middleware)->group(base_path('routes/app/product.php'));
-            // Route::middleware($middleware)->group(base_path('routes/app/kit.php'));
-            // Route::middleware($middleware)->group(base_path('routes/app/incoming-invoice.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/people.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/kit.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/incoming-invoice.php'));
             // Route::middleware($middleware)->group(base_path('routes/app/outgoing-invoice.php'));
-            // Route::middleware($middleware)->group(base_path('routes/app/warehouse.php'));
+            Route::middleware($middleware)->group(base_path('routes/app/warehouse.php'));
         });
     }
 

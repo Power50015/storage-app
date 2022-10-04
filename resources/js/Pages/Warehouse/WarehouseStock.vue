@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="إضافه مخزون">
     <FormSection
-      title="إضافه مخزن"
+      title="إضافه مخزون"
       btnTitle="حفظ المخزون"
       :formData="form"
       formRoute="warehouse-stock.store"
@@ -20,165 +20,39 @@
         :error="errors.title"
         :require="true"
       />
-      <FormAttachments v-model="form.attachment" :error="errors.attachment"/>
-
       <!-- Content-->
       <div class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3">
         <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
           محتوى المخزون من المنتجات
-          <span class="text-red-800 font-bold">*</span>
         </h2>
-        <div v-for="(i, index) in form.content" :key="index">
-          <div class="w-full my-5">
-            <h3>{{ 1 + index }}</h3>
-            <label class="px-3 dark:text-gray-300"
-              >المنتج
-              <span class="text-red-800 font-bold">*</span>
-            </label>
-            <select
-              v-model="form.content[index].product"
-              class="
-                w-full
-                text-base
-                dark:bg-[#1b1b29]
-                bg-[#f5f8fa]
-                dark:active:bg-[#1b1b29]
-                active:bg-[#f5f8fa]
-                dark:focus:bg-[#1b1b29]
-                focus:bg-[#f5f8fa]
-                mt-3
-                focus:ring-0
-                border-0
-                shadow-sm
-                rounded-md
-                py-2
-              "
-            >
-              <option
-                v-for="product in products"
-                :key="product.index"
-                :value="product.id"
-              >
-                <template v-if="product.product_brand"
-                  >{{ product.product_brand.name }} |</template
-                >
-                <template v-if="product.product_category">
-                  {{ product.product_category.name }}</template
-                >
-                <template v-if="product.product_type">
-                  |{{ product.product_type.name }}
-                </template>
-                <template v-if="product.product_collection">
-                  |{{ product.product_collection.name }}
-                </template>
-                <template v-if="product.product_model">
-                  |{{ product.product_model.name }}
-                </template>
-                <template v-if="product.product_color">
-                  |{{ product.product_color.name }}
-                </template>
-                <template v-if="product.product_material">
-                  |{{ product.product_material.name }}
-                </template>
-                <template v-if="product.product_country">
-                  | {{ product.product_country.name }}</template
-                >
-                <template v-if="product.sku"> | {{ product.sku }}</template>
-                {{ product.name }}
-              </option>
-            </select>
-          </div>
+        <div v-for="(i, index) in form.content" :key="index" class="mb-3">
+          <!-- product -->
+          <FormSelect
+            v-model="form.content[index].product_id"
+            title="المنتج"
+            :options="products"
+          />
           <div class="w-full flex items-end justify-around">
             <!-- Quanty -->
-            <div class="m-5">
-              <label class="px-3 dark:text-gray-300">
-                كميه المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <input
-                type="number"
-                v-model="form.content[index].quantity"
-                @change="total"
-                min="0"
-                step="1"
-                class="
-                  w-full
-                  text-base
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:active:bg-[#1b1b29]
-                  active:bg-[#f5f8fa]
-                  dark:focus:bg-[#1b1b29]
-                  focus:bg-[#f5f8fa]
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  shadow-sm
-                  rounded-md
-                  py-2
-                "
-              />
-            </div>
+            <InputNumber
+              v-model="form.content[index].quantity"
+              title="كميه المنتج"
+              :step="1"
+              :min="1"
+              :require="true"
+            />
             <!-- Delete -->
-            <div class="mb-5">
-              <div
-                class="
-                  bg-[#EF305E]
-                  text-white
-                  hover:bg-[#EF305E]
-                  cursor-pointer
-                  text-base
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  py-3
-                  w-[80px]
-                  flex
-                  items-center
-                  justify-center
-                  rounded-md
-                "
-                @click="
-                  form.content = form.content.filter((item) => item.id != i.id);
-                  total();
-                "
-              >
-                <i class="fa-solid fa-xmark"></i>
-              </div>
-            </div>
-          </div>
-          <hr v-if="form.content.length > 1 && form.content.length != index" />
-        </div>
-
-        <div>
-          <!--New Item-->
-          <div
-            class="
-              mt-10
-              w-full
-              bg-[#009ef7]
-              border border-transparent
-              rounded-md
-              py-3
-              px-8
-              flex
-              items-center
-              justify-center
-              text-base
-              font-medium
-              text-white
-              hover:bg-[#009ef7]
-              focus:outline-none
-              focus:ring-2
-              focus:ring-offset-2
-              focus:ring-[#009ef7]
-              cursor-pointer
-            "
-            @click="pushToContent"
-          >
-            أضف بند
+            <BtnDanger
+              @click="
+                form.content = form.content.filter((item) => item.id != i.id);
+                total();
+              "
+              ><i class="fa-solid fa-xmark"></i
+            ></BtnDanger>
           </div>
         </div>
+        <!--New Item-->
+        <BtnSuccess @click="pushToContent"> أضف بند</BtnSuccess>
       </div>
       <!-- Kits -->
       <div class="mb-10 dark:bg-[#fefefe0d] dark:border-0 border py-7 px-3">
@@ -186,159 +60,34 @@
           قطع الغيار
           <span class="text-red-800 font-bold">*</span>
         </h2>
-        <div v-for="(i, index) in form.kit" :key="index">
-          <div class="w-full my-5">
-            <h3>{{ 1 + index }}</h3>
-            <label class="px-3 dark:text-gray-300"
-              >المنتج
-              <span class="text-red-800 font-bold">*</span>
-            </label>
-            <select
-              v-model="form.kit[index].kit"
-              class="
-                w-full
-                text-base
-                dark:bg-[#1b1b29]
-                bg-[#f5f8fa]
-                dark:active:bg-[#1b1b29]
-                active:bg-[#f5f8fa]
-                dark:focus:bg-[#1b1b29]
-                focus:bg-[#f5f8fa]
-                mt-3
-                focus:ring-0
-                border-0
-                shadow-sm
-                rounded-md
-                py-2
-              "
-            >
-              <option v-for="kit in kits" :key="kit.index" :value="kit.id">
-                {{ kit.title }}
-                <template v-if="kit.product">
-                  |
-                  <template v-if="kit.product.product_brand"
-                    >{{ kit.product.product_brand.name }} |</template
-                  >
-                  <template v-if="kit.product.product_category">
-                    {{ kit.product.product_category.name }}</template
-                  >
-                  <template v-if="kit.product.product_type">
-                    |{{ kit.product.product_type.name }}
-                  </template>
-                  <template v-if="kit.product.product_collection">
-                    |{{ kit.product.product_collection.name }}
-                  </template>
-                  <template v-if="kit.product.product_model">
-                    |{{ kit.product.product_model.name }}
-                  </template>
-                  <template v-if="kit.product.product_color">
-                    |{{ kit.product.product_color.name }}
-                  </template>
-                  <template v-if="kit.product.product_material">
-                    |{{ kit.product.product_material.name }}
-                  </template>
-                  <template v-if="kit.product.product_country">
-                    | {{ kit.product.product_country.name }}</template
-                  >
-                  <template v-if="kit.product.sku">
-                    | {{ kit.product.sku }}</template
-                  >
-                  | {{ kit.product.name }}</template
-                >
-              </option>
-            </select>
-          </div>
+        <div v-for="(i, index) in form.kit" :key="index" class="mb-3">
+          <!-- kit -->
+          <FormSelect
+            v-model="form.kit[index].kit_id"
+            title="قطعه الغيار"
+            :options="kits"
+          />
           <div class="w-full flex items-end justify-around">
             <!-- Quanty -->
-            <div class="m-5">
-              <label class="px-3 dark:text-gray-300">
-                كميه المنتج
-                <span class="text-red-800 font-bold">*</span>
-              </label>
-              <input
-                type="number"
-                v-model="form.kit[index].quantity"
-                @change="total"
-                min="0"
-                step="1"
-                class="
-                  w-full
-                  text-base
-                  dark:bg-[#1b1b29]
-                  bg-[#f5f8fa]
-                  dark:active:bg-[#1b1b29]
-                  active:bg-[#f5f8fa]
-                  dark:focus:bg-[#1b1b29]
-                  focus:bg-[#f5f8fa]
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  shadow-sm
-                  rounded-md
-                  py-2
-                "
-              />
-            </div>
+            <InputNumber
+              v-model="form.kit[index].quantity"
+              title="كميه القطعه"
+              :step="1"
+              :min="1"
+              :require="true"
+            />
             <!-- Delete -->
-            <div class="mb-5">
-              <div
-                class="
-                  bg-[#EF305E]
-                  text-white
-                  hover:bg-[#EF305E]
-                  cursor-pointer
-                  text-base
-                  mt-3
-                  focus:ring-0
-                  border-0
-                  py-3
-                  w-[80px]
-                  flex
-                  items-center
-                  justify-center
-                  rounded-md
-                "
-                @click="
-                  form.kit = form.kit.filter((item) => item.id != i.id);
-                  total();
-                "
-              >
-                <i class="fa-solid fa-xmark"></i>
-              </div>
-            </div>
-          </div>
-          <hr v-if="form.kit.length > 1 && form.kit.length != index" />
-        </div>
-
-        <div>
-          <!--New Item-->
-          <div
-            class="
-              mt-10
-              w-full
-              bg-[#009ef7]
-              border border-transparent
-              rounded-md
-              py-3
-              px-8
-              flex
-              items-center
-              justify-center
-              text-base
-              font-medium
-              text-white
-              hover:bg-[#009ef7]
-              focus:outline-none
-              focus:ring-2
-              focus:ring-offset-2
-              focus:ring-[#009ef7]
-              cursor-pointer
-            "
-            @click="pushToKit"
-          >
-            أضف بند
+            <BtnDanger
+              @click="
+                form.kit = form.kit.filter((item) => item.id != i.id);
+                total();
+              "
+              ><i class="fa-solid fa-xmark"></i
+            ></BtnDanger>
           </div>
         </div>
+        <!--New Item-->
+        <BtnSuccess @click="pushToKit"> أضف بند</BtnSuccess>
       </div>
     </FormSection>
   </AppLayout>
@@ -352,7 +101,9 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import FormSection from "@/Forms/FormSection.vue";
 import InputText from "@/Forms/InputText.vue";
 import FormSelect from "@/Forms/FormSelect.vue";
-import FormAttachments from "@/Forms/FormAttachments.vue";
+import InputNumber from "@/Forms/InputNumber.vue";
+import BtnDanger from "@/Components/Buttons/BtnDanger.vue";
+import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
 
 provide("title", "إضافه مخزون");
 provide(
@@ -374,6 +125,60 @@ provide(
 
 const props = defineProps(["errors", "products", "warehouses", "kits"]);
 
+const products = computed(() => {
+  return props.products.map((item) => {
+    return {
+      index: item.id,
+      image: item.image,
+      label:
+        item.name +
+        (item.product_collection ? " | " + item.product_collection.name : "") +
+        (item.product_model ? " | " + item.product_model.name : "") +
+        (item.product_brand ? " | " + item.product_brand.name : "") +
+        (item.product_category ? " | " + item.product_category.name : "") +
+        (item.product_type ? " | " + item.product_type.name : "") +
+        (item.product_color ? " | " + item.product_color.name : "") +
+        (item.product_material ? " | " + item.product_material.name : "") +
+        (item.product_country ? " | " + item.product_country.name : ""),
+    };
+  });
+});
+const kits = computed(() => {
+  return props.kits.map((item) => {
+    return {
+      index: item.id,
+      image: item.image,
+      label:
+        item.title +
+        (item.product ? " | " + item.product.name : "") +
+        (item.product && item.product.product_collection
+          ? " | " + item.product.product_collection.name
+          : "") +
+        (item.product && item.product.product_model
+          ? " | " + item.product.product_model.name
+          : "") +
+        (item.product && item.product.product_brand
+          ? " | " + item.product.product_brand.name
+          : "") +
+        (item.product && item.product.product_category
+          ? " | " + item.product.product_category.name
+          : "") +
+        (item.product && item.product.product_type
+          ? " | " + item.product.product_type.name
+          : "") +
+        (item.product && item.product.product_color
+          ? " | " + item.product.product_color.name
+          : "") +
+        (item.product && item.product.product_material
+          ? " | " + item.product.product_material.name
+          : "") +
+        (item.product && item.product.product_country
+          ? " | " + item.product.product_country.name
+          : ""),
+    };
+  });
+});
+
 const options = props.warehouses.map((item) => {
   return { label: item.name, index: item.id };
 });
@@ -382,23 +187,22 @@ const form = reactive({
   title: null,
   warehouses: null,
   content: [],
-  attachment: [],
   kit: [],
 });
 
 function pushToContent() {
   form.content.push({
     id: form.content.length + 1,
-    product: null,
-    quantity: 0,
+    product_id: null,
+    quantity: 1,
   });
 }
 
 function pushToKit() {
   form.kit.push({
     id: form.kit.length + 1,
-    kit: null,
-    quantity: 0,
+    kit_id: null,
+    quantity: 1,
   });
 }
 </script>

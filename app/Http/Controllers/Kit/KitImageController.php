@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kit;
 
-use App\Models\KitImage;
-use App\Http\Requests\StoreKitImageRequest;
-use App\Http\Requests\UpdateKitImageRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Kit\KitImage;
+use App\Http\Requests\Kit\StoreKitImageRequest;
+use App\Http\Requests\Kit\UpdateKitImageRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;

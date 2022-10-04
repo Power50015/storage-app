@@ -40,6 +40,7 @@ class ProductModelController extends Controller
         ProductModel::create([
             'name' => $request->name,
             'product_collection_id' => $request->product_collection_id,
+            'user_id' => auth()->user()->id,
         ]);
         return Redirect::back();
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Warehouse;
 
-use App\Models\Warehouse;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateWarehouseRequest extends FormRequest

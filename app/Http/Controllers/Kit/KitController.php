@@ -1,27 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kit;
 
-use App\Models\Kit;
-use App\Http\Requests\StoreKitRequest;
-use App\Http\Requests\UpdateKitRequest;
-use App\Models\Cash;
-use App\Models\IncomingInvoiceContent;
-use App\Models\IncomingInvoiceKit;
-use App\Models\KitAttachment;
-use App\Models\KitImage;
-use App\Models\KitNote;
-use App\Models\KitStock;
-use App\Models\OutgoingInvoiceContent;
-use App\Models\People;
-use App\Models\Product;
-use App\Models\TransferContent;
-use App\Models\Warehouse;
-use App\Models\WarehouseStockContent;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Kit\Kit;
+use App\Http\Requests\Kit\StoreKitRequest;
+use App\Http\Requests\Kit\UpdateKitRequest;
+// use App\Models\Cash;
+// use App\Models\IncomingInvoiceContent;
+// use App\Models\IncomingInvoiceKit;
+// use App\Models\Kit\KitAttachment;
+// use App\Models\Kit\KitImage;
+// use App\Models\Kit\KitNote;
+// use App\Models\Kit\KitStock;
+// use App\Models\OutgoingInvoiceContent;
+// use App\Models\People\People;
+use App\Models\Product\Product;
+// use App\Models\TransferContent;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
+// use App\Models\WarehouseStockContent;
+// use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Redirect;
+// use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class KitController extends Controller
@@ -33,8 +35,18 @@ class KitController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Kit/Kits', [
-            "kits" =>  Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get()
+        return Inertia::render('Kit/Index', [
+            "kits" =>  Kit::with(
+                'product',
+                'product.product_country',
+                'product.product_material',
+                'product.product_color',
+                'product.product_model',
+                'product.product_collection',
+                'product.product_brand',
+                'product.product_type',
+                'product.product_category'
+            )->get()
         ]);
     }
 
@@ -45,7 +57,7 @@ class KitController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Kit/CreateKit', [
+        return Inertia::render('Kit/Create', [
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "warehouses" => Warehouse::all(),
         ]);
@@ -59,7 +71,16 @@ class KitController extends Controller
      */
     public function store(StoreKitRequest $request)
     {
+        Kit::create(array_merge(
+            $request->all(),
+            [
+                'user_id' => auth()->user()->id,
+                'image' => $request->hasFile('image') ? $request->file('image')->store('image/kit', 'public') : 'no_image.png'
+            ]
+        ));
 
+        return Redirect::back();
+        /*
         $image_path = '';
         if ($request->hasFile('image')) {
             $image_path = $request->file('image')->store('image/kit', 'public');
@@ -114,7 +135,7 @@ class KitController extends Controller
 
 
         // Save The Content Of Incoming Invoice
-        return Redirect::back();
+        return Redirect::back();*/
     }
 
     /**
@@ -125,7 +146,7 @@ class KitController extends Controller
      */
     public function show(Kit $kit)
     {
-        $incomeIvoice = IncomingInvoiceKit::with(['incoming_invoice', 'incoming_invoice.people'])->where('kit_id', $kit->id)->get();
+        /* $incomeIvoice = IncomingInvoiceKit::with(['incoming_invoice', 'incoming_invoice.people'])->where('kit_id', $kit->id)->get();
         $stratStock = KitStock::with('warehouse_stock')->where('kit_id', $kit->id)->get();
         $stockData = [];
 
@@ -149,7 +170,7 @@ class KitController extends Controller
             "note" => KitNote::where('kit_id', $kit->id)->get(),
             "attachment" => KitAttachment::where('kit_id', $kit->id)->get(),
             "image" => KitImage::where('kit_id', $kit->id)->get(),
-        ]);
+        ]);*/
     }
 
     /**
@@ -160,11 +181,11 @@ class KitController extends Controller
      */
     public function edit(Kit $kit)
     {
-        return Inertia::render('Kit/EditKit', [
+        /*return Inertia::render('Kit/EditKit', [
             "kit" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('id', $kit->id)->get(),
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
 
-        ]);
+        ]);*/
     }
 
     /**
@@ -176,7 +197,7 @@ class KitController extends Controller
      */
     public function update(UpdateKitRequest $request, Kit $kit)
     {
-        $image_path = '';
+        /* $image_path = '';
         if ($request->hasFile('image')) {
             Storage::delete("public/" . $request->image);
             $image_path = $request->file('image')->store('image/kit', 'public');
@@ -192,7 +213,7 @@ class KitController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        return Redirect::back();
+        return Redirect::back();*/
     }
 
     /**

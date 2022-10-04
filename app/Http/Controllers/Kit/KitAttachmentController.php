@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kit;
 
-use App\Models\KitAttachment;
-use App\Http\Requests\StoreKitAttachmentRequest;
-use App\Http\Requests\UpdateKitAttachmentRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Models\Kit\KitAttachment;
+use App\Http\Requests\Kit\StoreKitAttachmentRequest;
+use App\Http\Requests\Kit\UpdateKitAttachmentRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,7 +43,6 @@ class KitAttachmentController extends Controller
        KitAttachment::create([
             'attachment' =>  $attachment_path,
             'kit_id' => $request->kit_id,
-            'user_id' => Auth::id()
         ]);
         return Redirect::back();
     }

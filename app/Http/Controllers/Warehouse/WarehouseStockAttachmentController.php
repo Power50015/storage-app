@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\WarehouseStockAttachment;
-use App\Http\Requests\StoreWarehouseStockAttachmentRequest;
-use App\Http\Requests\UpdateWarehouseStockAttachmentRequest;
+use App\Models\Warehouse\WarehouseStockAttachment;
+use App\Http\Requests\Warehouse\StoreWarehouseStockAttachmentRequest;
+use App\Http\Requests\Warehouse\UpdateWarehouseStockAttachmentRequest;
 
 class WarehouseStockAttachmentController extends Controller
 {

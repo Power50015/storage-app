@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\IncomingInvoiceController;
-use App\Http\Controllers\ReturnedIncomingInvoiceController;
+use App\Http\Controllers\IncomingInvoice\IncomingInvoiceController;
+use App\Http\Controllers\IncomingInvoice\ReturnedIncomingInvoiceController;
 use Illuminate\Support\Facades\Route;
 
  // incoming invoice

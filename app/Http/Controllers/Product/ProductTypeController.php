@@ -40,6 +40,7 @@ class ProductTypeController extends Controller
         ProductType::create([
             'name' => $request->name,
             'product_category_id' => $request->product_category_id,
+            'user_id' => auth()->user()->id,
         ]);
         return Redirect::back();
     }

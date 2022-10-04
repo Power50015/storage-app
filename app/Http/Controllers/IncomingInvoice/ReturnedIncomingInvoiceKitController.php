@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\IncomingInvoice;
 
-use App\Models\ReturnedIncomingInvoiceKit;
-use App\Http\Requests\StoreReturnedIncomingInvoiceKitRequest;
-use App\Http\Requests\UpdateReturnedIncomingInvoiceKitRequest;
+use App\Http\Controllers\Controller;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Http\Requests\IncomingInvoice\StoreReturnedIncomingInvoiceKitRequest;
+use App\Http\Requests\IncomingInvoice\UpdateReturnedIncomingInvoiceKitRequest;
 
 class ReturnedIncomingInvoiceKitController extends Controller
 {

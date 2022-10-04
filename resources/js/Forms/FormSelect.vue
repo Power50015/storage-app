@@ -30,8 +30,8 @@
         "
       >
         <template v-slot:option="option">
-          <div class="flex">
-            <img v-if="option['image']" :src="`/storage/${option['image']}`" alt="" width="50" height="50" class="mx-3"/>
+          <div class="flex  items-center">
+            <img v-if="option['image']" :src="`/storage/${option['image']}`" alt="" width="100" height="100" class="mx-3"/>
             <h6>{{ option["label"] }}</h6>
           </div>
         </template>

@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\IncomingInvoice;
 
-use App\Http\Requests\StoreIncomingInvoiceContentRequest;
-use App\Models\IncomingInvoice;
-use App\Http\Requests\StoreIncomingInvoiceRequest;
-use App\Http\Requests\UpdateIncomingInvoiceRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceContentRequest;
+use App\Models\IncomingInvoice\IncomingInvoice;
+use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceRequest;
+use App\Http\Requests\IncomingInvoice\UpdateIncomingInvoiceRequest;
 use App\Models\Cash;
-use App\Models\IncomingInvoiceAttachment;
-use App\Models\IncomingInvoiceContent;
-use App\Models\IncomingInvoiceKit;
-use App\Models\Kit;
-use App\Models\People;
-use App\Models\Product;
-use App\Models\ReturnedIncomingInvoice;
-use App\Models\ReturnedIncomingInvoiceKit;
-use App\Models\Warehouse;
+use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
+use App\Models\IncomingInvoice\IncomingInvoiceContent;
+use App\Models\IncomingInvoice\IncomingInvoiceKit;
+use App\Models\Kit\Kit;
+use App\Models\People\People;
+use App\Models\Product\Product;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class IncomingInvoiceController extends Controller
     public function index()
     {
 
-        return Inertia::render('IncomingInvoice/IncomingInvoice', [
+        return Inertia::render('IncomingInvoice/Index', [
             "incomingInvoice" => IncomingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->get(),
         ]);
     }
@@ -45,8 +46,8 @@ class IncomingInvoiceController extends Controller
      */
     public function create()
     {
-
-        return Inertia::render('IncomingInvoice/CreateIncomingInvoice', [
+// dd(123);
+        return Inertia::render('IncomingInvoice/Create', [
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
@@ -126,14 +127,14 @@ class IncomingInvoiceController extends Controller
      */
     public function show($incomingInvoice)
     {
-        return Inertia::render('IncomingInvoice/ShowIncomingInvoice', [
-            "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
-            "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
-            "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
-            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        ]);
+        // return Inertia::render('IncomingInvoice/ShowIncomingInvoice', [
+        //     "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
+        //     "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        //     "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
+        //     "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
+        //     "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        //     "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        // ]);
     }
 
     /**
@@ -145,18 +146,18 @@ class IncomingInvoiceController extends Controller
     public function edit($incomingInvoice)
     {
 
-        return Inertia::render('IncomingInvoice/EditIncomingInvoice', [
-            "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
-            "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
-            "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
-            "cash" => Cash::all(),
-            "warehouses" => Warehouse::all(),
-            "suppliers" => People::orderByDesc("type")->get(),
-            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
-            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        ]);
+        // return Inertia::render('IncomingInvoice/EditIncomingInvoice', [
+        //     "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
+        //     "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        //     "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
+        //     "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        //     "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
+        //     "cash" => Cash::all(),
+        //     "warehouses" => Warehouse::all(),
+        //     "suppliers" => People::orderByDesc("type")->get(),
+        //     "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
+        //     "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        // ]);
     }
 
     /**
@@ -168,6 +169,7 @@ class IncomingInvoiceController extends Controller
      */
     public function update(UpdateIncomingInvoiceRequest $request, IncomingInvoice $incomingInvoice)
     {
+        /*
         // Edit the Incoming Invoice
         $invice = DB::table('incoming_invoices')->where('id', $incomingInvoice->id)->update([
             'number' => $request->number,
@@ -261,7 +263,7 @@ class IncomingInvoiceController extends Controller
                 ]);
         }
 
-        return Redirect::back();
+        return Redirect::back();*/
     }
 
     /**

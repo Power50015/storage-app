@@ -2,6 +2,7 @@
 
 namespace App\Models\Product;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,11 +43,4 @@ class ProductBrand extends Model
         return $this->hasMany(ProductCollection::class);
     }
 
-    public static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->user_id = auth()->user()->id;
-        });
-    }
 }

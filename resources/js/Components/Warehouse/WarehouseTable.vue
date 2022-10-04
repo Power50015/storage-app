@@ -6,7 +6,7 @@
       :href="route('warehouse.show', props.id)"
       class="hover:text-[#009ef7]"
     >
-      <h3 class="pb-3">{{ props.name }}</h3>
+      <h3 class="pb-3 font-bold">{{ props.name }}</h3>
       <div v-html="props.address" class="text-xs"></div>
     </Link>
 
@@ -23,7 +23,7 @@
             :formData="form"
             formRoute="warehouse.update"
             toastMsg="تم تعديل المخزن"
-            :toastDescription="`تم تسجيل المخزن : ${form.name}`"
+            :toastDescription="`تم تعديل المخزن : ${form.name}`"
           >
             <InputText v-model="form.name" title="أسم المخزن" :require="true" />
             <InputTextArea v-model="form.address" title="عنوان المخزن" />

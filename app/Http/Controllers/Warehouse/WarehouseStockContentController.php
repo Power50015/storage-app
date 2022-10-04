@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\WarehouseStockContent;
-use App\Http\Requests\StoreWarehouseStockContentRequest;
-use App\Http\Requests\UpdateWarehouseStockContentRequest;
+use App\Models\Warehouse\WarehouseStockContent;
+use App\Http\Requests\Warehouse\StoreWarehouseStockContentRequest;
+use App\Http\Requests\Warehouse\UpdateWarehouseStockContentRequest;
 
 class WarehouseStockContentController extends Controller
 {

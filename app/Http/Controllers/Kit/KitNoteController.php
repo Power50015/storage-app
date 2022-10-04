@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kit;
 
-use App\Models\KitNote;
-use App\Http\Requests\StoreKitNoteRequest;
-use App\Http\Requests\UpdateKitNoteRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Kit\KitNote;
+use App\Http\Requests\Kit\StoreKitNoteRequest;
+use App\Http\Requests\Kit\UpdateKitNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 

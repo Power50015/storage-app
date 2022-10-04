@@ -37,7 +37,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Product/Products', [
+
+        // return Product::with(
+        //     [
+        //         'product_category',
+        //         'product_type',
+        //         'product_brand',
+        //         'product_collection',
+        //         'product_model',
+        //         'product_color',
+        //         'product_material',
+        //         'product_country'
+        //     ]
+        // )->paginate(5);
+        return Inertia::render('Product/Index', [
             "products" => Product::with(
                 [
                     'product_category',
@@ -60,7 +73,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Product/CreateProduct', [
+        return Inertia::render('Product/Create', [
             "ProductCategory" => ProductCategory::all(),
             "ProductType" => ProductType::all(),
             "ProductBrand" => ProductBrand::all(),
@@ -82,9 +95,12 @@ class ProductController extends Controller
     {
         Product::create(array_merge(
             $request->all(),
-            ['image' => $request->hasFile('image') ? $request->file('image')->store('image/product', 'public') : 'no_image.png']
+            [
+                'user_id' => auth()->user()->id,
+                'image' => $request->hasFile('image') ? $request->file('image')->store('image/product', 'public') : 'no_image.png'
+            ]
         ));
-        
+
         return Redirect::back();
     }
 
@@ -96,7 +112,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-
+        /*
         $incomeIvoice = IncomingInvoiceContent::with(['incoming_invoice', 'incoming_invoice.people'])->where('product_id', $product->id)->get();
         $outgoingIvoice = OutgoingInvoiceContent::with(['outgoing_invoice', 'outgoing_invoice.people'])->where('product_id', $product->id)->get();
         $stratStock = WarehouseStockContent::with('warehouse_stock')->where('product_id', $product->id)->get();
@@ -133,7 +149,7 @@ class ProductController extends Controller
             "note" => ProductNote::where('product_id', $product->id)->get(),
             "attachment" => ProductAttachment::where('product_id', $product->id)->get(),
             "image" => ProductImage::where('product_id', $product->id)->get(),
-        ]);
+        ]);*/
     }
 
     /**
@@ -144,7 +160,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return Inertia::render('Product/EditProduct', [
+        return Inertia::render('Product/Edit', [
             "ProductCategory" => ProductCategory::all(),
             "ProductBrand" => ProductBrand::all(),
             "ProductColor" => ProductColor::all(),

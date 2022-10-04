@@ -41,6 +41,7 @@ class ProductBrandController extends Controller
 
         ProductBrand::create([
             'name' => $request->name,
+            'user_id' => auth()->user()->id,
             'logo' => $request->hasFile('image') ?
                 $request->file('image')->store('image/brand', 'public') : 'no_image.png',
             'product_country_id' => $request->product_country_id

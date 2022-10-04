@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Warehouse;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,18 +23,16 @@ class StoreWarehouseStockRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->request);
+        // dd($this->request->all()["content"]);
         return [
             'title' => 'required',
             'warehouses' => 'required',
-            'content' => 'required_if:kit,[]|array',
-            'content.*.product' => 'required_if:kit,[]',
-            'content.*.quantity' => 'required_if:kit,[]|numeric|min:1',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
-            'kit' => 'required_if:content,[]|array',
-            'kit.*.kit' => 'required_if:content,[]',
-            'kit.*.quantity' => 'required_if:content,[]|numeric|min:1',
+            'content' => $this->request->all()["kit"] == [] ? 'required' : '',
+            'content.*.product_id' => $this->request->all()["kit"] == [] ? 'required|numeric' : '',
+            'content.*.quantity' => $this->request->all()["kit"] == [] ? 'required|numeric|min:1' : '',
+            'kit' => $this->request->all()["content"] == [] ? 'required' : '',
+            'kit.*.kit_id' => $this->request->all()["content"] == [] ? 'required|numeric' : '',
+            'kit.*.quantity' => $this->request->all()["content"] == [] ?  'required|numeric|min:1' : '',
         ];
     }
     /**
@@ -48,15 +46,11 @@ class StoreWarehouseStockRequest extends FormRequest
             'title.required' => 'يجب إدخال البند',
             'warehouses.required' => 'يجب إدخال المخزن  ',
             'content.*' => 'يجب إدخال محتوى المخزون',
-            'content.*.product.required_if' => 'يجب إدخال المنتجات للمخزون',
-            'content.*.quantity.required_if' =>  'يجب إدخال كميه المنتج فى المخزون',
-            'content.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى المخزون',
-            'content.*.quantity.min' => 'يجب إدخال كميه المنتج فى المخزون',
+            'content.*.product_id.*' => 'يجب إدخال المنتجات للمخزون',
+            'content.*.quantity.*' =>  'يجب إدخال كميه المنتج فى المخزون',
             'kit.*' => 'يجب إدخال محتوى المخزون',
-            'kit.*.product.required_if' => 'يجب إدخال المنتجات للمخزون',
-            'kit.*.quantity.required_if' =>  'يجب إدخال كميه المنتج فى المخزون',
-            'kit.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى المخزون',
-            'kit.*.quantity.min' => 'يجب إدخال كميه المنتج فى المخزون',
+            'kit.*.kit_id.*' => 'يجب إدخال المنتجات للمخزون',
+            'kit.*.quantity.*' =>  'يجب إدخال كميه المنتج فى المخزون',
         ];
     }
 }
