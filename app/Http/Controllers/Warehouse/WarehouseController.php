@@ -7,6 +7,7 @@ use App\Http\Requests\Warehouse\StoreWarehouseRequest;
 use App\Http\Requests\Warehouse\UpdateWarehouseRequest;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class WarehouseController extends Controller
@@ -19,7 +20,11 @@ class WarehouseController extends Controller
     public function index()
     {
         return Inertia::render('Warehouse/Index', [
-            "warehouses" => Warehouse::all()
+            "warehouses" => Warehouse::query()->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->with('user')->paginate(20)->withQueryString(),
+
+            'filters' => Request::only(['search'])
         ]);
     }
 

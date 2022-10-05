@@ -1,6 +1,6 @@
 <template>
   <div class="mb-5">
-    <FromLabel :title="title" :require="require" :error="error" />
+    <FromLabel v-if="title" :title="title" :require="require" :error="error" />
     <input
       type="text"
       :value="modelValue"
@@ -15,13 +15,13 @@
         active:bg-[#f5f8fa]
         dark:focus:bg-[#1b1b29]
         focus:bg-[#f5f8fa]
-        
         focus:ring-0
         border-0
         shadow-sm
         rounded-md
         py-2
       "
+      :placeholder=placeholder
     />
   </div>
 </template>
@@ -32,6 +32,7 @@ defineProps({
   title: { type: String, default: "" },
   error: { type: String, default: "" },
   require: { type: Boolean, default: false },
+  placeholder:{default: ""}
 });
 defineEmits(["update:modelValue"]);
 </script>
