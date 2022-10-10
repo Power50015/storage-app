@@ -2,7 +2,7 @@
   <component
     :is="element"
     :type="type"
-    :to="to"
+    :href="to"
     class="btn"
     :class="customClass"
   >

@@ -1,28 +1,34 @@
 <template>
   <AppLayout title="المخازن">
-    <FormSection
-      title="إضافه مخزن"
-      btnTitle="حفظ المخزن"
-      :formData="form"
-      formRoute="warehouse.store"
-      toastMsg="تم تسجيل المخزن"
-      :toastDescription="`تم تسجيل المخزن : ${form.name}`"
-    >
-      <InputText
-        v-model="form.name"
-        title="أسم المخزن"
-        :error="errors.name"
-        :require="true"
-      />
-      <InputTextArea v-model.lazy="form.address" title="عنوان المخزن" />
-    </FormSection>
-    <SectionTemplate>
-      <div class="flex content-center items-center justify-between mb-2">
-        <h2 class="font-bold">بيانات المخازن</h2>
-        <btn-info :element="Link" :to="route('warehouse-stock.create')">
-          أضف مخزون
-        </btn-info>
+    <SectionTemplate class="pb-0">
+      <h2 class="font-bold text-xl mb-5">بيانات المخازن</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <btn-info
+            :element="Link"
+            :to="route('warehouse.create')"
+            class="mb-3"
+          >
+            أضف مخزن
+          </btn-info>
+          <btn-primary :element="Link" :to="route('warehouse-stock.create')">
+            أضف مخزون
+          </btn-primary>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <CardWarning class="mx-3">
+            <h4 class="mb-3">عدد المخازن</h4>
+            <h4 class="text-xl font-bold">{{ totalWarehouse }}</h4>
+          </CardWarning>
+          <CardDanger>
+            <h4 class="mb-3">عدد المخازن الفارغه</h4>
+            <h4 class="text-xl font-bold">{{ totalEmptyWarehouse }}</h4>
+          </CardDanger>
+        </div>
       </div>
+    </SectionTemplate>
+    <SectionTemplate>
+      <h2 class="font-bold">بيانات المخازن</h2>
       <InputText v-model="search" placeholder="بحث ...." />
       <table class="min-w-max w-full table-auto mt-5">
         <tbody>
@@ -86,7 +92,8 @@
           </tr>
         </tbody>
       </table>
-      <Pagination :links="warehouses.links" />
+      <Pagination :links="warehouses.links" v-if="warehouses.data.length" />
+      <div v-else>لا يوجد بيانات</div>
     </SectionTemplate>
   </AppLayout>
 </template>
@@ -102,17 +109,19 @@ import {
   ref,
 } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
+import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import FormSection from "@/Forms/FormSection.vue";
 import InputText from "@/Forms/InputText.vue";
 import InputTextArea from "@/Forms/InputTextArea.vue";
-import BtnDanger from "@/Components/Buttons/BtnDanger.vue";
+import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 import WarehouseTable from "@/Components/Warehouse/WarehouseTable.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import Modal from "@/Components/Modals/Modal.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";
-import { Inertia } from "@inertiajs/inertia";
+import CardDanger from "@/Components/Cards/Statistics/CardDanger.vue";
+import CardWarning from "@/Components/Cards/Statistics/CardWarning.vue";
 
 provide("title", "المخازن");
 provide(
@@ -123,7 +132,12 @@ provide(
   ])
 );
 
-const props = defineProps(["errors", "warehouses", "filters"]);
+const props = defineProps([
+  "warehouses",
+  "filters",
+  "totalWarehouse",
+  "totalEmptyWarehouse",
+]);
 
 const warehouses = computed(() => props.warehouses);
 

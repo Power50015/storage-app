@@ -45,6 +45,14 @@ class Kit extends Model
     /**
      * Get the KitOperation for the kit.
      */
+    public function warehouse_stocks()
+    {
+        return $this->hasMany(WarehouseStock::class);
+    }
+
+    /**
+     * Get the KitOperation for the kit.
+     */
     public function kit_operations()
     {
         return $this->hasMany(KitOperation::class);
@@ -89,34 +97,44 @@ class Kit extends Model
      */
     public function getTotalNumberOfKitWarehouseAttribute()
     {
-        return 0;
-        // $warehouses = Warehouse::all();
-
-        // $data = [];
+/*
+        $warehouses = Warehouse::all();
+        $data = [];
 
         // // where warehouse is
-        // foreach ($warehouses as $key => $value) {
+        foreach ($warehouses as $key => $value) {
+            $warehouse = $warehouses[$key]['id'];
+            $quantity = 0;
+            // dd(IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $this->id)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->get('quantity')); // Golden Code
+            // dd(KitStock::with('warehouse_stock')->where('kit_id', $this->id)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity'));
+            $quantity += KitStock::with('warehouse_stock')->where('kit_id', $this->id)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity');
+            $quantity += IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $this->id)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            $data[] = [
+                        "warehouse" => $warehouses[$key],
+                        "quantity" => $quantity
+                    ];
+            
+*/
+            // Get The income invoice numbers
+            // $incoming_invoices = IncomingInvoice::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
+            //     $warehouse_stocks = WarehouseStock::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
+            //     $incoming_invoice_id = [];
 
+            //     foreach ($incoming_invoices as $key1 => $value1) {
+            //         $incoming_invoice_id[] = $incoming_invoices[$key1]["id"];
+            //     }
+            //     // Get The income product quantity
+            //     $incoming_q =
+            //         (IncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
+            //             - ReturnedIncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
+            //         ) + KitStock::where('kit_id', $this->id)->whereIn('warehouse_stock_id', $warehouse_stocks)->sum('quantity');
 
-        //     // Get The income invoice numbers
-        //     $incoming_invoices = IncomingInvoice::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
-        //     $warehouse_stocks = WarehouseStock::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
-        //     $incoming_invoice_id = [];
-
-        //     foreach ($incoming_invoices as $key1 => $value1) {
-        //         $incoming_invoice_id[] = $incoming_invoices[$key1]["id"];
-        //     }
-        //     // Get The income product quantity
-        //     $incoming_q =
-        //         (IncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
-        //             - ReturnedIncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
-        //         ) + KitStock::where('kit_id', $this->id)->whereIn('warehouse_stock_id', $warehouse_stocks)->sum('quantity');
-
-        //     $data[] = [
-        //         "warehouse" => $warehouses[$key],
-        //         "quantity" => $incoming_q
-        //     ];
+            //     $data[] = [
+            //         "warehouse" => $warehouses[$key],
+            //         "quantity" => $incoming_q
+            //     ];
         // }
+        // dd($data);
 
 
         // $data = collect($data);

@@ -2,6 +2,8 @@
 
 namespace App\Models\OutgoingInvoice;
 
+use App\Models\Product\Product;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -47,22 +47,7 @@ Route::middleware([
     Route::resource('/expense', ExpenseController::class)->only([
         'index', 'store'
     ]);
-    // People
-    Route::resource('/people', PeopleController::class)->only([
-        'index', 'store'
-    ]);
-    // Cash
-    Route::resource('/cash', CashController::class)->only([
-        'index', 'store'
-    ]);
     
-    // Debtor
-    Route::resource('/debtor', DebtorController::class)->only([
-        'index', 'create', 'store'
-    ]);
-    Route::resource('/debtor-pay', DebtorPayController::class)->only([
-        'create', 'store'
-    ]);
     // Creditor
     Route::resource('/creditor', CreditorController::class)->only([
         'index', 'create', 'store'

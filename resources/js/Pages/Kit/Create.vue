@@ -15,12 +15,8 @@
         :error="errors.title"
         :require="true"
       />
-      <!-- Kit Brand -->
-      <FormSelect
-        v-model="form.product_id"
-        title="ماركه المنتج"
-        :options="products"
-      />
+      <!-- Kit Product -->
+      <SelectProduct v-model="form.product_id" title=" المنتج" />
       <!-- Kit Description-->
       <InputTextArea v-model="form.description" title="تفاصيل قطعه الغيار" />
       <!-- Kit Images-->
@@ -42,6 +38,7 @@ import FormSelect from "@/Forms/FormSelect.vue";
 import InputText from "@/Forms/InputText.vue";
 import InputTextArea from "@/Forms/InputTextArea.vue";
 import InputImage from "@/Forms/InputImage.vue";
+import SelectProduct from "@/Forms/SelectProduct.vue";
 
 provide("title", "قطع غيار");
 provide(
@@ -56,7 +53,7 @@ provide(
   ])
 );
 
-const props = defineProps(["errors", "products"]);
+const props = defineProps(["errors"]);
 
 const products = computed(() => {
   return props.products.map((item) => {
@@ -84,5 +81,4 @@ const form = reactive({
   description: null,
   image: null,
 });
-
 </script>

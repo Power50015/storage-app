@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\OutgoingInvoice;
 
-use App\Models\ReturnedOutgoingInvoice;
-use App\Http\Requests\StoreReturnedOutgoingInvoiceRequest;
-use App\Http\Requests\UpdateReturnedOutgoingInvoiceRequest;
-use App\Models\OutgoingInvoice;
-use App\Models\OutgoingInvoiceAttachment;
-use App\Models\OutgoingInvoiceContent;
-use App\Models\Product;
+use App\Http\Controllers\Controller;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Http\Requests\OutgoingInvoice\StoreReturnedOutgoingInvoiceRequest;
+use App\Http\Requests\OutgoingInvoice\UpdateReturnedOutgoingInvoiceRequest;
+use App\Models\OutgoingInvoice\OutgoingInvoice;
+use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
+use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\Product\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;

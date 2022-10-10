@@ -9,6 +9,7 @@
         :reduce="(item) => item.index"
         @option:selected="change"
         @option:deselected="$emit('update:modelValue', null)"
+        @scroll="scroll"
         dir="rtl"
         class="
           w-full
@@ -30,8 +31,15 @@
         "
       >
         <template v-slot:option="option">
-          <div class="flex  items-center">
-            <img v-if="option['image']" :src="`/storage/${option['image']}`" alt="" width="100" height="100" class="mx-3"/>
+          <div class="flex items-center">
+            <img
+              v-if="option['image']"
+              :src="`/storage/${option['image']}`"
+              alt=""
+              width="100"
+              height="100"
+              class="mx-3"
+            />
             <h6>{{ option["label"] }}</h6>
           </div>
         </template>
@@ -46,7 +54,7 @@
     </div>
   </div>
 </template>
-  <script setup>
+<script setup>
 import FromLabel from "@/Forms/FromLabel.vue";
 import { ref } from "@vue/reactivity";
 import { onMounted, onUnmounted, onUpdated } from "@vue/runtime-core";
@@ -69,6 +77,9 @@ onUnmounted(() => (select.value = props.modelValue));
 function change() {
   emit("update:modelValue", select.value);
   emit("changeSelect");
+}
+function scroll(IntersectionObserver) {
+  console.log(213432);
 }
 </script>
 <style scoped>

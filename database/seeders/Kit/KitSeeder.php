@@ -53,16 +53,6 @@ class KitSeeder extends Seeder
         Kit::factory(10)->create();
         Kit::factory(10)->create();
         Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
+
     }
 }

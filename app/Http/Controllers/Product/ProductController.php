@@ -14,6 +14,8 @@ use App\Models\Product\ProductModel;
 use App\Models\Product\ProductColor;
 use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductCountry;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 use App\Models\IncomingInvoiceContent;
 use App\Models\OutgoingInvoiceContent;
@@ -38,20 +40,8 @@ class ProductController extends Controller
     public function index()
     {
 
-        // return Product::with(
-        //     [
-        //         'product_category',
-        //         'product_type',
-        //         'product_brand',
-        //         'product_collection',
-        //         'product_model',
-        //         'product_color',
-        //         'product_material',
-        //         'product_country'
-        //     ]
-        // )->paginate(5);
         return Inertia::render('Product/Index', [
-            "products" => Product::with(
+            "products" => Product::query()->with(
                 [
                     'product_category',
                     'product_type',
@@ -62,7 +52,22 @@ class ProductController extends Controller
                     'product_material',
                     'product_country'
                 ]
-            )->get()
+            )->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('price', $search)
+                    ->orWhereRelation('product_category', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_type', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_brand', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_collection', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_model', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_color', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
+            })->paginate(12)->withQueryString(),
+
+            'filters' => Request::only(['search'])
         ]);
     }
 
@@ -216,5 +221,34 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+    // Get All Products as a row data
+    public function data()
+    {
+        return Product::query()->with(
+            [
+                'product_category',
+                'product_type',
+                'product_brand',
+                'product_collection',
+                'product_model',
+                'product_color',
+                'product_material',
+                'product_country'
+            ]
+        )->when(FacadesRequest::input('search'), function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('sku', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhere('price', $search)
+                ->orWhereRelation('product_category', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_type', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_brand', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_collection', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_model', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_color', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
+        })->paginate(10)->withQueryString();
     }
 }

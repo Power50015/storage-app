@@ -7,14 +7,9 @@
           أضف منتج
         </btn-info>
       </div>
-      <DataTable class="products w-full" :options="options">
-        <thead>
-          <tr>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody
+      <InputText v-model="search" placeholder="بحث ...." />
+      <div class="products w-full">
+        <div
           class="
             grid grid-cols-1
             gap-y-10
@@ -25,11 +20,11 @@
             mt-5
           "
         >
-          <tr v-for="i in products" :key="i.date">
-            <td :value="i.total_number_of_product" class="hidden">
+          <div v-for="i in products.data" :key="i.date">
+            <div :value="i.total_number_of_product" class="hidden">
               {{ i.total_number_of_product }}
-            </td>
-            <td>
+            </div>
+            <div>
               <Link :href="route('product.show', i.id)" class="group">
                 <div
                   class="
@@ -56,7 +51,7 @@
                   />
                 </div>
                 <div>
-                  <h3 class="mt-1 text-md font-bold	 text-[#009ef7]">
+                  <h3 class="mt-1 text-md font-bold text-[#009ef7]">
                     {{ i.name }} |
                     <template v-if="i.product_collection">
                       {{ i.product_collection.name }} |
@@ -90,27 +85,25 @@
                   المتاح : {{ i.total_number_of_product }}
                 </p>
               </Link>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr></tr>
-        </tfoot>
-      </DataTable>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Pagination :links="products.links" v-if="products.data.length" />
+      <div v-else>لا يوجد بيانات</div>
     </SectionTemplate>
   </AppLayout>
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { computed, provide, readonly } from "@vue/runtime-core";
+import { computed, provide, readonly, ref, watch } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
-
-import DataTable from "datatables.net-vue3";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
+import Pagination from "@/Components/Tables/Pagination.vue";
+import InputText from "@/Forms/InputText.vue";
 
 provide("title", "المنتجات");
 provide(
@@ -121,21 +114,26 @@ provide(
   ])
 );
 
-const options = {
-  pageLength: 12,
-  lengthChange: false,
-  info: false,
-  language: {
-    search: "بحث : ",
-    paginate: {
-      next: "التالى",
-      previous: "السابق",
-    },
-  },
-  order: [0],
-};
+const props = defineProps(["products", "filters"]);
 
-const props = defineProps(["products"]);
+const products = computed(() => props.products);
+
+const search = ref(props.filters.search);
+
+watch(search, (value) => {
+  Inertia.get(
+    "/product",
+    {
+      search: value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+      preserveScroll: true,
+    }
+  );
+});
 </script>
-<style>
+<style scoped>
+
 </style>

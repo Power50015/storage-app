@@ -1,7 +1,8 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Debtor;
 
+use App\Models\Debtor\Debtor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,7 @@ class DebtorSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Debtor::truncate();
+        Debtor::factory(80)->create();
     }
 }

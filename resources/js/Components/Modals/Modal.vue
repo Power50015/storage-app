@@ -7,7 +7,7 @@
   <div class="model" v-if="modelValue">
     <div class="model-overlay" @click="$emit('update:modelValue', false)"></div>
     <div
-      class="model-content max-w-7xl mx-auto sm:px-6 lg:px-8 z-10 lg:w-[750px]"
+      class="model-content max-w-7xl mx-auto sm:px-6 lg:px-8 z-10 lg:w-[750px] text-right"
     >
       <slot />
     </div>

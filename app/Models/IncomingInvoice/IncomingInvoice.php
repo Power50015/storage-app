@@ -2,10 +2,9 @@
 
 namespace App\Models\IncomingInvoice;
 
-use App\Models\Cash;
+use App\Models\Cash\Cash;
 use App\Models\People\People;
-use App\Models\ReturnedIncomingInvoice;
-use App\Models\ReturnedIncomingInvoiceKit;
+
 use App\Models\User;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +14,7 @@ class IncomingInvoice extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_before_discount', 'total_after_discount','total_before_discount_and_returned', 'total_after_discount_befoure_returned'];
+    protected $appends = ['total_before_discount', 'total_after_discount', 'total_before_discount_and_returned', 'total_after_discount_befoure_returned'];
 
     /**
      * Get the users for the IncomingInvoice.
@@ -61,7 +60,7 @@ class IncomingInvoice extends Model
     {
         return $this->hasMany(IncomingInvoiceContent::class);
     }
-     /**
+    /**
      * Get the IncomingInvoiceKit for the IncomingInvoice.
      */
     public function incoming_invoice_kits()
@@ -88,6 +87,7 @@ class IncomingInvoice extends Model
      **/
     public function getTotalBeforeDiscountAttribute()
     {
+        return 0;
         $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
         $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
         $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
@@ -117,6 +117,7 @@ class IncomingInvoice extends Model
      **/
     public function getTotalAfterDiscountAttribute()
     {
+        return 0;
         $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
         $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
         $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
@@ -146,6 +147,7 @@ class IncomingInvoice extends Model
      **/
     public function getTotalBeforeDiscountAndReturnedAttribute()
     {
+        return 0;
         $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
         $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
         $total = 0;
@@ -165,6 +167,7 @@ class IncomingInvoice extends Model
      **/
     public function getTotalAfterDiscountBefoureReturnedAttribute()
     {
+        return 0;
         $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
         $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
         $total = 0;

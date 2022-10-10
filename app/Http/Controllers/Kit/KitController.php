@@ -6,6 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Kit\Kit;
 use App\Http\Requests\Kit\StoreKitRequest;
 use App\Http\Requests\Kit\UpdateKitRequest;
+use App\Models\IncomingInvoice\IncomingInvoiceKit;
+use Illuminate\Support\Facades\Request;
+use App\Models\Product\Product;
+use App\Models\Warehouse\KitStock;
+use App\Models\Warehouse\Warehouse;
+use Illuminate\Support\Facades\Redirect;
+
 // use App\Models\Cash;
 // use App\Models\IncomingInvoiceContent;
 // use App\Models\IncomingInvoiceKit;
@@ -15,10 +22,9 @@ use App\Http\Requests\Kit\UpdateKitRequest;
 // use App\Models\Kit\KitStock;
 // use App\Models\OutgoingInvoiceContent;
 // use App\Models\People\People;
-use App\Models\Product\Product;
+
 // use App\Models\TransferContent;
-use App\Models\Warehouse\Warehouse;
-use Illuminate\Support\Facades\Redirect;
+
 // use App\Models\WarehouseStockContent;
 // use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\DB;
@@ -46,7 +52,19 @@ class KitController extends Controller
                 'product.product_brand',
                 'product.product_type',
                 'product.product_category'
-            )->get()
+            )->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_category', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_type', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_brand', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_collection', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_model', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_color', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_material', 'name', 'like', "%{$search}%")
+                    ->orWhereRelation('product.product_country', 'name', 'like', "%{$search}%");
+            })->paginate(12)->withQueryString(),
+            'filters' => Request::only(['search'])
         ]);
     }
 
@@ -57,10 +75,7 @@ class KitController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Kit/Create', [
-            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
-            "warehouses" => Warehouse::all(),
-        ]);
+        return Inertia::render('Kit/Create');
     }
 
     /**
@@ -80,22 +95,7 @@ class KitController extends Controller
         ));
 
         return Redirect::back();
-        /*
-        $image_path = '';
-        if ($request->hasFile('image')) {
-            $image_path = $request->file('image')->store('image/kit', 'public');
-        } else {
-            $image_path = 'no_image.png';
-        }
-        // Save the Kit
-        $kit = Kit::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'product_id' => $request->product,
-            'image' =>  $image_path,
-            'user_id' => Auth::id()
-        ]);
-
+       /* 
         // Save Attachment Of Kit
         if (!is_null($request["attachment"]))
             for ($i = 0; $i <  count($request["attachment"]); $i++) {
@@ -132,10 +132,10 @@ class KitController extends Controller
                     ]);
                 }
             }
-
+*/
 
         // Save The Content Of Incoming Invoice
-        return Redirect::back();*/
+        return Redirect::back();
     }
 
     /**
@@ -146,6 +146,21 @@ class KitController extends Controller
      */
     public function show(Kit $kit)
     {
+        $warehouses = Warehouse::all();
+        $warehousesData = [];
+
+        //  where warehouse is
+        foreach ($warehouses as $key => $value) {
+            $warehouse = $warehouses[$key]['id'];
+            $quantity = 0;
+            $quantity += KitStock::with('warehouse_stock')->where('kit_id', $kit->id)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity');
+            $quantity += IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $kit->id)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            $warehousesData[] = [
+                "warehouse" => $warehouses[$key],
+                "quantity" => $quantity
+            ];
+        }
+        // dd($warehousesData);
         /* $incomeIvoice = IncomingInvoiceKit::with(['incoming_invoice', 'incoming_invoice.people'])->where('kit_id', $kit->id)->get();
         $stratStock = KitStock::with('warehouse_stock')->where('kit_id', $kit->id)->get();
         $stockData = [];
@@ -171,6 +186,7 @@ class KitController extends Controller
             "attachment" => KitAttachment::where('kit_id', $kit->id)->get(),
             "image" => KitImage::where('kit_id', $kit->id)->get(),
         ]);*/
+        return Inertia::render('Kit/ShowKit');
     }
 
     /**

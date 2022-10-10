@@ -7,17 +7,19 @@ use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceContentRequest;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceRequest;
 use App\Http\Requests\IncomingInvoice\UpdateIncomingInvoiceRequest;
-use App\Models\Cash;
+use App\Models\Cash\Cash;
 use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
 use App\Models\Kit\Kit;
 use App\Models\People\People;
 use App\Models\Product\Product;
+use Illuminate\Support\Facades\Request;
+
 use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Warehouse\Warehouse;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -35,7 +37,22 @@ class IncomingInvoiceController extends Controller
     {
 
         return Inertia::render('IncomingInvoice/Index', [
-            "incomingInvoice" => IncomingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->get(),
+            "incomingInvoice" => IncomingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->when(
+                Request::input('search'),
+                function ($query, $search) {
+                    $query->where('number', 'like', "%{$search}%")
+                        ->orWhere('date', 'like', "%{$search}%")
+                        ->orWhereRelation('warehouse', 'name', 'like', "%{$search}%")
+                        ->orWhereRelation('people', 'name', 'like', "%{$search}%");
+                }
+            )->paginate(35)->withQueryString(),
+
+            'filters' => Request::only(['search']),
+            'totalIncomingInvoice' => IncomingInvoice::count(),
+            'totalIncomingInvoiceThisDay' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfDay()->subDay()->toDateString())->count(),
+            'totalIncomingInvoiceThisWeek' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfWeek()->subWeek()->toDateString())->count(),
+            'totalIncomingInvoiceThisMonth' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfMonth()->subMonth()->toDateString())->count(),
+            'totalIncomingInvoiceThisYear' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfYear()->subMonth()->toDateString())->count()
         ]);
     }
 
@@ -46,7 +63,6 @@ class IncomingInvoiceController extends Controller
      */
     public function create()
     {
-// dd(123);
         return Inertia::render('IncomingInvoice/Create', [
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "cash" => Cash::all(),

@@ -11,37 +11,21 @@ use App\Http\Controllers\Product\ProductColorController;
 use App\Http\Controllers\Product\ProductMaterialController;
 use App\Http\Controllers\Product\ProductCountryController;
 use App\Http\Controllers\Product\ProductController;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 use App\Http\Controllers\Product\ProductAttachmentController;
 use App\Http\Controllers\Product\ProductImageController;
 use App\Http\Controllers\Product\ProductNoteController;
+use App\Models\Product\Product;
 
-
-Route::resource('/product-category', ProductCategoryController::class)->only([
-    'store'
-]);
-Route::resource('/product-type', ProductTypeController::class)->only([
-    'store'
-]);
-Route::resource('/product-brand', ProductBrandController::class)->only([
-    'store'
-]);
-Route::resource('/product-collection', ProductCollectionController::class)->only([
-    'store'
-]);
-Route::resource('/product-model', ProductModelController::class)->only([
-    'store'
-]);
-Route::resource('/product-color', ProductColorController::class)->only([
-    'store'
-]);
-Route::resource('/product-material', ProductMaterialController::class)->only([
-    'store'
-]);
-Route::resource('/product-country', ProductCountryController::class)->only([
-    'store'
-]);
-
+Route::resource('/product-category', ProductCategoryController::class);
+Route::resource('/product-type', ProductTypeController::class);
+Route::resource('/product-brand', ProductBrandController::class);
+Route::resource('/product-collection', ProductCollectionController::class);
+Route::resource('/product-model', ProductModelController::class);
+Route::resource('/product-color', ProductColorController::class);
+Route::resource('/product-material', ProductMaterialController::class);
+Route::resource('/product-country', ProductCountryController::class);
 Route::resource('/product', ProductController::class);
 /*Route::resource('/product-note', ProductNoteController::class)->only([
     'store', 'destroy'
@@ -53,3 +37,4 @@ Route::resource('/product-image', ProductImageController::class)->only([
     'store', 'destroy'
 ]);*/
 
+Route::get('/product-data',[ProductController::class, 'data']);

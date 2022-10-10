@@ -56,18 +56,18 @@ class ProductBrandSeeder extends Seeder
             'product_country_id' => ProductCountry::all()->random()->id,
             'user_id' => User::all()->random()->id,
         ]);
-        ProductBrand::factory()->create([
-            'name' => 'مديا تك',
-            'logo' => function () {
-                $url = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Midea.svg/280px-Midea.svg.png";
-                $contents = file_get_contents($url);
-                $name = substr($url, strrpos($url, '/') + 1);
-                Storage::put('public/image/brand/' . $name, $contents);
-                return 'image/brand/' . $name;
-            },
-            'product_country_id' => ProductCountry::all()->random()->id,
-            'user_id' => User::all()->random()->id,
-        ]);
+        // ProductBrand::factory()->create([
+        //     'name' => 'مديا تك',
+        //     'logo' => function () {
+        //         $url = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Midea.svg/280px-Midea.svg.png";
+        //         $contents = file_get_contents($url);
+        //         $name = substr($url, strrpos($url, '/') + 1);
+        //         Storage::put('public/image/brand/' . $name, $contents);
+        //         return 'image/brand/' . $name;
+        //     },
+        //     'product_country_id' => ProductCountry::all()->random()->id,
+        //     'user_id' => User::all()->random()->id,
+        // ]);
         ProductBrand::factory()->create([
             'name' => 'فلارى اند بوخ',
             'logo' => 'no_image.png',

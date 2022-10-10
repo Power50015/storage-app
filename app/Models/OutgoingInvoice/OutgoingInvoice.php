@@ -2,6 +2,10 @@
 
 namespace App\Models\OutgoingInvoice;
 
+use App\Models\Cash\Cash;
+use App\Models\People\People;
+use App\Models\User;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

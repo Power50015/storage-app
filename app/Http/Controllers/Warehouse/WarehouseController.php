@@ -23,7 +23,8 @@ class WarehouseController extends Controller
             "warehouses" => Warehouse::query()->when(Request::input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })->with('user')->paginate(20)->withQueryString(),
-
+            'totalWarehouse' => Warehouse::count(),
+            'totalEmptyWarehouse' => Warehouse::count(),
             'filters' => Request::only(['search'])
         ]);
     }
@@ -35,7 +36,7 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Warehouse/Create');
     }
 
     /**

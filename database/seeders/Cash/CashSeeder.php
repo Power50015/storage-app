@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Cash;
 
-use App\Models\Cash;
+use App\Models\Cash\Cash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -31,5 +31,11 @@ class CashSeeder extends Seeder
             'attachment' => null,
             'user_id' => 1,
         ]);
+        Cash::create([
+            'title' => 'حساب CIB  مصر رئيسى | 010043200432400',
+            'attachment' => null,
+            'user_id' => 1,
+        ]);
+        Cash::factory(10)->create();
     }
 }

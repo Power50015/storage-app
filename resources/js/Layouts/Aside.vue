@@ -92,7 +92,7 @@
             <span class="mx-3">الفاوتير الوارده</span>
           </Link>
         </li>
-        <!-- <li class="mx-5">
+        <li class="mx-5">
           <Link
             :href="route('outgoing-invoice.index')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -106,7 +106,7 @@
             <i class="fa-solid fa-file-invoice"></i>
             <span class="mx-3">الفاوتير الصادرة</span>
           </Link>
-        </li> -->
+        </li>
         <!-- <li class="mx-5">
           <Link
             :href="route('transfer.create')"
@@ -121,13 +121,12 @@
             <span class="mx-3">نقل بضائع</span>
           </Link>
         </li> -->
-        <!-- <li class="mx-5">
+        <li class="mx-5">
           <Link
             :href="route('debtor.create')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('debtor.create') ||
-              route().current('debtor.index')
+              route().current('debtor.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
@@ -135,7 +134,7 @@
             <i class="fa-solid fa-hand-holding-dollar"></i>
             <span class="mx-3">مدينون</span>
           </Link>
-        </li> -->
+        </li>
         <li
           class="
             pt-5
@@ -178,7 +177,7 @@
             :href="route('people.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('people.index')
+              route().current('people.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
@@ -187,12 +186,12 @@
             <span class="mx-3">العملاء و الموردين</span>
           </Link>
         </li>
-        <!-- <li class="mx-5">
+        <li class="mx-5">
           <Link
             :href="route('cash.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('cash.index')
+              route().current('cash.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "
@@ -200,7 +199,7 @@
             <i class="fa-solid fa-money-bill-1-wave"></i>
             <span class="mx-3">الكاش</span>
           </Link>
-        </li> -->
+        </li>
         <li class="mx-5">
           <Link
             :href="route('product.index')"
@@ -220,7 +219,7 @@
             :href="route('warehouse.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
-              route().current('warehouse.index')
+              route().current('warehouse.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             "

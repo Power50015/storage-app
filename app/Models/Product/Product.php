@@ -5,9 +5,9 @@ namespace App\Models\Product;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
-use App\Models\OutgoingInvoice\OutgoingInvoice;
-use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\OutgoingInvoice\OutgoingInvoice\OutgoingInvoice;
+use App\Models\OutgoingInvoice\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\OutgoingInvoice\OutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\Transfer;
 use App\Models\TransferContent;
 use App\Models\Warehouse\Warehouse;
@@ -174,7 +174,7 @@ class Product extends Model
      */
     public function getTotalNumberOfProductAttribute()
     {
-        return (IncomingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedIncomingInvoice::where('product_id', $this->id)->sum('quantity')) + WarehouseStockContent::where('product_id', $this->id)->sum('quantity') - (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
+        // return (IncomingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedIncomingInvoice::where('product_id', $this->id)->sum('quantity')) + WarehouseStockContent::where('product_id', $this->id)->sum('quantity') - (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
     }
     /**
      * Get the Total Number Product in Warehuose.
@@ -234,6 +234,6 @@ class Product extends Model
      */
     public function getTotalSalesAttribute()
     {
-        return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
+        // return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
     }
 }

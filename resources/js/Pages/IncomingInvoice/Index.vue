@@ -1,119 +1,149 @@
 <template>
   <AppLayout title="الفواتير الوارده">
-    <div class="py-6">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div
-          class="
-            dark:bg-[#1e1e2d]
-            bg-white
-            dark:text-white
-            text-black
-            overflow-hidden
-            shadow-xl
-            rounded-md
-            p-4
-          "
-        >
-          <div class="flex content-center items-center justify-between">
-            <h2 class="title font-bold">الفواتير الوارده</h2>
-            <Link
-              :href="route('incoming-invoice.create')"
-              class="
-                bg-[#7239ea]
-                border border-transparent
-                rounded-md
-                py-3
-                px-8
-                flex
-                items-center
-                justify-center
-                text-base
-                font-medium
-                text-white
-                hover:bg-[#7239ea]
-                focus:outline-none
-                focus:ring-2
-                focus:ring-offset-2
-                focus:ring-[#7239ea]
-                cursor-pointer
-              "
-            >
-              أضف فاتوره وارده
-            </Link>
-          </div>
-          <DataTable class="incoming-invoices" :options="options">
-            <thead>
-              <tr>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="i in incoming_invoices" :key="i.date">
-                <td>
-                  <div
-                    class="
-                      flex
-                      content-center
-                      items-center
-                      justify-between
-                      hover:gray-500
-                      item
-                      py-3
-                      border-b
-                    "
-                  >
-                    <Link
-                      :href="route('incoming-invoice.show', i.id)"
-                      class="data hover:text-[#009ef7]"
-                    >
-                      <h3 class="">رقم الفاتوره : {{ i.number }}</h3>
-                      <div class="text-sm pb-3">{{ dateFormat(i.date) }}</div>
-                      <div class="text-sm">{{ i.people.name }}</div>
-                      <div class="text-sm">
-                        نوع الدفع :
-                        <span v-if="i.pay_type == 0">على الحساب</span>
-                        <span v-if="i.pay_type == 1">كاش</span>
-                      </div>
-                      <div class="text-md text-[#50cd89] mt-3">
-                        إجمالى الفاتوره بعد الخصم :
-                        {{ i.total_before_discount }}
-                      </div>
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr></tr>
-            </tfoot>
-          </DataTable>
-        </div>
+    <SectionTemplate class="pb-0">
+      <h2 class="font-bold text-xl mb-5">الفواتير الوارده</h2>
+      <div class="grid grid-cols-5 gap-3">
+        <CardPrimary>
+          <h4 class="mb-3">الفواتير اليوم</h4>
+          <h4 class="text-xl font-bold">
+            {{ totalIncomingInvoiceThisDay }}
+          </h4>
+        </CardPrimary>
+        <CardInfo>
+          <h4 class="mb-3">الفواتير الأسبوع</h4>
+          <h4 class="text-xl font-bold">
+            {{ totalIncomingInvoiceThisWeek }}
+          </h4>
+        </CardInfo>
+        <CardDanger>
+          <h4 class="mb-3">الفواتير الشهر</h4>
+          <h4 class="text-xl font-bold">
+            {{ totalIncomingInvoiceThisMonth }}
+          </h4>
+        </CardDanger>
+        <CardSuccess>
+          <h4 class="mb-3">الفواتير السنه</h4>
+          <h4 class="text-xl font-bold">
+            {{ totalIncomingInvoiceThisYear }}
+          </h4>
+        </CardSuccess>
+        <CardWarning>
+          <h4 class="mb-3">الفواتير على النظام</h4>
+          <h4 class="text-xl font-bold">
+            {{ totalIncomingInvoice }}
+          </h4>
+        </CardWarning>
       </div>
-    </div>
+    </SectionTemplate>
+    <SectionTemplate>
+      <div class="flex content-center items-center justify-between mb-2">
+        <h2 class="font-bold">بيانات الفواتير الوارده</h2>
+        <btn-info :element="Link" :to="route('incoming-invoice.create')">
+          فاتوره جديده
+        </btn-info>
+      </div>
+      <InputText v-model="search" placeholder="بحث ...." />
+      <table class="min-w-max w-full table-auto mt-5">
+        <tbody>
+          <tr
+            class="text-right"
+            v-for="item in incoming_invoices.data"
+            :key="item.index"
+          >
+            <td class="py-3 px-6 whitespace-nowrap text-right">
+              <Link
+                :href="route('incoming-invoice.show', item.id)"
+                class="data hover:text-[#009ef7]"
+              >
+                <h3 class="pb-2">رقم الفاتوره : {{ item.number }}</h3>
+                <div class="text-sm pb-3">
+                  {{
+                    new Date(item.date).toLocaleDateString("ar-EG-u-nu-latn", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  }}
+                </div>
+              </Link>
+            </td>
+            <td class="py-3 px-6 text-center">
+              <Link
+                :href="route('people.show', item.people.id)"
+                class="data hover:text-[#009ef7]"
+              >
+                <div class="pb-2">{{ item.people.name }}</div>
+                <div class="text-sm">
+                  نوع الدفع :
+                  <span v-if="item.pay_type == 0">على الحساب</span>
+                  <span v-if="item.pay_type == 1">كاش</span>
+                </div>
+              </Link>
+            </td>
+            <td class="py-3 px-6 text-center">
+              <div class="text-md text-[#50cd89] text-center">
+                <div class="pb-2">إجمالى بعد الخصم</div>
+                {{ item.total_before_discount }}
+              </div>
+            </td>
+
+            <td class="py-3 px-6 text-left">
+              <div class="flex items-left justify-end">
+                <div class="mr-2">
+                  <img
+                    class="w-6 h-6 rounded-full"
+                    :src="item.user.profile_photo_url"
+                  />
+                </div>
+                <Link
+                  :href="route('incoming-invoice.show', item.id)"
+                  class="hover:text-[#009ef7]"
+                >
+                  <h6 class="mx-2">{{ item.user.name }}</h6>
+                  <h6 class="mx-2">
+                    {{
+                      new Date(item.created_at).toLocaleDateString(
+                        "ar-EG-u-nu-latn",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        }
+                      )
+                    }}
+                  </h6>
+                </Link>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <Pagination
+        :links="incoming_invoices.links"
+        v-if="incoming_invoices.data.length"
+      />
+      <div v-else>لا يوجد بيانات</div>
+    </SectionTemplate>
   </AppLayout>
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { computed, provide, readonly } from "@vue/runtime-core";
+import { reactive, computed, provide, readonly, ref, watch } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import DataTable from "datatables.net-vue3";
+import SectionTemplate from "@/Components/SectionTemplate.vue";
+import Pagination from "@/Components/Tables/Pagination.vue";
+import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
+import InputText from "@/Forms/InputText.vue";
+import CardPrimary from "@/Components/Cards/Statistics/CardPrimary.vue";
+import CardInfo from "@/Components/Cards/Statistics/CardInfo.vue";
+import CardDanger from "@/Components/Cards/Statistics/CardDanger.vue";
+import CardSuccess from "@/Components/Cards/Statistics/CardSuccess.vue";
+import CardWarning from "@/Components/Cards/Statistics/CardWarning.vue";
 
-const options = {
-  pageLength: 35,
-  lengthChange: false,
-  info: false,
-  language: {
-    search: "بحث : ",
-    paginate: {
-      next: "التالى",
-      previous: "السابق",
-    },
-  },
-  order: [],
-};
 provide("title", "الفواتير الوارده");
 provide(
   "breadcrumb",
@@ -123,49 +153,31 @@ provide(
   ])
 );
 
-const props = defineProps(["incomingInvoice"]);
+const props = defineProps([
+  "filters",
+  "incomingInvoice",
+  "totalIncomingInvoice",
+  "totalIncomingInvoiceThisDay",
+  "totalIncomingInvoiceThisWeek",
+  "totalIncomingInvoiceThisMonth",
+  "totalIncomingInvoiceThisYear",
+]);
 
-const incoming_invoices = props.incomingInvoice;
+const incoming_invoices = computed(() => props.incomingInvoice);
 
-function dateFormat(x) {
-  var options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  var today = new Date(x);
-  return today.toLocaleDateString("ar-EG", options);
-}
+const search = ref(props.filters.search);
+
+watch(search, (value) => {
+  Inertia.get(
+    "/incoming-invoice",
+    {
+      search: value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+      preserveScroll: true,
+    }
+  );
+});
 </script>
-<style>
-/* @import "datatables.net-dt"; */
-.incoming-invoices {
-  margin-top: 10px;
-  width: 100% !important;
-  text-align: right !important;
-}
-.dataTables_filter input {
-  @apply text-sm text-gray-900 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-[#1b1b29] bg-[#f5f8fa] dark:border-gray-600 dark:placeholder-gray-400 mx-2;
-}
-.dataTables_paginate {
-  @apply my-3 flex;
-  justify-content: flex-start;
-}
-.dataTables_paginate span {
-  @apply flex;
-}
-.paginate_button {
-  @apply mx-2 bg-[#009ef7] border border-transparent rounded-md py-3 px-5 flex items-center justify-center text-base  text-sm text-white hover:bg-[#009ef7] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#009ef7] cursor-pointer;
-}
-.disabled,
-.disabled:hover,
-.current,
-.current:hover {
-  background: #151521;
-  cursor: auto;
-  outline: none;
-  outline-offset: 0;
-  box-shadow: none;
-}
-</style>

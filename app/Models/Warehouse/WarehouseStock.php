@@ -42,5 +42,13 @@ class WarehouseStock extends Model
    {
        return $this->hasMany(WarehouseStockContent::class);
    }
+
+   /**
+    * Get the WarehouseStockContent for the OutgoingInvoice.
+    */
+    public function kit_stocks()
+    {
+        return $this->hasMany(KitStock::class);
+    }
    
 }

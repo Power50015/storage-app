@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\OutgoingInvoice;
 
-use App\Models\OutgoingInvoice;
-use App\Http\Requests\StoreOutgoingInvoiceRequest;
-use App\Http\Requests\UpdateOutgoingInvoiceRequest;
-use App\Models\Cash;
-use App\Models\OutgoingInvoiceAttachment;
-use App\Models\OutgoingInvoiceContent;
-use App\Models\People;
-use App\Models\Product;
-use App\Models\ReturnedOutgoingInvoice;
-use App\Models\Warehouse;
+use App\Http\Controllers\Controller;
+use App\Models\OutgoingInvoice\OutgoingInvoice;
+use App\Http\Requests\OutgoingInvoice\StoreOutgoingInvoiceRequest;
+use App\Http\Requests\OutgoingInvoice\UpdateOutgoingInvoiceRequest;
+use Illuminate\Support\Facades\Request;
+use App\Models\Cash\Cash;
+use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
+use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\People\People;
+use App\Models\Product\Product;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\Warehouse\Warehouse;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -27,8 +30,23 @@ class OutgoingInvoiceController extends Controller
      */
     public function index()
     {
-        return Inertia::render('OutgoingInvoice/OutgoingInvoice', [
-            "outgoingInvoice" => OutgoingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->get(),
+        return Inertia::render('OutgoingInvoice/Index', [
+            "outgoingInvoice" => OutgoingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->when(
+                Request::input('search'),
+                function ($query, $search) {
+                    $query->where('number', 'like', "%{$search}%")
+                        ->orWhere('date', 'like', "%{$search}%")
+                        ->orWhereRelation('warehouse', 'name', 'like', "%{$search}%")
+                        ->orWhereRelation('people', 'name', 'like', "%{$search}%");
+                }
+            )->paginate(35)->withQueryString(),
+
+            'filters' => Request::only(['search']),
+            'totalOutgoingInvoice' => OutgoingInvoice::count(),
+            'totalOutgoingInvoiceThisDay' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfDay()->subDay()->toDateString())->count(),
+            'totalOutgoingInvoiceThisWeek' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfWeek()->subWeek()->toDateString())->count(),
+            'totalOutgoingInvoiceThisMonth' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfMonth()->subMonth()->toDateString())->count(),
+            'totalOutgoingInvoiceThisYear' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfYear()->subMonth()->toDateString())->count()
         ]);
     }
 

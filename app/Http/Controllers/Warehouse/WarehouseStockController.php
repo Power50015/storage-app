@@ -34,7 +34,7 @@ class WarehouseStockController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Warehouse/WarehouseStock', [
+        return Inertia::render('WarehouseStock/Create', [
             "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "warehouses" => Warehouse::all(),
             "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
