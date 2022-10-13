@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\Transfer\TransferKit;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -370,6 +372,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(TransferAttachment::class);
     }
+     /**
+     * Get the Transfer To for the Transfer Kit.
+     */
+    public function transfer_kits()
+    {
+        return $this->hasMany(TransferKit::class);
+    }
     /**
      * Get the IncomingInvoiceKit for the IncomingInvoice.
      */
@@ -383,5 +392,12 @@ class User extends Authenticatable
     public function returned_incoming_invoice_kits()
     {
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_outgoing_invoice_kits()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
     }
 }

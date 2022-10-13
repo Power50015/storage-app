@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->decimal('amount', $precision = 11, $scale = 2);
             $table->text('description')->nullable();
-            $table->date('date');
+            $table->timestamp('date')->useCurrent();
             $table->foreignId('user_id');
         });
     }

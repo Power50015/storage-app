@@ -22,7 +22,7 @@ class IncomingInvoiceKitFactory extends Factory
         return [
             'quantity' => $faker->numberBetween($min = 1, $max = 100),
             'price' => $faker->numberBetween($min = 15, $max = 200),
-            'kit_id' => $faker->unique()->randomElement(Kit::all('id')) //Product::all()->random()->id
+            'kit_id' => $faker->unique()->randomElement(Kit::all('id'))
         ];
     }
 }

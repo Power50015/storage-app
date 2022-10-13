@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->date('date');
+            $table->string('name')->nullable();
+            $table->timestamp('date')->useCurrent();
             $table->foreignId('driver_id')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('warehouse_from_id');

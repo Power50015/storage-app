@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('returned_incoming_invoice_kits', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->date('date');
+            $table->timestamp('date')->useCurrent();
             $table->integer('quantity');
             $table->foreignId('incoming_invoice_id');
             $table->foreignId('kit_id');

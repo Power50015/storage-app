@@ -2,6 +2,8 @@
 
 namespace App\Models\Kit;
 
+use App\Models\User;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,12 +34,5 @@ class KitOperation extends Model
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
-    }
-    public static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->user_id = auth()->user()->id;
-        });
     }
 }

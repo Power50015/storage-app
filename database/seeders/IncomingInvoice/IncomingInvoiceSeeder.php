@@ -20,6 +20,7 @@ class IncomingInvoiceSeeder extends Seeder
        
         IncomingInvoice::truncate();
         IncomingInvoiceContent::truncate();
+        IncomingInvoiceKit::truncate();
 
         IncomingInvoice::factory(5000)->create()->each(function ($IncomingInvoice) {
             if (rand(0, 1)) {

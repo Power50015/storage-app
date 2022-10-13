@@ -67,6 +67,13 @@ class OutgoingInvoice extends Model
         return $this->hasMany(ReturnedOutgoingInvoice::class);
     }
     /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_outgoing_invoice_kits()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
+    }
+    /**
      * Get The Total Before Discount
      **/
     public function getTotalBeforeDiscountAttribute()

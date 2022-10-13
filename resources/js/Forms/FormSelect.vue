@@ -1,6 +1,6 @@
 <template>
   <div class="mb-5">
-    <FromLabel :title="title" :require="require" :error="error" />
+    <FromLabel :title="title" :require="require" :error="error"  v-if="title"/>
     <div class="flex">
       <v-select
         :clearable="false"

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-between">
-      <h2 class="font-bold text-2xl my-3">المتاح بالمخازن</h2>
+      <h2 class="font-bold text-2xl my-3">تفاصيل المخازن</h2>
       <div
         @click="print"
         class="
@@ -44,16 +44,12 @@
             >
               الكميه
             </th>
-            <th
-              class="border border-dashed border-slate-700 py-3 px-3 font-bold"
-            >
-              استخدام / اعدام
-            </th>
+           
           </tr>
         </thead>
         <tbody>
-          <template v-for="product in warehouse" :key="product.index">
-            <tr class="" v-if="product.quantity > 0">
+          <template v-for="kit in warehouse" :key="kit.index">
+            <tr class="" v-if="kit.quantity > 0">
               <td
                 class="
                   border border-dashed border-slate-700
@@ -63,17 +59,14 @@
                 "
               >
                 <Link
-                  :href="route('warehouse.show', product.warehouse.id)"
+                  :href="route('warehouse.show', kit.warehouse.id)"
                   class="data hover:text-[#009ef7]"
                 >
-                  {{ product.warehouse.name }}
+                  {{ kit.warehouse.name }}
                 </Link>
               </td>
               <td class="border border-dashed border-slate-700 py-3 px-3">
-                {{ product.quantity }}
-              </td>
-              <td class="border border-dashed border-slate-700 py-3 px-3">
-                <kit-action-model/>
+                {{ kit.quantity }}
               </td>
             </tr>
           </template>

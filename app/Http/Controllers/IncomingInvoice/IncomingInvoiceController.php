@@ -35,7 +35,6 @@ class IncomingInvoiceController extends Controller
      */
     public function index()
     {
-
         return Inertia::render('IncomingInvoice/Index', [
             "incomingInvoice" => IncomingInvoice::with('user', 'people', 'warehouse')->orderBy('date', 'desc')->latest()->when(
                 Request::input('search'),
@@ -49,7 +48,7 @@ class IncomingInvoiceController extends Controller
 
             'filters' => Request::only(['search']),
             'totalIncomingInvoice' => IncomingInvoice::count(),
-            'totalIncomingInvoiceThisDay' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfDay()->subDay()->toDateString())->count(),
+            'totalIncomingInvoiceThisDay' => IncomingInvoice::where('date', '>=', Carbon::now()->locale('eg')->toDateString())->count(),
             'totalIncomingInvoiceThisWeek' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfWeek()->subWeek()->toDateString())->count(),
             'totalIncomingInvoiceThisMonth' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfMonth()->subMonth()->toDateString())->count(),
             'totalIncomingInvoiceThisYear' => IncomingInvoice::where('date', '>=', Carbon::now()->startOfYear()->subMonth()->toDateString())->count()

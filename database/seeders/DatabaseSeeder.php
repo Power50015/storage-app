@@ -17,8 +17,11 @@ use Database\Seeders\Warehouse\WarehouseSeeder;
 use Database\Seeders\Warehouse\WarehouseStockSeeder;
 use Database\Seeders\Cash\CashSeeder;
 use Database\Seeders\Debtor\DebtorSeeder;
+use Database\Seeders\Driver\DriverSeeder;
 use Database\Seeders\IncomingInvoice\IncomingInvoiceSeeder;
+use Database\Seeders\Kit\KitOperationSeeder;
 use Database\Seeders\OutgoingInvoice\OutgoingInvoiceSeeder;
+use Database\Seeders\Transfer\TransferSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -48,16 +51,19 @@ class DatabaseSeeder extends Seeder
         // $this->call(ProductColorSeeder::class);
         // $this->call(ProductMaterialSeeder::class);
         // $this->call(ProductSeeder::class);
+        // $this->call(KitSeeder::class);
         // $this->call(PeopleSeeder::class);
         // $this->call(WarehouseSeeder::class);
-        // $this->call(KitSeeder::class);
         // $this->call(WarehouseStockSeeder::class);
         // $this->call(CashSeeder::class);
         // $this->call(IncomingInvoiceSeeder::class);
-        // $this->call(DebtorSeeder::class);
-        $this->call(OutgoingInvoiceSeeder::class);
-        // $this->call(ExpenseSeeder::class);
         // $this->call(OutgoingInvoiceSeeder::class);
+        // $this->call(DriverSeeder::class);
+        // $this->call(TransferSeeder::class);
+        // $this->call(KitOperationSeeder::class);
+
+        // $this->call(DebtorSeeder::class);
+        // $this->call(ExpenseSeeder::class);
         // \App\Models\User::factory(10)->create();
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

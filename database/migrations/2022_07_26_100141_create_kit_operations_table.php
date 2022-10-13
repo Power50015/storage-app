@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('kit_id');
             $table->foreignId('warehouse_id');
             $table->integer('quantity');
+            $table->timestamp('date')->useCurrent();
         });
     }
 

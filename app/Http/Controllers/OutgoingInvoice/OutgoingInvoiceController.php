@@ -43,7 +43,7 @@ class OutgoingInvoiceController extends Controller
 
             'filters' => Request::only(['search']),
             'totalOutgoingInvoice' => OutgoingInvoice::count(),
-            'totalOutgoingInvoiceThisDay' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfDay()->subDay()->toDateString())->count(),
+            'totalOutgoingInvoiceThisDay' => OutgoingInvoice::where('date', '>=', Carbon::now()->locale('eg')->toDateString())->count(),
             'totalOutgoingInvoiceThisWeek' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfWeek()->subWeek()->toDateString())->count(),
             'totalOutgoingInvoiceThisMonth' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfMonth()->subMonth()->toDateString())->count(),
             'totalOutgoingInvoiceThisYear' => OutgoingInvoice::where('date', '>=', Carbon::now()->startOfYear()->subMonth()->toDateString())->count()

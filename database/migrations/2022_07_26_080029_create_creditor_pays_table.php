@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->timestamp('date')->useCurrent();
             $table->decimal('amount', $precision = 11, $scale = 2);
             $table->boolean('pay_type')->default(false); //if true pay cash
             $table->foreignId('cash_id')->nullable();

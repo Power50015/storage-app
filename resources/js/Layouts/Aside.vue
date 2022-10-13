@@ -27,7 +27,7 @@
         transition-all
         lg:block
         duration-1000
-        overflow-x-auto overflow-y-scroll
+        
       "
       :class="{
         'lg:right-0 ': asideOpenStateDesktop,
@@ -37,7 +37,7 @@
       }"
     >
       <UserCard />
-      <ul class="text-white">
+      <ul class="text-white overflow-x-auto overflow-y-scroll h-full">
         <li
           class="
             pt-5

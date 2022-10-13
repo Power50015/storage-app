@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->boolean('pay_type')->default(false); //if true pay cash
+            $table->foreignId('driver_id')->nullable();
             $table->decimal('discount', $precision = 11, $scale = 2);
-            $table->date('date');
+            $table->timestamp('date')->useCurrent();
             $table->foreignId('people_id');
             $table->foreignId('warehouse_id');
             $table->foreignId('cash_id')->nullable();

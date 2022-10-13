@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('returned_outgoing_invoices', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->date('date');
+            $table->timestamp('date')->useCurrent();
             $table->integer('quantity');
             $table->foreignId('outgoing_invoice_id');
             $table->foreignId('product_id');

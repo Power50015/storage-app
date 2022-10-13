@@ -1,144 +1,106 @@
 <template>
-  <AppLayout title="المنتجات">
-    <div class="pt-6 pb-2">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div
-          class="
-            dark:bg-[#1e1e2d]
-            bg-white
-            dark:text-white
-            text-black
-            overflow-hidden
-            shadow-xl
-            rounded-md
-            p-4
-          "
-        >
-          <div class="flex content-center items-center justify-between">
-            <div class="flex w-full justify-between">
-              <div class="">
-                <h2 class="title font-bold mt-3">
-                  {{ kit.title }}
-                </h2>
-                <h2 class="title font-bold mt-3 hover:text-[#009ef7] mb-5">
-                  <template v-if="kit.product">
-                    <Link :href="route('product.show', kit.product.id)"
-                      ><template v-if="kit.product.product_brand"
-                        >{{ kit.product.product_brand.name }} |</template
-                      >
-                      <template v-if="kit.product.product_category">
-                        {{ kit.product.product_category.name }}</template
-                      >
-                      <template v-if="kit.product.product_type">
-                        |{{ kit.product.product_type.name }}
-                      </template>
-                      <template v-if="kit.product.product_collection">
-                        |{{ kit.product.product_collection.name }}
-                      </template>
-                      <template v-if="kit.product.product_model">
-                        |{{ kit.product.product_model.name }}
-                      </template>
-                      <template v-if="kit.product.product_color">
-                        |{{ kit.product.product_color.name }}
-                      </template>
-                      <template v-if="kit.product.product_material">
-                        |{{ kit.product.product_material.name }}
-                      </template>
-                      <template v-if="kit.product.product_country">
-                        | {{ kit.product.product_country.name }}</template
-                      >
-                      <template v-if="kit.product.sku">
-                        | {{ kit.product.sku }}</template
-                      >
-                      | {{ kit.product.name }}</Link
-                    ></template
-                  >
-                </h2>
-                <div v-html="kit.description"></div>
-                <h2 class="title font-bold mt-3 text-lg text-[#009ef7]">
-                  إجمالى المتاح بالمخازن : {{ kit.total_number_of_kit }}
-                </h2>
-                <Link
-                  :href="route('kit.edit', kit.id)"
-                  class="
-                    print:hidden
-                    mt-5
-                    bg-[#7239ea]
-                    border border-transparent
-                    rounded-md
-                    py-3
-                    px-3
-                    inline-block
-                    items-center
-                    justify-center
-                    text-base
-                    font-medium
-                    text-white
-                    hover:bg-[#7239ea]
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-offset-2
-                    focus:ring-[#7239ea]
-                    cursor-pointer
-                  "
-                >
-                  تعديل بيانات
-                </Link>
-              </div>
-              <div>
-                <a :href="`/storage/${kit.image}`" target="_blank">
-                  <img
-                    :src="`/storage/${kit.image}`"
-                    :alt="kit.title"
-                    class="
-                      w-full
-                      h-[270px]
-                      object-center object-cover
-                      group-hover:opacity-75
-                    "
-                    height="270"
-                    width="270"
-                /></a>
-              </div>
-            </div>
+  <AppLayout title="قطع الغيار">
+    <SectionTemplate class="print:p-0">
+      <div class="flex justify-between">
+        <div class="flex justify-around flex-col">
+          <h2 class="font-bold mb-3 text-lg">
+            {{ kit.title }}
+          </h2>
+          <template v-if="kit.product">
+            <Link
+              :href="route('product.show', kit.product.id)"
+              class="font-bold hover:text-[#009ef7] mb-3 text-sm"
+              ><template v-if="kit.product.product_brand"
+                >{{ kit.product.product_brand.name }} |</template
+              >
+              <template v-if="kit.product.product_category">
+                {{ kit.product.product_category.name }}</template
+              >
+              <template v-if="kit.product.product_type">
+                |{{ kit.product.product_type.name }}
+              </template>
+              <template v-if="kit.product.product_collection">
+                |{{ kit.product.product_collection.name }}
+              </template>
+              <template v-if="kit.product.product_model">
+                |{{ kit.product.product_model.name }}
+              </template>
+              <template v-if="kit.product.product_color">
+                |{{ kit.product.product_color.name }}
+              </template>
+              <template v-if="kit.product.product_material">
+                |{{ kit.product.product_material.name }}
+              </template>
+              <template v-if="kit.product.product_country">
+                | {{ kit.product.product_country.name }}</template
+              >
+              | {{ kit.product.name }}
+            </Link>
+            <h2 v-if="kit.product.sku">
+              SKU :
+              {{ kit.product.sku }}
+            </h2>
+          </template>
+          <div v-html="kit.description"></div>
+          <h2 class="title font-bold text-lg text-[#009ef7]">
+            إجمالى المتاح بالمخازن : {{ kit.total_number_of_kit }}
+          </h2>
+          <div class="flex justify-around print:hidden">
+            <btn-success
+              :element="Link"
+              :to="route('kit.edit', kit.id)"
+              class="mt-4"
+            >
+              تعديل بيانات
+            </btn-success>
+            <btn-info
+              :element="Link"
+              :to="route('kit.edit', kit.id)"
+              class="mt-4"
+            >
+              أستعمال
+            </btn-info>
           </div>
         </div>
+        <div>
+          <a :href="`/storage/${kit.image}`" target="_blank">
+            <img
+              :src="`/storage/${kit.image}`"
+              :alt="kit.title"
+              class="
+                w-full
+                h-[270px]
+                object-center object-cover
+                group-hover:opacity-75
+                shadow-xl
+                rounded-md
+              "
+              height="270"
+              width="270"
+          /></a>
+        </div>
       </div>
-    </div>
-    <kit-tabs
-      :warehouse="kit.total_number_of_kit_warehouse"
-      :stockData="stockData"
-      :incomeIvoice="incomeIvoice"
-      :stratStock="stratStock"
-      :note="note"
-      :attachment="attachment"
-      :image="image"
-      :id="kit.id"
-    />
+    </SectionTemplate>
+    <SectionTemplate class="print:p-0">
+      <KitTabs :id="kit.id" />
+    </SectionTemplate>
   </AppLayout>
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { computed, provide, readonly } from "@vue/runtime-core";
+import { reactive, computed, provide, readonly, ref, watch } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import SectionTemplate from "@/Components/SectionTemplate.vue";
+import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
+import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
+import KitWarehouse from "../../Components/Kit/KitWarehouse.vue";
 import KitTabs from "@/Components/Kit/KitTabs.vue";
 
-const props = defineProps([
-  "kit",
-  "stockData",
-  "incomeIvoice",
-  "stratStock",
-  "note",
-  "attachment",
-  "image",
-  "id",
-]);
-const kit = computed(() => props.kit[0]);
+const props = defineProps(["kit"]);
 
-provide("title", "المنتج");
+provide("title", "قطع الغيار");
 provide(
   "breadcrumb",
   readonly([
@@ -151,4 +113,7 @@ provide(
     },
   ])
 );
+
+const kit = computed(() => props.kit[0]);
+const actionData = computed(() => props.actionData);
 </script>

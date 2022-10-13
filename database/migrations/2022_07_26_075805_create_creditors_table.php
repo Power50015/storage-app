@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('title');
+            $table->timestamp('date')->useCurrent();
             $table->text('description')->nullable();
             $table->decimal('amount', $precision = 11, $scale = 2);
             $table->foreignId('people_id');

@@ -6,6 +6,9 @@ use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
 use App\Models\Product\Product;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\Transfer\TransferKit;
 use App\Models\User;
 use App\Models\Warehouse\KitStock;
 use App\Models\Warehouse\Warehouse;
@@ -17,7 +20,7 @@ class Kit extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_number_of_kit', 'total_number_of_kit_warehouse'];
+    protected $appends = ['total_number_of_kit'];
 
     /**
      * Get the users for the Kit.
@@ -72,6 +75,13 @@ class Kit extends Model
         return $this->hasMany(KitNote::class);
     }
     /**
+     * Get the Transfer To for the Transfer Kit.
+     */
+    public function transfer_kits()
+    {
+        return $this->hasMany(TransferKit::class);
+    }
+    /**
      * Get the IncomingInvoiceKit for the IncomingInvoice.
      */
     public function incoming_invoice_kits()
@@ -86,59 +96,24 @@ class Kit extends Model
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
     }
     /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_outgoing_invoice_kits()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
+    }
+    /**
      * Get the Total Number Product.
      */
     public function getTotalNumberOfKitAttribute()
     {
-        return (IncomingInvoiceKit::where('kit_id', $this->id)->sum('quantity') - ReturnedIncomingInvoiceKit::where('kit_id', $this->id)->sum('quantity')) + KitStock::where('kit_id', $this->id)->sum('quantity');
-    }
-    /**
-     * Get the Total Number Product in Warehuose.
-     */
-    public function getTotalNumberOfKitWarehouseAttribute()
-    {
-/*
-        $warehouses = Warehouse::all();
-        $data = [];
+        $quantity = KitStock::where('kit_id', $this->id)->sum('quantity');
+        $quantity += IncomingInvoiceKit::where('kit_id', $this->id)->sum('quantity');
+        $quantity -= ReturnedIncomingInvoiceKit::where('kit_id', $this->id)->sum('quantity');
+        $quantity -= OutgoingInvoiceKit::where('kit_id', $this->id)->sum('quantity');
+        $quantity += ReturnedOutgoingInvoiceKit::where('kit_id', $this->id)->sum('quantity');
+        $quantity -= KitOperation::where('kit_id', $this->id)->sum('quantity');
 
-        // // where warehouse is
-        foreach ($warehouses as $key => $value) {
-            $warehouse = $warehouses[$key]['id'];
-            $quantity = 0;
-            // dd(IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $this->id)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->get('quantity')); // Golden Code
-            // dd(KitStock::with('warehouse_stock')->where('kit_id', $this->id)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity'));
-            $quantity += KitStock::with('warehouse_stock')->where('kit_id', $this->id)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity');
-            $quantity += IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $this->id)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
-            $data[] = [
-                        "warehouse" => $warehouses[$key],
-                        "quantity" => $quantity
-                    ];
-            
-*/
-            // Get The income invoice numbers
-            // $incoming_invoices = IncomingInvoice::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
-            //     $warehouse_stocks = WarehouseStock::where('warehouse_id', $warehouses[$key]['id'])->get()->map->only('id');
-            //     $incoming_invoice_id = [];
-
-            //     foreach ($incoming_invoices as $key1 => $value1) {
-            //         $incoming_invoice_id[] = $incoming_invoices[$key1]["id"];
-            //     }
-            //     // Get The income product quantity
-            //     $incoming_q =
-            //         (IncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
-            //             - ReturnedIncomingInvoiceKit::whereIn('incoming_invoice_id', $incoming_invoice_id)->where('kit_id', $this->id)->sum('quantity')
-            //         ) + KitStock::where('kit_id', $this->id)->whereIn('warehouse_stock_id', $warehouse_stocks)->sum('quantity');
-
-            //     $data[] = [
-            //         "warehouse" => $warehouses[$key],
-            //         "quantity" => $incoming_q
-            //     ];
-        // }
-        // dd($data);
-
-
-        // $data = collect($data);
-        // $data = $data->sortByDesc('quantity');
-        // return $data->values()->all();
+        return $quantity;
     }
 }
