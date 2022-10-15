@@ -1,6 +1,7 @@
 <template>
   <div class="mb-5">
     <FromLabel :title="title" :require="require" :error="error" />
+    <img v-if="oldImage" :src="`/storage/${oldImage}`" class="img-fluid" height="300" width="300" />
     <template v-if="imgPreview">
       <img :src="imgPreview" class="img-fluid" height="300" width="300" />
       <p class="mb-0">أسم الملف: {{ imgData.value.name }}</p>
@@ -35,6 +36,7 @@ defineProps({
   title: { type: String, default: "" },
   error: { type: String, default: "" },
   require: { type: Boolean, default: false },
+  oldImage: {},
 });
 const emit = defineEmits(["update:modelValue"]);
 

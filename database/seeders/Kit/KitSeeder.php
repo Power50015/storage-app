@@ -3,6 +3,9 @@
 namespace Database\Seeders\Kit;
 
 use App\Models\Kit\Kit;
+use App\Models\Kit\KitAttachment;
+use App\Models\Kit\KitImage;
+use App\Models\Kit\KitNote;
 use App\Models\Product\Product;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,7 +22,11 @@ class KitSeeder extends Seeder
     public function run()
     {
         Kit::truncate();
+        KitNote::truncate();
+        KitNote::truncate();
         Storage::deleteDirectory('public/image/kit');
+        Storage::deleteDirectory('public/attachment/kit');
+        
         Kit::factory()->create([
             'title' => "طبق مدور",
             'description' => "",
@@ -32,7 +39,23 @@ class KitSeeder extends Seeder
             },
             'user_id' => User::all()->random()->id,
             'product_id' => Product::all()->random()->id,
-        ]);
+        ])->each(function ($kit) {
+            if (rand(0, 1)) {
+                KitNote::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitAttachment::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitImage::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+        });
         Kit::factory()->create([
             'title' => "فنجان",
             'description' => "",
@@ -45,14 +68,73 @@ class KitSeeder extends Seeder
             },
             'user_id' => User::all()->random()->id,
             'product_id' => Product::all()->random()->id,
-        ]);
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-        Kit::factory(10)->create();
-
+        ])->each(function ($kit) {
+            if (rand(0, 1)) {
+                KitNote::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitAttachment::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitImage::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+        });
+        Kit::factory(10)->create()->each(function ($kit) {
+            if (rand(0, 1)) {
+                KitNote::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitAttachment::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitImage::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+        });
+        Kit::factory(10)->create()->each(function ($kit) {
+            if (rand(0, 1)) {
+                KitNote::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitAttachment::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitImage::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+        });
+        Kit::factory(10)->create()->each(function ($kit) {
+            if (rand(0, 1)) {
+                KitNote::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitAttachment::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+            if (rand(0, 1)) {
+                KitImage::factory(rand(1, 10))->create([
+                    'kit_id' => $kit->id
+                ]);
+            }
+        });
     }
 }

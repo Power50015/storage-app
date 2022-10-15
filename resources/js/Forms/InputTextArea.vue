@@ -37,10 +37,10 @@ import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 
 const props = defineProps({
-  modelValue: { type: String, default: "" },
+  modelValue: { default: "" },
   title: { type: String, default: "" },
   error: { type: String, default: "" },
-  require: { type: Boolean, default: false },
+  require: { default: false },
 });
 defineEmits(["update:modelValue"]);
 

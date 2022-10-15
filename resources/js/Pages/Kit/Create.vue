@@ -1,11 +1,11 @@
 <template>
   <AppLayout title="قطع غيار">
     <FormSection
-      title="إضافه قطع غيار"
-      btnTitle="حفظ  قطعه غيار"
+      :title="formText.title"
+      :btnTitle="formText.btnTitle"
       :formData="form"
-      formRoute="kit.store"
-      toastMsg="تم أضافه قطعه الغيار"
+      :formRoute="form.route"
+      :toastMsg="formText.toastMsg"
       :toastDescription="form.title"
     >
       <!-- Kit Title -->
@@ -22,6 +22,7 @@
       <!-- Kit Images-->
       <InputImage
         v-model="form.image"
+        :oldImage="form.old_image"
         title="صوره القطعه"
         :error="errors.image"
       />
@@ -41,44 +42,51 @@ import InputImage from "@/Forms/InputImage.vue";
 import SelectProduct from "@/Forms/SelectProduct.vue";
 
 provide("title", "قطع غيار");
-provide(
-  "breadcrumb",
-  readonly([
-    { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
-    {
-      index: 1,
-      linkTitle: "قطع غيار",
-      linkRoute: "#",
-    },
-  ])
-);
 
-const props = defineProps(["errors"]);
+const props = defineProps(["errors", "kit"]);
 
-const products = computed(() => {
-  return props.products.map((item) => {
-    let name = item.name;
-    if (item.product_collection)
-      name = name + " | " + item.product_collection.name;
-    if (item.product_model) name = name + " | " + item.product_model.name;
-    if (item.product_brand) name = name + " | " + item.product_brand.name;
-    if (item.product_category) name = name + " | " + item.product_category.name;
-    if (item.product_type) name = name + " | " + item.product_type.name;
-    if (item.product_color) name = name + " | " + item.product_color.name;
-    if (item.product_material) name = name + " | " + item.product_material.name;
-    if (item.product_country) name = name + " | " + item.product_country.name;
-    return {
-      label: name,
-      index: item.id,
-      image: item.image,
-    };
-  });
-});
+if (props.kit) {
+  provide(
+    "breadcrumb",
+    readonly([
+      { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+      {
+        index: 1,
+        linkTitle: "قطع غيار",
+        linkRoute: "kit.index",
+      },
+      { index: 2, linkTitle: "تعديل قطع غيار : " + props.kit[0].title, linkRoute: "#" },
+    ])
+  );
+} else {
+  provide(
+    "breadcrumb",
+    readonly([
+      { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+      {
+        index: 1,
+        linkTitle: "قطع غيار",
+        linkRoute: "#",
+      },
+    ])
+  );
+}
 
 const form = reactive({
-  title: null,
-  product_id: null,
-  description: null,
+  id: props.kit ? props.kit[0].id : null,
+  _method: props.kit ? "patch" : "post",
+  route: props.kit ? "kit.update" : "kit.store",
+  title: props.kit ? props.kit[0].title : null,
+  product_id:
+    props.kit && props.kit[0].product ? props.kit[0].product.id : null,
+  description: props.kit ? props.kit[0].description : null,
   image: null,
+  old_image: props.kit ? props.kit[0].image : null,
+});
+
+const formText = reactive({
+  title: props.kit ? "تعديل بيانات قطع غيار" : "إضافه قطع غيار",
+  btnTitle: props.kit ? "تعديل البيانات" : "إضافه قطع غيار",
+  formText: props.kit ? "تم تعديل قطعه الغيار" : "تم أضافه قطعه الغيار",
 });
 </script>

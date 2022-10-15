@@ -8,15 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 // Kit
 Route::resource('/kit', KitController::class);
-
-Route::resource('/kit-note', KitNoteController::class)->only([
-    'store', 'destroy'
-]);
-Route::resource('/kit-attachment', KitAttachmentController::class)->only([
-    'store', 'destroy'
-]);
-Route::resource('/kit-image', KitImageController::class)->only([
-    'store', 'destroy'
-]);
 Route::get('/kit-action', [KitController::class, 'actionData']);
 Route::get('/kit-stock', [KitController::class, 'stockData']);
+
+Route::resource('/kit-note', KitNoteController::class);
+Route::resource('/kit-attachment', KitAttachmentController::class);
+Route::resource('/kit-image', KitImageController::class);

@@ -11,7 +11,8 @@
         align-baseline
         font-bold
         text-[#50cd89]
-        bg-[#1c3238]
+        dark:bg-[#1c3238]
+        bg-[#e8fff3]
         rounded-md
       "
     >

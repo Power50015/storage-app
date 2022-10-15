@@ -21,7 +21,6 @@ import { onMounted, onUnmounted, reactive, ref } from "@vue/runtime-core";
 
 const props = defineProps({
   modelValue: {
-    type: Boolean,
     required: true,
   },
   disabledClass: {},

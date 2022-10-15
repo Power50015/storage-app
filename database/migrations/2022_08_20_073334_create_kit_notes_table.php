@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('kit_notes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->text('tag');
             $table->text('note');
             $table->foreignId('kit_id');
             $table->foreignId('user_id');

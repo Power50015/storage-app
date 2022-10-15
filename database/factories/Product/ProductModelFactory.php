@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories\Product;;
+namespace Database\Factories\Product;
 
 use App\Models\Product\ProductCollection;
 use App\Models\User;

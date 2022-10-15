@@ -60,44 +60,29 @@
     </div>
   </div>
   <div>
-    <kit-stock :kit="id" v-if="tab == 'stock'"/>
-    <!-- <kit-warehouse
-      :warehouse="warehouse"
-      v-if="warehouse.length > 0 && tab == 'stock'"
-    /> -->
+    <kit-stock :kit="id" v-if="tab == 'stock'" />
     <kit-action :kit="id" v-if="tab == 'actionData'" />
-    <kit-note :note="note" v-if="tab == 'note'" :id="props.id" />
-    <kit-attachment
-      :attachment="attachment"
+    <note-board v-if="tab == 'note'" :id="props.id" url="kit-note" />
+    <file-board
       v-if="tab == 'attachment'"
       :id="props.id"
+      url="kit-attachment"
     />
-    <kit-image :image="image" v-if="tab == 'image'" :id="props.id" />
+    <image-board v-if="tab == 'image'" :id="props.id" url="kit-image" />
   </div>
 </template>
 <script setup>
-import { computed, provide, readonly, reactive, ref } from "@vue/runtime-core";
+import { ref } from "@vue/runtime-core";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
-import KitWarehouse from "./KitWarehouse.vue";
 import KitAction from "./KitAction.vue";
-import KitIncomeIvoice from "./KitIncomeIvoice.vue";
-import KitNote from "./KitNote.vue";
-import KitAttachment from "./KitAttachment.vue";
-import KitImage from "./KitImage.vue";
+import NoteBoard from "../Board/NoteBoard.vue";
 import KitStock from "./KitStock.vue";
+import FileBoard from "../Board/FileBoard.vue";
+import ImageBoard from "../Board/ImageBoard.vue";
 const tab = ref("stock");
 
-const props = defineProps([
-  "note",
-  "attachment",
-  "image",
-  "id",
-]);
-const warehouse = props.warehouse;
-const note = computed(() => props.note);
-const attachment = computed(() => props.attachment);
-const image = computed(() => props.image);
+const props = defineProps(["note", "id"]);
 
 function tabClick(inputTab) {
   tab.value = inputTab;

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Factory as FakerFactory;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Kit>

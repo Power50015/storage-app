@@ -16,7 +16,7 @@ class StoreKitAttachmentRequest extends FormRequest
         return true;
     }
 
-   /**
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
@@ -24,7 +24,8 @@ class StoreKitAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'attachment' => 'required|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv'
+            'title' => 'required',
+            'attachment' => 'required|file|mimes:csv,txt,jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls'
         ];
     }
     /**
@@ -36,7 +37,8 @@ class StoreKitAttachmentRequest extends FormRequest
     {
 
         return [
-            'attachment.required' => 'يجب إدخال الملف المنتج',
+            'title.*' => 'يجب إدخال عنوان ',
+            // 'attachment.*' => 'يجب إدخال الملف ',
         ];
     }
 }

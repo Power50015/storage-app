@@ -1,8 +1,12 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Product;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Faker\Factory as FakerFactory;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductImage>
@@ -16,8 +20,17 @@ class ProductImageFactory extends Factory
      */
     public function definition()
     {
+        $image = function () {
+            $url =  Http::get('https://loremflickr.com/json/500/500/product/all')["file"];
+
+            $contents = file_get_contents($url);
+            $name = substr($url, strrpos($url, '/') + 1);
+            Storage::put('public/image/product/' . $name, $contents);
+            return 'image/kit/' . $name;
+        };
         return [
-            //
+            'image' => $image,
+            'user_id' => User::all()->random()->id,
         ];
     }
 }

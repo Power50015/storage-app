@@ -2,7 +2,7 @@
   <AppLayout title="قطع الغيار">
     <SectionTemplate class="print:p-0">
       <div class="flex justify-between">
-        <div class="flex justify-around flex-col">
+        <div class="flex justify-around flex-col w-full">
           <h2 class="font-bold mb-3 text-lg">
             {{ kit.title }}
           </h2>
@@ -95,7 +95,6 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
-import KitWarehouse from "../../Components/Kit/KitWarehouse.vue";
 import KitTabs from "@/Components/Kit/KitTabs.vue";
 
 const props = defineProps(["kit"]);

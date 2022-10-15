@@ -299,6 +299,12 @@
       </div>
     </div>
   </div>
+  <div
+    v-if="(rowData[0] && rowData[0].next_page_url) || rowData.length == 0"
+  >
+    <DotsSpinner />
+  </div>
+  <div v-if="rowData[0] && rowData[0].data.length == 0" class="mt-3">لا يوجد بيانات</div>
 </template>
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
@@ -313,6 +319,7 @@ import { reactive, ref } from "@vue/reactivity";
 import axios from "axios";
 import { onMounted } from "@vue/runtime-core";
 import FormSelect from "@/Forms/FormSelect.vue";
+import DotsSpinner from "../Spinner/DotsSpinner.vue";
 
 const props = defineProps(["kit"]);
 

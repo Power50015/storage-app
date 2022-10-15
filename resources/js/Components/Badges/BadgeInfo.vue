@@ -10,7 +10,8 @@
         whitespace-nowrap
         align-baseline
         font-bold
-        bg-[#2f264f]
+        bg-[#f8f5ff]
+        dark:bg-[#2f264f]
         text-[#7239ea]
         rounded-md
       "

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('kit_attachments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->text('title');
             $table->text('attachment');
             $table->foreignId('user_id');
             $table->foreignId('kit_id');

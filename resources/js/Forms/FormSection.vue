@@ -14,7 +14,7 @@
         "
       >
         <h2 class="title font-bold mb-4" v-if="title">{{ title }}</h2>
-        <form @submit.prevent="submit" autocomplete="off">
+        <form @submit.prevent="submit" autocomplete="off" enctype="multipart/form-data">
           <slot />
           <btn-primary element="button" type="submit" customClass="w-full">{{
             btnTitle
@@ -57,6 +57,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["FormSuccess"]);
+
 const submit = () => {
   const form = useForm(props.formData);
   form.post(
@@ -89,6 +91,7 @@ const submit = () => {
         // Reset Any Model
         if (props.formData["modelToggle"])
           props.formData["modelToggle"] = false;
+          emit("FormSuccess");
       },
       onError: (errors) => {
         for (const key in errors) {

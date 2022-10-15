@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         //     'password' => '$2y$10$QCtPNdsiwvpQvC5rYkSG3uXHP8RJs2gtsVUlIqBbh1XT1ZiRchEfG',
         //     'profile_photo_path' => NULL,
         // ]);
-        // \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(15)->create();
         // $this->call(ProductCategorySeeder::class);
         // $this->call(ProductTypeSeeder::class);
         // $this->call(ProductCountrySeeder::class);
@@ -51,16 +51,17 @@ class DatabaseSeeder extends Seeder
         // $this->call(ProductColorSeeder::class);
         // $this->call(ProductMaterialSeeder::class);
         // $this->call(ProductSeeder::class);
-        // $this->call(KitSeeder::class);
         // $this->call(PeopleSeeder::class);
+        // $this->call(KitSeeder::class);
         // $this->call(WarehouseSeeder::class);
         // $this->call(WarehouseStockSeeder::class);
-        // $this->call(CashSeeder::class);
-        // $this->call(IncomingInvoiceSeeder::class);
-        // $this->call(OutgoingInvoiceSeeder::class);
         // $this->call(DriverSeeder::class);
-        // $this->call(TransferSeeder::class);
-        // $this->call(KitOperationSeeder::class);
+        $this->call(CashSeeder::class);
+        $this->call(IncomingInvoiceSeeder::class);
+        $this->call(OutgoingInvoiceSeeder::class);
+        
+        $this->call(TransferSeeder::class);
+        $this->call(KitOperationSeeder::class);
 
         // $this->call(DebtorSeeder::class);
         // $this->call(ExpenseSeeder::class);

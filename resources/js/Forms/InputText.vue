@@ -28,10 +28,10 @@
 <script setup>
 import FromLabel from "@/Forms/FromLabel.vue";
 defineProps({
-  modelValue: { type: String, default: "" },
+  modelValue: { default: "" },
   title: { type: String, default: "" },
   error: { type: String, default: "" },
-  require: { type: Boolean, default: false },
+  require: {  default: false },
   placeholder:{default: ""}
 });
 defineEmits(["update:modelValue"]);

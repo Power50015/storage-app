@@ -9,6 +9,8 @@ use App\Http\Requests\Kit\UpdateKitImageRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Request;
+
 
 class KitImageController extends Controller
 {
@@ -19,7 +21,10 @@ class KitImageController extends Controller
      */
     public function index()
     {
-        //
+        $kit = Request::input('id');
+        return [
+            "image" => KitImage::where('kit_id', $kit)->with('user')->latest()->paginate()
+        ];
     }
 
     /**
@@ -40,10 +45,9 @@ class KitImageController extends Controller
      */
     public function store(StoreKitImageRequest $request)
     {
-        $attachment_path = $request["image"]->store('image/kits', 'public');
         KitImage::create([
-            'image' =>  $attachment_path,
-            'kit_id' => $request->kit_id,
+            'image' =>  $request["image"]->store('image/kits', 'public'),
+            'kit_id' => $request->id,
             'user_id' => Auth::id()
         ]);
         return Redirect::back();

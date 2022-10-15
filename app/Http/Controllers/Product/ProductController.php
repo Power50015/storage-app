@@ -15,7 +15,6 @@ use App\Models\Product\ProductColor;
 use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductCountry;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 
 use App\Models\IncomingInvoiceContent;
 use App\Models\OutgoingInvoiceContent;
@@ -225,6 +224,18 @@ class ProductController extends Controller
     // Get All Products as a row data
     public function data()
     {
+        if (Request::input('id')) return Product::with(
+            [
+                'product_category',
+                'product_type',
+                'product_brand',
+                'product_collection',
+                'product_model',
+                'product_color',
+                'product_material',
+                'product_country'
+            ]
+        )->where('id', Request::input('id'))->get();
         return Product::query()->with(
             [
                 'product_category',
@@ -236,7 +247,7 @@ class ProductController extends Controller
                 'product_material',
                 'product_country'
             ]
-        )->when(FacadesRequest::input('search'), function ($query, $search) {
+        )->when(Request::input('search'), function ($query, $search) {
             $query->where('name', 'like', "%{$search}%")
                 ->orWhere('sku', 'like', "%{$search}%")
                 ->orWhere('description', 'like', "%{$search}%")

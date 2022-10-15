@@ -2,6 +2,7 @@
 
 namespace App\Models\Kit;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,11 +25,5 @@ class KitImage extends Model
    {
        return $this->belongsTo(Kit::class);
    }
-   public static function boot()
-   {
-       parent::boot();
-       static::creating(function ($model) {
-           $model->user_id = auth()->user()->id;
-       });
-   }
+
 }

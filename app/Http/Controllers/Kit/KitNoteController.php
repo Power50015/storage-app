@@ -8,6 +8,7 @@ use App\Http\Requests\Kit\StoreKitNoteRequest;
 use App\Http\Requests\Kit\UpdateKitNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class KitNoteController extends Controller
 {
@@ -18,7 +19,15 @@ class KitNoteController extends Controller
      */
     public function index()
     {
-        //
+        $kit = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => KitNote::with('user')->latest()->where('kit_id', $kit)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -39,9 +48,10 @@ class KitNoteController extends Controller
      */
     public function store(StoreKitNoteRequest $request)
     {
-        $note = KitNote::create([
+        KitNote::create([
             'note' => $request->note,
-            'kit_id' => $request->kit_id,
+            'kit_id' => $request->id,
+            'tag' => $request->tag,
             'user_id' => Auth::id()
         ]);
         return Redirect::back();

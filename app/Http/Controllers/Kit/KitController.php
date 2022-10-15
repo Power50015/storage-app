@@ -20,6 +20,7 @@ use App\Models\Transfer\TransferKit;
 use App\Models\Warehouse\KitStock;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class KitController extends Controller
@@ -76,56 +77,16 @@ class KitController extends Controller
      */
     public function store(StoreKitRequest $request)
     {
-        Kit::create(array_merge(
-            $request->all(),
+        $kit = Kit::create(
             [
+                'title' => $request->title,
+                'description' => $request->description,
+                'product_id' => $request->product_id,
                 'user_id' => auth()->user()->id,
                 'image' => $request->hasFile('image') ? $request->file('image')->store('image/kit', 'public') : 'no_image.png'
             ]
-        ));
-
-        return Redirect::back();
-        /* 
-        // Save Attachment Of Kit
-        if (!is_null($request["attachment"]))
-            for ($i = 0; $i <  count($request["attachment"]); $i++) {
-                if ($request["attachment"][$i]["attachment"] != null) {
-                    $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/kit', 'public');
-                    KitAttachment::create([
-                        'attachment' =>  $attachment_path,
-                        'kit_id' => $kit['id'],
-                        'user_id' => Auth::id()
-                    ]);
-                }
-            }
-
-
-        // Save The Notes Of Product
-        if (!is_null($request["note"]))
-            for ($i = 0; $i <  count($request["note"]); $i++) {
-                KitNote::create([
-                    'note' => $request["note"][$i]["note"],
-                    'kit_id' => $kit['id'],
-                    'user_id' => Auth::id()
-                ]);
-            }
-
-        // Save The Images Of Product
-        if (!is_null($request["images"]))
-            for ($i = 0; $i <  count($request["images"]); $i++) {
-                if ($request["images"][$i]["image"] != null) {
-                    $attachment_path = $request["images"][$i]["image"]->store('image/kits', 'public');
-                    KitImage::create([
-                        'image' =>  $attachment_path,
-                        'kit_id' => $kit['id'],
-                        'user_id' => Auth::id()
-                    ]);
-                }
-            }
-*/
-
-        // Save The Content Of Incoming Invoice
-        return Redirect::back();
+        );
+        return Redirect::route('kit.show', $kit->id);
     }
 
     /**
@@ -136,11 +97,19 @@ class KitController extends Controller
      */
     public function show($kit)
     {
-        
+
         return Inertia::render('Kit/Show', [
-            "kit" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('id', $kit)->get(),
-            // "warehousesData" => $warehousesData->values()->all(),
-            // "actionData" => $actionData->values()->all(),
+            "kit" => Kit::with([
+                'product',
+                'product.product_country',
+                'product.product_material',
+                'product.product_color',
+                'product.product_model',
+                'product.product_collection',
+                'product.product_brand',
+                'product.product_type',
+                'product.product_category'
+            ])->where('id', $kit)->get(),
             "note" => KitNote::where('kit_id', $kit)->get(),
             "attachment" => KitAttachment::where('kit_id', $kit)->get(),
             "image" => KitImage::where('kit_id', $kit)->get(),
@@ -155,10 +124,18 @@ class KitController extends Controller
      */
     public function edit(Kit $kit)
     {
-        return Inertia::render('Kit/Edit', [
-            "kit" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('id', $kit->id)->get(),
-            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
-
+        return Inertia::render('Kit/Create', [
+            "kit" => Kit::with([
+                'product',
+                'product.product_country',
+                'product.product_material',
+                'product.product_color',
+                'product.product_model',
+                'product.product_collection',
+                'product.product_brand',
+                'product.product_type',
+                'product.product_category'
+            ])->where('id', $kit->id)->get(),
         ]);
     }
 
@@ -171,23 +148,15 @@ class KitController extends Controller
      */
     public function update(UpdateKitRequest $request, Kit $kit)
     {
-        /* $image_path = '';
+        $kit->title = $request->title;
         if ($request->hasFile('image')) {
-            Storage::delete("public/" . $request->image);
-            $image_path = $request->file('image')->store('image/kit', 'public');
-        } else {
-            $image_path = $request->oldImage;
+            Storage::delete("public/" . $request->old_image);
+            $kit->image = $request->file('image')->store('image/kit', 'public');
         }
-
-        $kit = DB::table('kits')->where('id', $kit->id)->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'product_id' => $request->product,
-            'image' =>  $image_path,
-            'user_id' => Auth::id()
-        ]);
-
-        return Redirect::back();*/
+        $kit->description = $request->description;
+        $kit->product_id = $request->product_id;
+        $kit->save();
+        return Redirect::route('kit.show', $kit->id);
     }
 
     /**
@@ -287,7 +256,9 @@ class KitController extends Controller
     public function stockData()
     {
         $kit = Request::input('kit');
-        $warehouses = Warehouse::all();
+        $search = Request::input('search');
+        $warehouses = $search ? Warehouse::where('name', 'like',  "%{$search}%")->get() : Warehouse::all();
+
         $warehousesData = collect([]);
 
         //  where warehouse is
