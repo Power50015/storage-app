@@ -36,7 +36,7 @@
         justify-between
       "
     >
-      <div class="w-full flex justify-between">
+      <div class="w-full flex justify-between items-center">
         <BadgeInfo>{{
           new Date(item.created_at).toLocaleDateString("ar-EG-u-nu-latn", {
             weekday: "long",
@@ -108,6 +108,9 @@ const form = reactive({
 const rowData = reactive([]);
 const images = reactive([]);
 function getImageData(reload = false, page = 1) {
+  form.id = props.id;
+  if (reload) images.length = 0;
+  if (reload) rowData.length = 0;
   axios
     .get(route(props.url + ".index"), {
       params: {
@@ -117,7 +120,6 @@ function getImageData(reload = false, page = 1) {
     })
     .then(function (response) {
       rowData.length = 0;
-      if (reload) images.length = 0;
       rowData.push(response.data.image);
       response.data.image.data.forEach((item) => {
         images.push(item);

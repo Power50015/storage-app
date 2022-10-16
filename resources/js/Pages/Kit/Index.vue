@@ -1,5 +1,22 @@
 <template>
   <AppLayout title="قطع الغيار">
+    <SectionTemplate class="pb-0">
+      <h2 class="font-bold text-xl mb-5">قطع الغيار</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <CardPrimary>
+          <h4 class="mb-3">قطع الغيار المسجله</h4>
+          <h4 class="text-xl font-bold">
+            {{kitCount}}
+          </h4>
+        </CardPrimary>
+        <CardInfo>
+          <h4 class="mb-3">قطع الغيار بدون مخزون</h4>
+          <h4 class="text-xl font-bold">
+            {{kitCountWithNoStock}}
+          </h4>
+        </CardInfo>
+      </div>
+    </SectionTemplate>
     <SectionTemplate>
       <div class="flex content-center items-center justify-between">
         <h2 class="title font-bold">قطع الغيار</h2>
@@ -103,6 +120,8 @@ import SectionTemplate from "@/Components/SectionTemplate.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";
 import InputText from "@/Forms/InputText.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
+import CardPrimary from "@/Components/Cards/Statistics/CardPrimary.vue";
+import CardInfo from "@/Components/Cards/Statistics/CardInfo.vue";
 
 provide("title", "قطع الغيار");
 provide(
@@ -113,7 +132,7 @@ provide(
   ])
 );
 
-const props = defineProps(["kits", "filters"]);
+const props = defineProps(["kits", "filters","kitCount","kitCountWithNoStock"]);
 
 const kits = computed(() => props.kits);
 

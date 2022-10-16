@@ -2,7 +2,7 @@
 
 namespace App\Models\Transfer;
 
-use App\Models\Driver;
+use App\Models\Driver\Driver;
 use App\Models\User;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

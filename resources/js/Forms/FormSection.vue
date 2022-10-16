@@ -19,6 +19,7 @@
           <btn-primary element="button" type="submit" customClass="w-full">{{
             btnTitle
           }}</btn-primary>
+          <slot name="footer"/>
         </form>
       </div>
     </div>

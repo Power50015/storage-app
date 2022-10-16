@@ -29,13 +29,13 @@
   <script setup>
 import FromLabel from "@/Forms/FromLabel.vue";
 defineProps({
-  modelValue: { type: Number, default: "" },
-  title: { type: String, default: "" },
-  error: { type: String, default: "" },
-  require: { type: Boolean, default: false },
-  min: { type: Number, default: 0 },
+  modelValue: { default: "" },
+  title: { default: "" },
+  error: { default: "" },
+  require: { default: false },
+  min: { default: 0 },
   step: { default: 0.01 },
-  max: { type: Number },
+  max: {},
 });
 defineEmits(["update:modelValue"]);
 </script>

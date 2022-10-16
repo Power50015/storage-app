@@ -26,10 +26,11 @@ class StoreKitOperationRequest extends FormRequest
         return [
             'title' => 'required',
             'quantity' => 'required|numeric|min:1',
-            'action' => 'required|numeric',
+            'action' => 'required',
+            'date' => 'required|date',
         ];
     }
-     /**
+    /**
      * Get the error messages for the defined validation rules.
      *
      * @return array
@@ -38,9 +39,9 @@ class StoreKitOperationRequest extends FormRequest
     {
 
         return [
-            'title.required' => 'يجب إدخال الملاحظه .',
-            'quantity.required' => 'يجب إدخال الملاحظه .',
-            'action.required' => 'يجب إدخال الملاحظه .',
+            'title.required' => 'يجب إدخال البند .',
+            'quantity.*' => 'يجب إدخال الكميه .',
+            'date.*' => 'يجب إدخال تاريخ العمليه .',
         ];
     }
 }

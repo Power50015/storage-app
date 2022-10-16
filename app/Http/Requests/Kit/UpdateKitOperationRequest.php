@@ -13,7 +13,7 @@ class UpdateKitOperationRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,24 @@ class UpdateKitOperationRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'quantity' => 'required|numeric|min:1',
+            'action' => 'required',
+            'date' => 'required|date',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.required' => 'يجب إدخال البند .',
+            'quantity.*' => 'يجب إدخال الكميه .',
+            'date.*' => 'يجب إدخال تاريخ العمليه .',
         ];
     }
 }

@@ -155,6 +155,9 @@ const rowData = reactive([]);
 const attachments = reactive([]);
 const inputText = ref();
 function getAttachmentData(reload = false, page = 1) {
+  form.id = props.id;
+  if (reload) attachments.length = 0;
+  if (reload) rowData.length = 0;
   axios
     .get(route(props.url + ".index"), {
       params: {
@@ -165,7 +168,6 @@ function getAttachmentData(reload = false, page = 1) {
     })
     .then(function (response) {
       rowData.length = 0;
-      if (reload) attachments.length = 0;
       rowData.push(response.data.attachment);
       response.data.attachment.data.forEach((item) => {
         attachments.push(item);

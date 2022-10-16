@@ -33,6 +33,8 @@ class KitController extends Controller
     public function index()
     {
         return Inertia::render('Kit/Index', [
+            "kitCount" => Kit::count(),
+            "kitCountWithNoStock" => Kit::get()->where('total_number_of_kit',  0)->count(),
             "kits" =>  Kit::with(
                 'product',
                 'product.product_country',
@@ -183,7 +185,7 @@ class KitController extends Controller
         $actionData = collect([]);
         //  Stock
         if ($action == "Stock" || $action == "all") {
-            $KitStock = KitStock::with(['warehouse_stock', 'warehouse_stock.warehouse'])->where('kit_id', $kit)->get();
+            $KitStock = KitStock::with(['user', 'warehouse_stock', 'warehouse_stock.warehouse'])->where('kit_id', $kit)->get();
             foreach ($KitStock as $key => $value) {
                 $KitStock[$key]["dataType"] = "Stock";
                 $KitStock[$key]["date"] = $KitStock[$key]["warehouse_stock"]["date"];
@@ -192,7 +194,7 @@ class KitController extends Controller
         }
         if ($action == "IncomingInvoice" || $action == "all") {
             //  Incoming Invoice
-            $IncomingInvoiceKit = IncomingInvoiceKit::with(['incoming_invoice', 'incoming_invoice.warehouse'])->where('kit_id', $kit)->get();
+            $IncomingInvoiceKit = IncomingInvoiceKit::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('kit_id', $kit)->get();
             foreach ($IncomingInvoiceKit as $key => $value) {
                 $IncomingInvoiceKit[$key]["dataType"] = "IncomingInvoice";
                 $IncomingInvoiceKit[$key]["date"] = $IncomingInvoiceKit[$key]["incoming_invoice"]["date"];
@@ -201,7 +203,7 @@ class KitController extends Controller
         }
         //  Returned Incoming Invoice
         if ($action == "ReturnedIncomingInvoice" || $action == "all") {
-            $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::with(['incoming_invoice', 'incoming_invoice.warehouse'])->where('kit_id', $kit)->get();
+            $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('kit_id', $kit)->get();
             foreach ($ReturnedIncomingInvoiceKit as $key => $value) {
                 $ReturnedIncomingInvoiceKit[$key]["dataType"] = "ReturnedIncomingInvoice";
                 $actionData->push($ReturnedIncomingInvoiceKit[$key]);
@@ -209,7 +211,7 @@ class KitController extends Controller
         }
         //  Transfer
         if ($action == "Transfer" || $action == "all") {
-            $TransferKit = TransferKit::with(['transfer', 'transfer.warehouse_from', 'transfer.warehouse_to'])->where('kit_id', $kit)->get();
+            $TransferKit = TransferKit::with(['user', 'transfer', 'transfer.warehouse_from', 'transfer.warehouse_to', 'transfer.driver'])->where('kit_id', $kit)->get();
             foreach ($TransferKit as $key => $value) {
                 $TransferKit[$key]["dataType"] = "Transfer";
                 $TransferKit[$key]["date"] = $TransferKit[$key]["transfer"]["date"];
@@ -219,7 +221,7 @@ class KitController extends Controller
         //  Outgoing Invoice
         if ($action == "OutgoingInvoice" || $action == "all") {
 
-            $OutgoingInvoiceKit = OutgoingInvoiceKit::with('outgoing_invoice', 'outgoing_invoice.warehouse')->where('kit_id', $kit)->get();
+            $OutgoingInvoiceKit = OutgoingInvoiceKit::with('user', 'outgoing_invoice', 'outgoing_invoice.people', 'outgoing_invoice.warehouse')->where('kit_id', $kit)->get();
             foreach ($OutgoingInvoiceKit as $key => $value) {
                 $OutgoingInvoiceKit[$key]["dataType"] = "OutgoingInvoice";
                 $OutgoingInvoiceKit[$key]["date"] = $OutgoingInvoiceKit[$key]["outgoing_invoice"]["date"];
@@ -230,7 +232,7 @@ class KitController extends Controller
         //  Returned Outgoing Invoice
         if ($action == "ReturnedOutgoingInvoice" || $action == "all") {
 
-            $ReturnedOutgoingInvoiceKit = ReturnedOutgoingInvoiceKit::with('outgoing_invoice', 'outgoing_invoice.warehouse')->where('kit_id', $kit)->get();
+            $ReturnedOutgoingInvoiceKit = ReturnedOutgoingInvoiceKit::with('user', 'outgoing_invoice', 'outgoing_invoice.people', 'outgoing_invoice.warehouse')->where('kit_id', $kit)->get();
             foreach ($ReturnedOutgoingInvoiceKit as $key => $value) {
                 $ReturnedOutgoingInvoiceKit[$key]["dataType"] = "ReturnedOutgoingInvoice";
                 $actionData->push($ReturnedOutgoingInvoiceKit[$key]);
@@ -239,7 +241,7 @@ class KitController extends Controller
         //  Oprtion
         if ($action == "KitOperation" || $action == "all") {
 
-            $KitOperation = KitOperation::with('warehouse')->where('kit_id', $kit)->get();
+            $KitOperation = KitOperation::with('user', 'warehouse')->where('kit_id', $kit)->get();
             foreach ($KitOperation as $key => $value) {
                 $KitOperation[$key]["dataType"] = "KitOperation";
                 $actionData->push($KitOperation[$key]);

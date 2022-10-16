@@ -45,20 +45,13 @@
           <h2 class="title font-bold text-lg text-[#009ef7]">
             إجمالى المتاح بالمخازن : {{ kit.total_number_of_kit }}
           </h2>
-          <div class="flex justify-around print:hidden">
-            <btn-success
-              :element="Link"
-              :to="route('kit.edit', kit.id)"
-              class="mt-4"
-            >
-              تعديل بيانات
-            </btn-success>
+          <div class="flex print:hidden">
             <btn-info
               :element="Link"
               :to="route('kit.edit', kit.id)"
               class="mt-4"
             >
-              أستعمال
+            تعديل بيانات
             </btn-info>
           </div>
         </div>

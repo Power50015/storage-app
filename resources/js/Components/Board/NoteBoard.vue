@@ -114,6 +114,9 @@ const rowData = reactive([]);
 const notes = reactive([]);
 const inputText = ref();
 function getNoteData(reload = false, page = 1) {
+  form.id = props.id;
+  if (reload) notes.length = 0;
+  if (reload) rowData.length = 0;
   axios
     .get(route(props.url + ".index"), {
       params: {
@@ -124,7 +127,6 @@ function getNoteData(reload = false, page = 1) {
     })
     .then(function (response) {
       rowData.length = 0;
-      if (reload) notes.length = 0;
       rowData.push(response.data.note);
       response.data.note.data.forEach((item) => {
         notes.push(item);

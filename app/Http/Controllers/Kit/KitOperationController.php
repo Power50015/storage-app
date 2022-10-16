@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Kit\KitOperation;
 use App\Http\Requests\Kit\StoreKitOperationRequest;
 use App\Http\Requests\Kit\UpdateKitOperationRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
 
 class KitOperationController extends Controller
 {
@@ -38,7 +40,18 @@ class KitOperationController extends Controller
      */
     public function store(StoreKitOperationRequest $request)
     {
-        //
+        $kit = KitOperation::create(
+            [
+                'title' => $request->title,
+                'action' => $request->action,
+                'kit_id' => $request->kit_id,
+                'user_id' => auth()->user()->id,
+                'warehouse_id' => $request->warehouse_id,
+                'quantity' => $request->quantity,
+                'date' => Carbon::parse($request->date),
+            ]
+        );
+        return Redirect::back();
     }
 
     /**
@@ -72,7 +85,12 @@ class KitOperationController extends Controller
      */
     public function update(UpdateKitOperationRequest $request, KitOperation $kitOperation)
     {
-        //
+        $kitOperation->title = $request->title;
+        $kitOperation->action = $request->action;
+        $kitOperation->quantity = $request->quantity;
+        $kitOperation->date = Carbon::parse($request->date);
+        $kitOperation->save();
+        return Redirect::back();
     }
 
     /**
@@ -83,6 +101,7 @@ class KitOperationController extends Controller
      */
     public function destroy(KitOperation $kitOperation)
     {
-        //
+        $kitOperation->delete();
+        return Redirect::back();
     }
 }
