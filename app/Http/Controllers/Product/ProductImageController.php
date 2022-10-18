@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductImage;
 use App\Http\Requests\Product\StoreProductImageRequest;
 use App\Http\Requests\Product\UpdateProductImageRequest;
+use App\Models\Product\ProductImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductImageController extends Controller
@@ -19,7 +20,10 @@ class ProductImageController extends Controller
      */
     public function index()
     {
-        //
+        $product = Request::input('id');
+        return [
+            "image" => ProductImage::where('product_id', $product)->with('user')->latest()->paginate()
+        ];
     }
 
     /**
@@ -40,10 +44,9 @@ class ProductImageController extends Controller
      */
     public function store(StoreProductImageRequest $request)
     {
-        $attachment_path = $request["image"]->store('image/products', 'public');
         ProductImage::create([
-            'image' =>  $attachment_path,
-            'product_id' => $request->product_id,
+            'image' =>  $request["image"]->store('image/products', 'public'),
+            'product_id' => $request->id,
             'user_id' => Auth::id()
         ]);
         return Redirect::back();
@@ -91,8 +94,8 @@ class ProductImageController extends Controller
      */
     public function destroy(ProductImage $productImage)
     {
-        $productImage::destroy($productImage->id);
         Storage::delete("public/" . $productImage["image"]);
+        $productImage->delete();
         return Redirect::back();
     }
 }

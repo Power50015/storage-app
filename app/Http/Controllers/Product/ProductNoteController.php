@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductNote;
 use App\Http\Requests\Product\StoreProductNoteRequest;
 use App\Http\Requests\Product\UpdateProductNoteRequest;
+use App\Models\Product\ProductNote;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -18,7 +19,15 @@ class ProductNoteController extends Controller
      */
     public function index()
     {
-        //
+        $product = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => ProductNote::with('user')->latest()->where('product_id', $product)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -41,10 +50,12 @@ class ProductNoteController extends Controller
     {
         $note = ProductNote::create([
             'note' => $request->note,
-            'product_id' => $request->product_id,
+            'product_id' => $request->id,
+            'tag' => $request->tag,
             'user_id' => Auth::id()
         ]);
         return Redirect::back();
+
     }
 
     /**
@@ -89,7 +100,8 @@ class ProductNoteController extends Controller
      */
     public function destroy(ProductNote $productNote)
     {
-        $productNote::destroy($productNote->id);
+        $productNote->delete();
+
         return Redirect::back();
     }
 }

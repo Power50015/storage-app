@@ -99,8 +99,9 @@ class KitAttachmentController extends Controller
      */
     public function destroy(KitAttachment $kitAttachment)
     {
-        $kitAttachment::destroy($kitAttachment->id);
         Storage::delete("public/" . $kitAttachment["attachment"]);
+        $kitAttachment->delete();
+
         return Redirect::back();
     }
 }

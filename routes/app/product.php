@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Request as FacadesRequest;
 use App\Http\Controllers\Product\ProductAttachmentController;
 use App\Http\Controllers\Product\ProductImageController;
 use App\Http\Controllers\Product\ProductNoteController;
-use App\Models\Product\Product;
 
 Route::resource('/product-category', ProductCategoryController::class);
 Route::resource('/product-type', ProductTypeController::class);
@@ -27,14 +26,19 @@ Route::resource('/product-color', ProductColorController::class);
 Route::resource('/product-material', ProductMaterialController::class);
 Route::resource('/product-country', ProductCountryController::class);
 Route::resource('/product', ProductController::class);
-/*Route::resource('/product-note', ProductNoteController::class)->only([
-    'store', 'destroy'
+
+Route::resource('/product-note', ProductNoteController::class)->only([
+    'index', 'store', 'destroy'
 ]);
+
 Route::resource('/product-attachment', ProductAttachmentController::class)->only([
-    'store', 'destroy'
+    'index', 'store', 'destroy'
 ]);
+
 Route::resource('/product-image', ProductImageController::class)->only([
-    'store', 'destroy'
-]);*/
+    'index', 'store', 'destroy'
+]);
 
 Route::get('/product-data',[ProductController::class, 'data']);
+Route::get('/product-action', [ProductController::class, 'actionData']);
+Route::get('/product-stock', [ProductController::class, 'stockData']);

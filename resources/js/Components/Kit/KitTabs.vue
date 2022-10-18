@@ -82,7 +82,7 @@ import FileBoard from "../Board/FileBoard.vue";
 import ImageBoard from "../Board/ImageBoard.vue";
 const tab = ref("stock");
 
-const props = defineProps(["note", "id"]);
+const props = defineProps(["id"]);
 
 function tabClick(inputTab) {
   tab.value = inputTab;

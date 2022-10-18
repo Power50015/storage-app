@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductAttachment;
+use App\Models\Product\ProductAttachment;
 use App\Http\Requests\Product\StoreProductAttachmentRequest;
 use App\Http\Requests\Product\UpdateProductAttachmentRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductAttachmentController extends Controller
@@ -19,7 +20,14 @@ class ProductAttachmentController extends Controller
      */
     public function index()
     {
-        //
+        $product = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "attachment" => ProductAttachment::with('user')->latest()->where('product_id', $product)->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -44,7 +52,8 @@ class ProductAttachmentController extends Controller
         $attachment_path = $request["attachment"]->store('attachment/products', 'public');
         ProductAttachment::create([
             'attachment' =>  $attachment_path,
-            'product_id' => $request->product_id,
+            'product_id' => $request->id,
+            'title' => $request->title,
             'user_id' => Auth::id()
         ]);
         return Redirect::back();
@@ -92,8 +101,9 @@ class ProductAttachmentController extends Controller
      */
     public function destroy(ProductAttachment $productAttachment)
     {
-        $productAttachment::destroy($productAttachment->id);
         Storage::delete("public/" . $productAttachment["attachment"]);
+        $productAttachment->delete();
+
         return Redirect::back();
     }
 }

@@ -95,8 +95,9 @@ class KitImageController extends Controller
      */
     public function destroy(KitImage $kitImage)
     {
-        $kitImage::destroy($kitImage->id);
         Storage::delete("public/" . $kitImage["image"]);
+        $kitImage->delete();
+
         return Redirect::back();
     }
 }

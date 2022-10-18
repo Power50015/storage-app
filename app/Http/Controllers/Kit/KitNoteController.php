@@ -99,7 +99,8 @@ class KitNoteController extends Controller
      */
     public function destroy(KitNote $kitNote)
     {
-        $kitNote::destroy($kitNote->id);
+        $kitNote->delete();
+
         return Redirect::back();
     }
 }

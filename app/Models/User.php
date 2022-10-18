@@ -2,9 +2,51 @@
 
 namespace App\Models;
 
+use App\Models\Cash\Cash;
+use App\Models\Debtor\Debtor;
+use App\Models\Debtor\DebtorAttachment;
+use App\Models\Debtor\DebtorPay;
+use App\Models\Debtor\DebtorPayAttachment;
+use App\Models\Driver\Driver;
+use App\Models\IncomingInvoice\IncomingInvoice;
+use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
+use App\Models\IncomingInvoice\IncomingInvoiceContent;
+use App\Models\IncomingInvoice\IncomingInvoiceKit;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\Kit\Kit;
+use App\Models\Kit\KitAttachment;
+use App\Models\Kit\KitImage;
+use App\Models\Kit\KitNote;
+use App\Models\Kit\KitOperation;
+use App\Models\OutgoingInvoice\OutgoingInvoice;
+use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
+use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\People\People;
+use App\Models\Product\DestructibleGoods;
+use App\Models\Product\DestructibleGoodsAction;
+use App\Models\Product\Product;
+use App\Models\Product\ProductAttachment;
+use App\Models\Product\ProductBrand;
+use App\Models\Product\ProductCategory;
+use App\Models\Product\ProductCollection;
+use App\Models\Product\ProductColor;
+use App\Models\Product\ProductCountry;
+use App\Models\Product\ProductImage;
+use App\Models\Product\ProductMaterial;
+use App\Models\Product\ProductModel;
+use App\Models\Product\ProductNote;
+use App\Models\Product\ProductType;
+use App\Models\Transfer\Transfer;
+use App\Models\Transfer\TransferAttachment;
+use App\Models\Transfer\TransferContent;
 use App\Models\Transfer\TransferKit;
 use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseStock;
+use App\Models\Warehouse\WarehouseStockAttachment;
+use App\Models\Warehouse\WarehouseStockContent;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -280,7 +322,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(DebtorPayAttachment::class);
     }
-     /**
+    /**
      * Get the Creditor for the user.
      */
     public function creditors()
@@ -372,7 +414,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(TransferAttachment::class);
     }
-     /**
+    /**
      * Get the Transfer To for the Transfer Kit.
      */
     public function transfer_kits()
@@ -399,5 +441,16 @@ class User extends Authenticatable
     public function returned_outgoing_invoice_kits()
     {
         return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
+    }
+    /**
+     * Get the DestructibleGoods for the user.
+     */
+    public function destructible_goods()
+    {
+        return $this->hasMany(DestructibleGoods::class);
+    }
+    public function destructible_goods_action()
+    {
+        return $this->hasMany(DestructibleGoodsAction::class);
     }
 }

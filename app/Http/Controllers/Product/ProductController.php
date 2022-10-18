@@ -16,13 +16,18 @@ use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductCountry;
 use Illuminate\Support\Facades\Request;
 
-use App\Models\IncomingInvoiceContent;
-use App\Models\OutgoingInvoiceContent;
-use App\Models\ProductAttachment;
-use App\Models\ProductImage;
-use App\Models\ProductNote;
-use App\Models\TransferContent;
-use App\Models\WarehouseStockContent;
+use App\Models\IncomingInvoice\IncomingInvoiceContent;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\Product\DestructibleGoods;
+use App\Models\Product\DestructibleGoodsAction;
+use App\Models\Product\ProductAttachment;
+use App\Models\Product\ProductImage;
+use App\Models\Product\ProductNote;
+use App\Models\Transfer\TransferContent;
+use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseStockContent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -116,44 +121,23 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        /*
-        $incomeIvoice = IncomingInvoiceContent::with(['incoming_invoice', 'incoming_invoice.people'])->where('product_id', $product->id)->get();
-        $outgoingIvoice = OutgoingInvoiceContent::with(['outgoing_invoice', 'outgoing_invoice.people'])->where('product_id', $product->id)->get();
-        $stratStock = WarehouseStockContent::with('warehouse_stock')->where('product_id', $product->id)->get();
-        $transfer = TransferContent::with(['transfer', 'transfer.warehouse_from', 'transfer.warehouse_to'])->where('product_id', $product->id)->get();
-        $stockData = [];
-
-        //incomeIvoice
-        for ($i = 0; $i < count($incomeIvoice); $i++) {
-            $stockData[$i] = $incomeIvoice[$i];
-            $stockData[$i]["type"] = "فاتورة وارده";
-        }
-        //outgoingIvoice
-        for ($i = count($incomeIvoice), $x = 0; $i < (count($incomeIvoice) + count($outgoingIvoice)); $i++, $x++) {
-            $stockData[$i] = $outgoingIvoice[$x];
-            $stockData[$i]["type"] = "فاتورة صادره";
-        }
-        //stratStock
-        for ($i = count($incomeIvoice) + count($outgoingIvoice), $x = 0; $i < (count($incomeIvoice) + count($outgoingIvoice) + count($stratStock)); $i++, $x++) {
-            $stockData[$i] = $stratStock[$x];
-            $stockData[$i]["type"] = "مخزون";
-        }
-        //transfer
-        for ($i = (count($incomeIvoice) + count($outgoingIvoice) + count($stratStock)), $x = 0; $i < (count($incomeIvoice) + count($outgoingIvoice) + count($stratStock) + count($transfer)); $i++, $x++) {
-            $stockData[$i] = $transfer[$x];
-            $stockData[$i]["type"] = "نقله";
-        }
-        return Inertia::render('Product/ShowProduct', [
-            "product" => Product::with(['product_category', 'product_type', 'product_brand', 'product_collection', 'product_model', 'product_color', 'product_material', 'product_country', 'product_notes', 'product_images', 'product_attachments'])->where('id', $product->id)->get(),
-            "stockData" => $stockData,
-            "incomeIvoice" => $incomeIvoice,
-            "outgoingIvoice" => $outgoingIvoice,
-            "stratStock" => $stratStock,
-            "transfer" => $transfer,
-            "note" => ProductNote::where('product_id', $product->id)->get(),
-            "attachment" => ProductAttachment::where('product_id', $product->id)->get(),
-            "image" => ProductImage::where('product_id', $product->id)->get(),
-        ]);*/
+        return Inertia::render('Product/Show', [
+            "product" => Product::with(
+                [
+                    'product_category',
+                    'product_type',
+                    'product_brand',
+                    'product_collection',
+                    'product_model',
+                    'product_color',
+                    'product_material',
+                    'product_country',
+                    'product_notes',
+                    'product_images',
+                    'product_attachments'
+                ]
+            )->where('id', $product->id)->get(),
+        ]);
     }
 
     /**
@@ -224,18 +208,20 @@ class ProductController extends Controller
     // Get All Products as a row data
     public function data()
     {
-        if (Request::input('id')) return Product::with(
-            [
-                'product_category',
-                'product_type',
-                'product_brand',
-                'product_collection',
-                'product_model',
-                'product_color',
-                'product_material',
-                'product_country'
-            ]
-        )->where('id', Request::input('id'))->get();
+        if (Request::input('id')) {
+            return Product::with(
+                [
+                    'product_category',
+                    'product_type',
+                    'product_brand',
+                    'product_collection',
+                    'product_model',
+                    'product_color',
+                    'product_material',
+                    'product_country'
+                ]
+            )->where('id', Request::input('id'))->get();
+        }
         return Product::query()->with(
             [
                 'product_category',
@@ -261,5 +247,131 @@ class ProductController extends Controller
                 ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
                 ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
         })->paginate(10)->withQueryString();
+    }
+
+    /**
+     * Get All Action of the product
+     */
+    public function actionData()
+    {
+
+        $product = Request::input('product');
+
+        $action = Request::input('action');
+
+        // Get Actions
+        $actionData = collect([]);
+        //  Stock
+        if ($action == "Stock" || $action == "all") {
+            $WarehouseStockContent = WarehouseStockContent::with(['user', 'warehouse_stock', 'warehouse_stock.warehouse'])->where('product_id', $product)->get();
+            foreach ($WarehouseStockContent as $key => $value) {
+                $WarehouseStockContent[$key]["dataType"] = "Stock";
+                $WarehouseStockContent[$key]["date"] = $WarehouseStockContent[$key]["warehouse_stock"]["date"];
+                $actionData->push($WarehouseStockContent[$key]);
+            }
+        }
+        if ($action == "IncomingInvoice" || $action == "all") {
+            //  Incoming Invoice
+            $IncomingInvoiceContent = IncomingInvoiceContent::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('product_id', $product)->get();
+            foreach ($IncomingInvoiceContent as $key => $value) {
+                $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
+                $IncomingInvoiceContent[$key]["date"] = $IncomingInvoiceContent[$key]["incoming_invoice"]["date"];
+                $actionData->push($IncomingInvoiceContent[$key]);
+            }
+        }
+        //  Returned Incoming Invoice
+        if ($action == "ReturnedIncomingInvoice" || $action == "all") {
+            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('product_id', $product)->get();
+            foreach ($ReturnedIncomingInvoice as $key => $value) {
+                $ReturnedIncomingInvoice[$key]["dataType"] = "ReturnedIncomingInvoice";
+                $actionData->push($ReturnedIncomingInvoice[$key]);
+            }
+        }
+        //  Transfer
+        if ($action == "Transfer" || $action == "all") {
+            $TransferContent = TransferContent::with(['user', 'transfer', 'transfer.warehouse_from', 'transfer.warehouse_to', 'transfer.driver'])->where('product_id', $product)->get();
+            foreach ($TransferContent as $key => $value) {
+                $TransferContent[$key]["dataType"] = "Transfer";
+                $TransferContent[$key]["date"] = $TransferContent[$key]["transfer"]["date"];
+                $actionData->push($TransferContent[$key]);
+            }
+        }
+        //  Outgoing Invoice
+        if ($action == "OutgoingInvoice" || $action == "all") {
+
+            $OutgoingInvoiceContent = OutgoingInvoiceContent::with('user', 'outgoing_invoice', 'outgoing_invoice.people', 'outgoing_invoice.warehouse')->where('product_id', $product)->get();
+            foreach ($OutgoingInvoiceContent as $key => $value) {
+                $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
+                $OutgoingInvoiceContent[$key]["date"] = $OutgoingInvoiceContent[$key]["outgoing_invoice"]["date"];
+
+                $actionData->push($OutgoingInvoiceContent[$key]);
+            }
+        }
+        //  Returned Outgoing Invoice
+        if ($action == "ReturnedOutgoingInvoice" || $action == "all") {
+
+            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with('user', 'outgoing_invoice', 'outgoing_invoice.people', 'outgoing_invoice.warehouse')->where('product_id', $product)->get();
+            foreach ($ReturnedOutgoingInvoice as $key => $value) {
+                $ReturnedOutgoingInvoice[$key]["dataType"] = "ReturnedOutgoingInvoice";
+                $actionData->push($ReturnedOutgoingInvoice[$key]);
+            }
+        }
+        //  Oprtion
+        if ($action == "Oprtion" || $action == "all") {
+
+            $DestructibleGoodsAction = DestructibleGoodsAction::with('user', 'destructible_goods',  'destructible_goods.warehouse')->whereRelation('destructible_goods', 'product_id', $product)->get();
+            foreach ($DestructibleGoodsAction as $key => $value) {
+                $DestructibleGoodsAction[$key]["dataType"] = "DestructibleGoods";
+                $actionData->push($DestructibleGoodsAction[$key]);
+            }
+        }
+
+        $actionData = $actionData->sortByDesc('date')->paginate();
+
+        return $actionData;
+    }
+    /**
+     * Get All Wearehouse Product Stock Data
+     */
+    public function stockData()
+    {
+        $product = Request::input('product');
+        $search = Request::input('search');
+        $warehouses = $search ? Warehouse::where('name', 'like',  "%{$search}%")->get() : Warehouse::all();
+
+        $warehousesData = collect([]);
+
+        //  where warehouse is
+        foreach ($warehouses as $key => $value) {
+            $warehouse = $warehouses[$key]['id'];
+            $quantity = 0;
+            // Add Stock
+            $quantity += WarehouseStockContent::with('warehouse_stock')->where('product_id', $product)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity');
+            // Add Incoming Invoice
+            $quantity += IncomingInvoiceContent::with('incoming_invoice')->where('product_id', $product)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            // subtract Returned Incoming Invoice
+            $quantity -= ReturnedIncomingInvoice::with('incoming_invoice')->where('product_id', $product)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            // Transfer to
+            $quantity += TransferContent::with('transfer')->where('product_id', $product)->whereRelation('transfer', 'warehouse_to_id', $warehouse)->sum('quantity');
+            // Transfer From
+            $quantity -= TransferContent::with('transfer')->where('product_id', $product)->whereRelation('transfer', 'warehouse_from_id', $warehouse)->sum('quantity');
+            // subtract Outgoing Invoice
+            $quantity = $quantity - OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $product)->whereRelation('outgoing_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            //Re-add Returned Outgoing Invoice
+            $quantity -= ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $product)->whereRelation('outgoing_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+
+            $quantity -= DestructibleGoodsAction::with('user', 'destructible_goods',  'destructible_goods.warehouse')->whereRelation('destructible_goods', 'product_id', $product)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->where('action', 1)->count();
+
+
+            if ($quantity > 0)
+                $warehousesData[] = [
+                    "warehouse" => $warehouses[$key],
+                    "quantity" => $quantity,
+                    "destructibleGoods" => DestructibleGoodsAction::with('user', 'destructible_goods',  'destructible_goods.warehouse')->whereRelation('destructible_goods', 'product_id', $product)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->where('action', 0)->count()
+                ];
+        }
+        $warehousesData = $warehousesData->sortByDesc('quantity')->paginate();
+
+        return $warehousesData;
     }
 }

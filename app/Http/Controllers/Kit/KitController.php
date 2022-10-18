@@ -15,7 +15,6 @@ use App\Models\Kit\KitOperation;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use Illuminate\Support\Facades\Request;
-use App\Models\Product\Product;
 use App\Models\Transfer\TransferKit;
 use App\Models\Warehouse\KitStock;
 use App\Models\Warehouse\Warehouse;
