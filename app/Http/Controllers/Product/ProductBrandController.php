@@ -7,6 +7,7 @@ use App\Models\Product\ProductBrand;
 use App\Http\Requests\Product\StoreProductBrandRequest;
 use App\Http\Requests\Product\UpdateProductBrandRequest;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class ProductBrandController extends Controller
 {
@@ -93,5 +94,24 @@ class ProductBrandController extends Controller
     public function destroy(ProductBrand $productBrand)
     {
         //
+    }
+
+    // Get All Products as a row data
+    public function data()
+    {
+        if (Request::input('id')) {
+            return ProductBrand::with(
+                [
+                    'product_country'
+                ]
+            )->where('id', Request::input('id'))->get();
+        }
+        return ProductBrand::query()->with(
+            [
+                'product_country'
+            ]
+        )->when(Request::input('search'), function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })->paginate(10)->withQueryString();
     }
 }

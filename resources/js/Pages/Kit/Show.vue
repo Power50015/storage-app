@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="قطع الغيار">
     <SectionTemplate class="print:p-0">
-      <div class="flex justify-between">
+      <div class="flex justify-between md:flex-row	flex-col-reverse">
         <div class="flex justify-around flex-col w-full">
           <h2 class="font-bold mb-3 text-lg">
             {{ kit.title }}

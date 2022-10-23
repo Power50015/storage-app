@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\DestructibleGoods;
 use App\Http\Requests\Product\StoreDestructibleGoodsRequest;
 use App\Http\Requests\Product\UpdateDestructibleGoodsRequest;
+use App\Models\Product\DestructibleGoodsAction;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
 
 class DestructibleGoodsController extends Controller
 {
@@ -16,7 +19,6 @@ class DestructibleGoodsController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -37,7 +39,22 @@ class DestructibleGoodsController extends Controller
      */
     public function store(StoreDestructibleGoodsRequest $request)
     {
-        //
+        $DestructibleGoods = DestructibleGoods::create([
+            'product_id' => $request->product_id,
+            'warehouse_id' => $request->warehouse_id,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        DestructibleGoodsAction::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'action' => 0,
+            "date" => Carbon::parse($request->date),
+            'destructible_goods_id' => $DestructibleGoods->id,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return Redirect::back();
     }
 
     /**

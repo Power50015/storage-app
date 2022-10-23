@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\DestructibleGoodsAction;
 use App\Http\Requests\Product\StoreDestructibleGoodsActionRequest;
 use App\Http\Requests\Product\UpdateDestructibleGoodsActionRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class DestructibleGoodsActionController extends Controller
 {
@@ -16,7 +20,32 @@ class DestructibleGoodsActionController extends Controller
      */
     public function index()
     {
-        //
+        $product = Request::input('product');
+
+        if ($product) {
+            $data = DestructibleGoodsAction::where('action', '==', 0)->whereRelation('destructible_goods', 'product_id', $product)->get();
+
+            foreach ($data as $key => $value) {
+                if (DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->count() == 1) {
+                    $row = DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->get('id');
+                    $ids[] = $row[0]['id'];
+                }
+            }
+            if (isset($ids))
+                return ["DestructibleGoodsAction"=>DestructibleGoodsAction::with('destructible_goods', 'user', 'destructible_goods.product', 'destructible_goods.warehouse')->whereIn('id',  $ids)->paginate()];
+            else return [];
+        } else {
+            $data = DestructibleGoodsAction::where('action', '==', 0)->get();
+
+            foreach ($data as $key => $value) {
+                if (DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->count() == 1) {
+                    $row = DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->get('id');
+                    $ids[] = $row[0]['id'];
+                }
+            }
+            return ["DestructibleGoodsAction"=>DestructibleGoodsAction::with('destructible_goods', 'user', 'destructible_goods.product', 'destructible_goods.warehouse')->whereIn('id',  $ids)->paginate()];
+
+        }
     }
 
     /**
@@ -37,7 +66,15 @@ class DestructibleGoodsActionController extends Controller
      */
     public function store(StoreDestructibleGoodsActionRequest $request)
     {
-        //
+        DestructibleGoodsAction::create([
+            "title" => $request->title,
+            "description" => $request->description,
+            "action" => $request->action,
+            "date" => Carbon::parse($request->date),
+            "destructible_goods_id" => $request->destructible_goods_id,
+            'user_id' => auth()->user()->id,
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -71,7 +108,12 @@ class DestructibleGoodsActionController extends Controller
      */
     public function update(UpdateDestructibleGoodsActionRequest $request, DestructibleGoodsAction $destructibleGoodsAction)
     {
-        //
+        $destructibleGoodsAction->title = $request->title;
+        $destructibleGoodsAction->description = $request->description;
+        $destructibleGoodsAction->action = $request->action;
+        $destructibleGoodsAction->date = Carbon::parse($request->date);
+        $destructibleGoodsAction->save();
+        return Redirect::back();
     }
 
     /**

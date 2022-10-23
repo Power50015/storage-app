@@ -1,5 +1,5 @@
 <template>
-  <div class="action" @click="OpenModel">
+  <div class="action" @click="OpenModel" :class="customBtnAreaClass">
     <slot name="btn"  />
   </div>
   <div class="model" v-if="modelValue">
@@ -30,6 +30,7 @@ const props = defineProps({
   modelValue: {
     required: true,
   },
+  customBtnAreaClass:{}
 });
 
 const emit = defineEmits(["update:modelValue"]);

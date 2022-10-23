@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Request;
 
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\Kit\Kit;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\Product\DestructibleGoods;
@@ -54,7 +55,7 @@ class ProductController extends Controller
                     'product_model',
                     'product_color',
                     'product_material',
-                    'product_country'
+                    'product_country',
                 ]
             )->when(Request::input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
@@ -69,6 +70,22 @@ class ProductController extends Controller
                     ->orWhereRelation('product_color', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
+
+                if (Request::input('price_from') && Request::input('price_to'))
+                    $query->whereBetween('price', [Request::input('price_from'), Request::input('price_to')]);
+                elseif (Request::input('price_from'))
+                    $query->where('price', '>=', Request::input('price_from'));
+                elseif (Request::input('price_to'))
+                    $query->where('price', '<=', Request::input('price_to'));
+
+                if (Request::input('material'))
+                    $query->where('product_material_id', Request::input('material'));
+
+                if (Request::input('country'))
+                    $query->where('product_country_id', Request::input('country'));
+
+                if (Request::input('color'))
+                    $query->where('product_color_id', Request::input('color'));
             })->paginate(12)->withQueryString(),
 
             'filters' => Request::only(['search'])
@@ -134,7 +151,8 @@ class ProductController extends Controller
                     'product_country',
                     'product_notes',
                     'product_images',
-                    'product_attachments'
+                    'product_attachments',
+                    'product_brand.product_country'
                 ]
             )->where('id', $product->id)->get(),
         ]);
@@ -326,7 +344,7 @@ class ProductController extends Controller
             }
         }
 
-        $actionData = $actionData->sortByDesc('date')->paginate();
+        $actionData = $actionData->sortByDesc('date')->sortByDesc('created_at')->paginate();
 
         return $actionData;
     }
@@ -337,7 +355,13 @@ class ProductController extends Controller
     {
         $product = Request::input('product');
         $search = Request::input('search');
-        $warehouses = $search ? Warehouse::where('name', 'like',  "%{$search}%")->get() : Warehouse::all();
+        // $warehouses = $search ? Warehouse::where('name', 'like',  "%{$search}%")->get() : Warehouse::all();
+
+        $warehouses = Warehouse::query()->when(Request::input('search'), function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })->get();
+
+        // return $warehouses;
 
         $warehousesData = collect([]);
 
@@ -359,19 +383,36 @@ class ProductController extends Controller
             $quantity = $quantity - OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $product)->whereRelation('outgoing_invoice', 'warehouse_id', $warehouse)->sum('quantity');
             //Re-add Returned Outgoing Invoice
             $quantity -= ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $product)->whereRelation('outgoing_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            // DestructibleGoodsAction
 
-            $quantity -= DestructibleGoodsAction::with('user', 'destructible_goods',  'destructible_goods.warehouse')->whereRelation('destructible_goods', 'product_id', $product)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->where('action', 1)->count();
-
+            $DestructibleGoodsAction = DestructibleGoodsAction::where('action', 0)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->whereRelation('destructible_goods', 'product_id', $product)->count();
+            $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 2)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->whereRelation('destructible_goods', 'product_id', $product)->count();
+            $quantity -= $DestructibleGoodsAction;
+            $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->whereRelation('destructible_goods', 'product_id', $product)->count();
 
             if ($quantity > 0)
                 $warehousesData[] = [
                     "warehouse" => $warehouses[$key],
                     "quantity" => $quantity,
-                    "destructibleGoods" => DestructibleGoodsAction::with('user', 'destructible_goods',  'destructible_goods.warehouse')->whereRelation('destructible_goods', 'product_id', $product)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->where('action', 0)->count()
+                    "destructibleGoods" => $DestructibleGoodsAction
                 ];
         }
         $warehousesData = $warehousesData->sortByDesc('quantity')->paginate();
 
         return $warehousesData;
+    }
+    /**
+     * Get All Kits Of Product
+     */
+    public function kits()
+    {
+        $product = Request::input('product');
+        if ($product)
+            return [
+                "kit" => Kit::query()->where('product_id', $product)->when(Request::input('search'), function ($query, $search) {
+                    $query->where('title', 'like', "%{$search}%");
+                })->with('user')->paginate()->withQueryString(),
+                'filters' => Request::only(['search'])
+            ];
     }
 }

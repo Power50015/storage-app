@@ -15,6 +15,8 @@
           px-2
           text-right
           font-bold
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">المخزن : {{ item.warehouse.name }}</h2>

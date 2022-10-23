@@ -68,10 +68,9 @@
         </Modal>
       </FormSelect>
       <!-- Product Brand -->
-      <FormSelect
+      <SelectBrand
         v-model="form.product_brand_id"
         title="ماركه المنتج"
-        :options="brand"
         @change-select="brandChange"
       >
         <Modal v-model="brandForm.modelToggle">
@@ -102,7 +101,7 @@
             </FormSection>
           </template>
         </Modal>
-      </FormSelect>
+      </SelectBrand>
       <!-- Product Collection -->
       <FormSelect
         v-model="form.product_collection_id"
@@ -275,7 +274,7 @@
 </template>
 
 <script setup>
-import { computed, provide, readonly,reactive } from "@vue/runtime-core";
+import { computed, provide, readonly, reactive } from "@vue/runtime-core";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import FormSection from "@/Forms/FormSection.vue";
 import FormSelect from "@/Forms/FormSelect.vue";
@@ -284,6 +283,7 @@ import InputTextArea from "@/Forms/InputTextArea.vue";
 import InputNumber from "@/Forms/InputNumber.vue";
 import InputImage from "@/Forms/InputImage.vue";
 import Modal from "@/Components/Modals/Modal.vue";
+import SelectBrand from "../../Forms/SelectBrand.vue";
 
 provide("title", "المنتجات");
 provide(

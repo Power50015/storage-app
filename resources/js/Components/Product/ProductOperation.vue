@@ -15,6 +15,8 @@
           px-2
           text-right
           font-bold
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">
@@ -24,8 +26,8 @@
         <div class="w-full">
           <BadgeLight>
             <template v-if="item.action == 0">هالك مضاف</template>
-            <template v-if="item.action == 1">إعدام</template>
-            <template v-if="item.action == 1">أستعمال</template>
+            <template v-if="item.action == 1">تم الإعدام</template>
+            <template v-if="item.action == 2">تم الإصلاح</template>
           </BadgeLight>
         </div>
         <h2 class="w-full text-right">
@@ -73,7 +75,7 @@
           <h2 class="mb-3 font-bold">
             {{ item.title }}
           </h2>
-          <div>{{ item.description }}</div>
+          <div v-html="item.description"></div>
           <h2 class="mb-3 font-bold">
             المخزن : {{ item.destructible_goods.warehouse.name }}
           </h2>
@@ -82,7 +84,7 @@
             <BadgeLight>
               <template v-if="item.action == 0">هالك مضاف</template>
               <template v-if="item.action == 1">إعدام</template>
-              <template v-if="item.action == 1">أستعمال</template>
+              <template v-if="item.action == 2">أستعمال</template>
             </BadgeLight>
           </div>
           <div class="mb-3 font-bold">
@@ -107,61 +109,32 @@
           </div>
           <div class="flex justify-between mt-5">
             <BtnPrimary @click="edit = true">تعديل</BtnPrimary>
-            <BtnDanger @click="deleteDiolog = true">حذف</BtnDanger>
-          </div>
-        </div>
-      </div>
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="deleteDiolog">
-        <div
-          class="
-            dark:bg-[#1e1e2d]
-            bg-white
-            dark:text-white
-            text-black
-            overflow-hidden
-            shadow-xl
-            rounded-md
-            p-4
-          "
-        >
-          <h2 class="text-lg font-black">هل أنت متاكد من الحذف ؟</h2>
-          <div class="flex justify-between mt-5">
-            <BtnPrimary @click="deleteDiolog = false">إلغاء</BtnPrimary>
-            <BtnDanger @click="deleteFun">حذف</BtnDanger>
           </div>
         </div>
       </div>
       <FormSection
         v-if="edit"
-        title="أضف أستعمال"
-        btnTitle="أضف"
+        title="تعديل الهالك"
+        btnTitle="عدل"
         :formData="form"
-        formRoute="kit-operation.update"
-        toastMsg="تم الأستعمال "
-        :toastDescription="`${form.title}`"
+        formRoute="destructible-goods-action.update"
+        toastMsg="تم التعديل "
         @FormSuccess="FormSuccess"
       >
-        <h2 class="w-full mb-5">المخزن : {{ item.warehouse.name }}</h2>
+        <h2 class="w-full mb-5">
+          المخزن : {{ item.destructible_goods.warehouse.name }}
+        </h2>
         <InputText v-model="form.title" title="البند" :require="true" />
-
-        <InputNumber
-          v-model="form.quantity"
-          title="الكميه"
-          step="1"
-          :max="item.quantity"
-        />
+        <InputTextArea v-model="form.description" title="الوصف" />
         <FormSelect
+          v-if="item.action != 0"
           v-model="form.action"
-          title="نوع الإستعمال"
+          title="نوع العمليه"
           :require="true"
           :options="option"
         ></FormSelect>
         <!-- Date -->
-        <InputDate
-          v-model="form.date"
-          title="تاريخ الإستعمال"
-          :require="true"
-        />
+        <InputDate v-model="form.date" title="تاريخ الإهلاك" :require="true" />
         <template #footer
           ><BtnDanger class="mt-3" @click="edit = false"
             >إلغاء</BtnDanger
@@ -179,7 +152,7 @@ import { createToast } from "mosha-vue-toastify";
 import BadgeLight from "../Badges/BadgeLight.vue";
 import FormSection from "@/Forms/FormSection.vue";
 import InputText from "@/Forms/InputText.vue";
-import InputNumber from "@/Forms/InputNumber.vue";
+import InputTextArea from "@/Forms/InputTextArea.vue";
 import FormSelect from "@/Forms/FormSelect.vue";
 import InputDate from "@/Forms/InputDate.vue";
 import BtnPrimary from "../Buttons/BtnPrimary.vue";
@@ -196,55 +169,15 @@ const form = reactive({
   _method: "patch",
   title: props.item.title,
   action: props.item.action,
-  quantity: props.item.quantity,
   date: props.item.date,
+  description: props.item.description,
 });
+
 const option = [
-  { label: "إعدام", index: 0 },
-  { label: "إستعمال", index: 1 },
+  { label: "إعدام", index: 1 },
+  { label: "أصلاح", index: 2 },
 ];
 function FormSuccess() {
   emit("FormSuccess");
-}
-function deleteFun() {
-  /**
-   * PUT/PATCH/DELETE method
-   * https://github.com/inertiajs/inertia/issues/495
-   *
-   */
-  Inertia.delete(route("kit-operation.destroy", props.item.id), {
-    onSuccess: () => {
-      form.modelToggle = false;
-      edit.value = false;
-      deleteDiolog.value = false;
-      emit("FormSuccess");
-      createToast(
-        {
-          title: "تم الحذف",
-        },
-        {
-          timeout: 3000,
-          transition: "slide",
-          type: "success",
-          showIcon: true,
-        }
-      );
-    },
-    onError: (errors) => {
-      for (const [key, value] of Object.entries(errors)) {
-        createToast(
-          {
-            title: value,
-          },
-          {
-            timeout: 3000,
-            transition: "slide",
-            type: "danger",
-            showIcon: true,
-          }
-        );
-      }
-    },
-  });
 }
 </script>

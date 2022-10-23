@@ -13,7 +13,7 @@ class UpdateDestructibleGoodsRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,22 @@ class UpdateDestructibleGoodsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'date' => 'required|date',
+
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.*' => 'يجب إدخال البند',
+            'date.*' => 'يجب إدخال تاريخ ',
         ];
     }
 }

@@ -26,6 +26,8 @@
           py-4
           px-2
           text-right
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">
@@ -80,12 +82,17 @@
           px-2
           text-right
           font-bold
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">
           المخزن : {{ item.incoming_invoice.warehouse.name }}
         </h2>
-        <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
+        <div class="w-full">
+          <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
+          <h2 class="w-full">السعر : {{ item.price }}</h2>
+        </div>
         <div class="w-full">
           <BadgePrimary>فاتورة وارده</BadgePrimary>
         </div>
@@ -143,6 +150,8 @@
           py-4
           px-2
           text-right
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">
@@ -201,12 +210,17 @@
           px-2
           text-right
           font-bold
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">
           المخزن : {{ item.outgoing_invoice.warehouse.name }}
         </h2>
-        <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
+        <div class="w-full">
+          <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
+          <h2 class="w-full">السعر : {{ item.price }}</h2>
+        </div>
         <div class="w-full">
           <BadgeSuccess>فاتورة صادره</BadgeSuccess>
         </div>
@@ -263,6 +277,8 @@
           py-4
           px-2
           text-right
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">
@@ -321,6 +337,8 @@
           px-2
           text-right
           font-bold
+          md:flex-row
+          flex-col
         "
       >
         <h2 class="w-full">المخزن : {{ item.transfer.warehouse_from.name }}</h2>

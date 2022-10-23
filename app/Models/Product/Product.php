@@ -15,7 +15,7 @@ class Product extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_number_of_product', 'total_sales'];
+    protected $appends = ['total_number_of_product', 'total_sales', 'destructible_goods'];
     /**
      * Get the category for the Product.
      */
@@ -165,7 +165,7 @@ class Product extends Model
         return $this->hasMany(ProductAttachment::class);
     }
 
-     /**
+    /**
      * Get the DestructibleGoods for the product.
      */
     public function destructible_goods()
@@ -190,5 +190,15 @@ class Product extends Model
     public function getTotalSalesAttribute()
     {
         return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
+    }
+
+    public function getDestructibleGoodsAttribute()
+    {
+        $DestructibleGoodsAction = DestructibleGoodsAction::where('action', 0)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
+        $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 2)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
+        $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
+
+
+        return $DestructibleGoodsAction;
     }
 }

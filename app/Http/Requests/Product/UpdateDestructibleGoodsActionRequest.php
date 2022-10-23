@@ -13,10 +13,10 @@ class UpdateDestructibleGoodsActionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
+   /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
@@ -24,7 +24,19 @@ class UpdateDestructibleGoodsActionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.*' => 'يجب إدخال  البند',
         ];
     }
 }

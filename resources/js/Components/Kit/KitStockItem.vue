@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center md:flex-row flex-col">
     <Link
       :href="route('warehouse.show', item.warehouse.id)"
       class="
@@ -13,12 +13,13 @@
         px-2
         text-right
         flex
+        md:flex-row flex-col
       "
     >
       <h2 class="w-full">المخزن : {{ item.warehouse.name }}</h2>
       <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
     </Link>
-    <Modal v-model="form.modelToggle">
+    <Modal v-model="form.modelToggle" customBtnAreaClass="md:w-auto w-full">
       <template #btn> <span class="mx-3">أستعمال</span></template>
       <template #default>
         <FormSection

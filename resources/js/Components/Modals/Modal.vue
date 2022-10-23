@@ -1,5 +1,5 @@
 <template>
-  <div class="action">
+  <div class="action" :class="customBtnAreaClass">
     <btn-success @click="OpenModel" :disabledClass="disabledClass">
       <slot name="btn" />
     </btn-success>
@@ -24,6 +24,7 @@ const props = defineProps({
     required: true,
   },
   disabledClass: {},
+  customBtnAreaClass:{}
 });
 
 const emit = defineEmits(["update:modelValue"]);
