@@ -3,7 +3,7 @@
     class="
       dark:bg-[#1e1e2d] dark:text-white
       flex flex-col
-      lg:flex-row lg:h-[80px]
+      xl:flex-row xl:h-[80px]
       h-[210px]
       items-center
       dark:border-b-1
@@ -11,7 +11,7 @@
       fixed
       inset-0
       w-full
-      lg:py-[40px]
+      xl:py-[40px]
       bg-white
       z-50
       print:hidden
@@ -25,7 +25,7 @@
         items-center
         justify-between
         w-full
-        lg:w-[265px] lg:border-b-1
+        xl:w-[265px] xl:border-b-1
         dark:border-[#323248]
         shrink-0
         h-[80px]
@@ -40,13 +40,13 @@
         />
       </Link>
       <button
-        class="p-5 flex text-white lg:hidden"
+        class="p-5 flex text-white xl:hidden"
         @click="$emit('asideShowMobile')"
       >
         <i class="fa-solid fa-bars"></i>
       </button>
       <button
-        class="p-5 hidden lg:flex text-white"
+        class="p-5 hidden xl:flex text-white"
         @click="$emit('asideShowDesktop')"
       >
         <i class="fa-solid fa-arrow-right-to-bracket"></i>
@@ -55,10 +55,10 @@
     <div
       class="
         flex flex-col
-        lg:flex-row lg:justify-between
+        xl:flex-row xl:justify-between
         w-full
         py-4
-        lg:px-8
+        xl:px-8
         px-5
       "
     >
@@ -91,11 +91,11 @@
       <div class="fast-links flex items-center">
         <h5
           class="
-            lg:px-3
+            xl:px-3
             flex
             items-center
             font-bold
-            lg:border-r-1
+            xl:border-r-1
             border-[#323248]
             min-h-[50px]
           "

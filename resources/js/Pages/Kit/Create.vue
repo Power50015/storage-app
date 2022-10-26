@@ -5,7 +5,7 @@
       :btnTitle="formText.btnTitle"
       :formData="form"
       :formRoute="form.route"
-      :toastMsg="formText.toastMsg"
+      :toastMsg="formText.formText"
       :toastDescription="form.title"
     >
       <!-- Kit Title -->

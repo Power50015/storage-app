@@ -24,12 +24,18 @@ class UpdateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'required|numeric',
-            'type' => 'required|numeric',
+            'product_category_id' => 'required|exists:product_categories,id',
+            'product_type_id' => 'required|exists:product_types,id',
+            'product_brand_id' => 'nullable|exists:product_brands,id',
+            'product_collection_id' => 'nullable|exists:product_collections,id',
+            'product_model_id' => 'nullable|exists:product_models,id',
             'name' => 'required',
-            'color' => 'required|numeric',
-            'material' => 'required|numeric',
-            'country' => 'required|numeric',
+            'product_color_id' => 'required|exists:product_colors,id',
+            'product_material_id' => 'required|exists:product_materials,id',
+            'product_country_id' => 'required|exists:product_countries,id',
+            'description' => 'nullable',
+            'sku' => 'nullable',
+            'price' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg'
         ];
     }
@@ -42,14 +48,13 @@ class UpdateProductRequest extends FormRequest
     {
 
         return [
-            'category.required' => 'يجب إدخال قسم المنتج',
-            'type.required' => 'يجب إدخال نوع المنتج',
-            'name.required' => 'يجب إدخال اسم المنتج',
-            'color.required' => 'يجب إدخال لون المنتج',
-            'material.required' => 'يجب إدخال خامه المنتج',
-            'country.required' => 'يجب إدخال بلد المنتج',
-            'image.image' => 'يجب إدخال صوره المنتج',
-            'image.required' => 'يجب إدخال صوره المنتج',
+            'product_category_id.*' => 'يجب إدخال قسم المنتج',
+            'product_type_id.*' => 'يجب إدخال نوع المنتج',
+            'name.*' => 'يجب إدخال اسم المنتج',
+            'product_color_id.*' => 'يجب إدخال لون المنتج',
+            'product_material_id.*' => 'يجب إدخال خامه المنتج',
+            'product_country_id.*' => 'يجب إدخال بلد المنتج',
+            'image.*' => 'يجب إدخال صوره المنتج',
         ];
     }
 }

@@ -1,9 +1,9 @@
 <template>
   <AppLayout title="المنتجات">
     <SectionTemplate class="print:p-0">
-      <div class="flex justify-between lg:flex-row flex-col-reverse">
+      <div class="flex justify-between xl:flex-row flex-col-reverse">
         <div class="flex justify-around flex-col w-full mx-3">
-          <div class="flex lg:flex-row flex-col font-bold items-center">
+          <div class="flex xl:flex-row flex-col font-bold items-center">
             <Link
               :href="
                 route('product-category.show', product.product_category.id)
@@ -65,19 +65,19 @@
               {{ product.product_country.name }}
             </Link>
           </div>
-          <div class="flex lg:flex-row flex-col text-lg font-bold mt-3">
+          <div class="flex xl:flex-row flex-col text-lg font-bold mt-3">
             <h2 class="mx-3 text-[#009ef7]">
               {{ product.name }}
             </h2>
-            <span>-</span>
-            <h2 class="mx-3">SKU : {{ product.sku }}</h2>
+            <span v-if="product.sku">-</span>
+            <h2 class="mx-3" v-if="product.sku">SKU : {{ product.sku }}</h2>
           </div>
           <div>
             <Link
               :href="route('product-brand.show', product.product_brand.id)"
               class="
                 flex
-                lg:flex-row
+                xl:flex-row
                 flex-col
                 items-center
                 p-5
@@ -102,7 +102,7 @@
             </Link>
           </div>
 
-          <div class="flex lg:flex-row flex-col text-lg font-bold mt-3">
+          <div class="flex xl:flex-row flex-col text-lg font-bold mt-3">
             <h2 class="mx-3 text-[#009ef7]">سعر البيع : {{ product.price }}</h2>
             <span>-</span>
             <h2 class="mx-3 text-[#009ef7]">
@@ -136,7 +136,7 @@
               :alt="product.name"
               class="
                 w-full
-                h-full
+                h-[270px]
                 object-center object-cover
                 group-hover:opacity-75
                 shadow-xl

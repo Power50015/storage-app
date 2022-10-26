@@ -2,16 +2,17 @@
   <div
     class="
       shrink-0
-      lg:block
+      xl:block
       top-[-210px]
-      lg:top-auto lg:static
+      xl:top-auto
+      xl:static
       absolute
       h-full
       print:hidden
     "
     :class="{
-      'lg:w-[265px] ': asideOpenStateDesktop,
-      'lg:w-0 ': !asideOpenStateDesktop,
+      'xl:w-[265px] ': asideOpenStateDesktop,
+      'xl:w-0 ': !asideOpenStateDesktop,
     }"
   >
     <aside
@@ -22,15 +23,14 @@
         bg-[#1e1e2d]
         items-center
         border-border-[#323248]
-        lg:fixed
         fixed
         transition-all
-        lg:block
+        xl:block
         duration-1000
       "
       :class="{
-        'lg:right-0 ': asideOpenStateDesktop,
-        'lg:right-[-300px]': !asideOpenStateDesktop,
+        'xl:right-0 ': asideOpenStateDesktop,
+        'xl:right-[-300px]': !asideOpenStateDesktop,
         'right-0': asideOpenStateMobile,
         'right-[-300px]': !asideOpenStateMobile,
       }"
@@ -234,7 +234,7 @@
       </perfect-scrollbar>
     </aside>
     <div
-      class="aside-overlay lg:hidden"
+      class="aside-overlay xl:hidden"
       :class="{
         block: asideOpenStateMobile,
         hidden: !asideOpenStateMobile,

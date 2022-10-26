@@ -39,7 +39,7 @@
               :key="option.index"
               @click="change(option.index, option.label)"
             >
-              <div class="item flex items-center">
+              <div class="item flex items-center min-h-[50px]">
                 <img
                   v-if="option['image']"
                   :src="`/storage/${option['image']}`"
@@ -76,23 +76,25 @@ const emit = defineEmits(["update:modelValue", "changeSelect"]);
 const select = ref(props.modelValue);
 
 onMounted(() => {
-  select.value = props.modelValue;
-  axios
-    .get("/product-data", {
-      params: {
-        id: props.modelValue,
-      },
-    })
-    .then(function (response) {
-      response.data.data.forEach((item) => {
-        let name = item.name;
-        if (item.product_country)
-          name = name + " - " + item.product_country.name;
-        if (props.modelValue == item.id) {
-          placeholderText.value = name;
-        }
+  if (select.value) {
+    select.value = props.modelValue;
+    axios
+      .get("/product-brand-data", {
+        params: {
+          id: props.modelValue,
+        },
+      })
+      .then(function (response) {
+        response.data.forEach((item) => {
+          let name = item.name;
+          if (item.product_country)
+            name = name + " - " + item.product_country.name;
+          if (props.modelValue == item.id) {
+            placeholderText.value = name;
+          }
+        });
       });
-    });
+  }
 });
 onUpdated(() => (select.value = props.modelValue));
 onUnmounted(() => (select.value = props.modelValue));
@@ -114,6 +116,11 @@ function getProductsData(page = 1) {
       rowData.length = 0;
       if (inputText.value) products.length = 0;
       rowData.push(response.data); // The row Data
+      products.push({
+        label: null,
+        index: null,
+        image: null,
+      });
       response.data.data.forEach((item) => {
         let name = item.name;
         if (item.product_country)

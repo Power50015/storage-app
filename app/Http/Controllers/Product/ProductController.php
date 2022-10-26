@@ -44,8 +44,21 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $product_count = Product::count();
 
         return Inertia::render('Product/Index', [
+            "product_category_count" => ProductCategory::count(),
+            "product_type_count" => ProductType::count(),
+            "product_brand_count" => ProductBrand::count(),
+            "product_brand" => ProductBrand::all(),
+            "product_count" => $product_count,
+            "product_category" => ProductCategory::all(),
+            "product_type" => ProductType::all(),
+            "product_collection" => ProductCollection::all(),
+            "product_model" => ProductModel::all(),
+            "product_color" => ProductColor::all(),
+            "product_material" => ProductMaterial::all(),
+            "product_country" => ProductCountry::all(),
             "products" => Product::query()->with(
                 [
                     'product_category',
@@ -57,7 +70,27 @@ class ProductController extends Controller
                     'product_material',
                     'product_country',
                 ]
-            )->when(Request::input('search'), function ($query, $search) {
+            )->when(Request::input('product_category_id'), function ($query, $product_category_id) {
+                $query->where('product_category_id', $product_category_id);
+            })->when(Request::input('product_type_id'), function ($query, $product_type_id) {
+                $query->where('product_type_id', $product_type_id);
+            })->when(Request::input('product_brand_id'), function ($query, $product_brand_id) {
+                $query->where('product_brand_id', $product_brand_id);
+            })->when(Request::input('product_collection_id'), function ($query, $product_collection_id) {
+                $query->where('product_collection_id', $product_collection_id);
+            })->when(Request::input('product_model_id'), function ($query, $product_model_id) {
+                $query->where('product_model_id', $product_model_id);
+            })->when(Request::input('product_color_id'), function ($query, $product_color_id) {
+                $query->where('product_color_id', $product_color_id);
+            })->when(Request::input('product_material_id'), function ($query, $product_material_id) {
+                $query->where('product_material_id', $product_material_id);
+            })->when(Request::input('product_country_id'), function ($query, $product_country_id) {
+                $query->where('product_country_id', $product_country_id);
+            })->when(Request::input('price_from'), function ($query, $price_from) {
+                $query->where('price', '>=', $price_from);
+            })->when(Request::input('price_to'), function ($query, $price_to) {
+                $query->where('price_to', '<=', $price_to);
+            })->when(Request::input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('sku', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%")
@@ -70,25 +103,20 @@ class ProductController extends Controller
                     ->orWhereRelation('product_color', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
-
-                if (Request::input('price_from') && Request::input('price_to'))
-                    $query->whereBetween('price', [Request::input('price_from'), Request::input('price_to')]);
-                elseif (Request::input('price_from'))
-                    $query->where('price', '>=', Request::input('price_from'));
-                elseif (Request::input('price_to'))
-                    $query->where('price', '<=', Request::input('price_to'));
-
-                if (Request::input('material'))
-                    $query->where('product_material_id', Request::input('material'));
-
-                if (Request::input('country'))
-                    $query->where('product_country_id', Request::input('country'));
-
-                if (Request::input('color'))
-                    $query->where('product_color_id', Request::input('color'));
             })->paginate(12)->withQueryString(),
-
-            'filters' => Request::only(['search'])
+            'filters' => Request::only([
+                'search',
+                'product_category_id',
+                'product_type_id',
+                'product_brand_id',
+                'product_collection_id',
+                'product_model_id',
+                'product_color_id',
+                'product_material_id',
+                'product_country_id',
+                'price_from',
+                'price_to'
+            ])
         ]);
     }
 
@@ -119,13 +147,24 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create(array_merge(
-            $request->all(),
+        Product::create(
             [
+                'name' => $request->name,
+                'description' => $request->description,
+                'sku' => $request->sku,
+                'product_category_id' => $request->product_category_id,
+                'product_type_id' => $request->product_type_id,
+                'product_brand_id' => $request->product_brand_id,
+                'product_collection_id' => $request->product_collection_id,
+                'product_model_id' => $request->product_model_id,
+                'product_color_id' => $request->product_color_id,
+                'product_material_id' => $request->product_material_id,
+                'product_country_id' => $request->product_country_id,
+                'price' => $request->price,
                 'user_id' => auth()->user()->id,
                 'image' => $request->hasFile('image') ? $request->file('image')->store('image/product', 'public') : 'no_image.png'
             ]
-        ));
+        );
 
         return Redirect::back();
     }
@@ -149,9 +188,6 @@ class ProductController extends Controller
                     'product_color',
                     'product_material',
                     'product_country',
-                    'product_notes',
-                    'product_images',
-                    'product_attachments',
                     'product_brand.product_country'
                 ]
             )->where('id', $product->id)->get(),
@@ -166,13 +202,27 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return Inertia::render('Product/Edit', [
+        return Inertia::render('Product/Create', [
             "ProductCategory" => ProductCategory::all(),
+            "ProductType" => ProductType::all(),
             "ProductBrand" => ProductBrand::all(),
+            "ProductCollection" => ProductCollection::all(),
+            "ProductModel" => ProductModel::all(),
             "ProductColor" => ProductColor::all(),
             "ProductMaterial" => ProductMaterial::all(),
             "ProductCountry" => ProductCountry::all(),
-            "Product" => Product::with(['product_category', 'product_type', 'product_brand', 'product_collection', 'product_model', 'product_color', 'product_material', 'product_country', 'product_notes', 'product_images', 'product_attachments'])->where('id', $product->id)->get(),
+            "product" => Product::with(
+                [
+                    'product_category',
+                    'product_type',
+                    'product_brand',
+                    'product_collection',
+                    'product_model',
+                    'product_color',
+                    'product_material',
+                    'product_country',
+                ]
+            )->where('id', $product->id)->get(),
         ]);
     }
 
@@ -185,32 +235,27 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $image_path = '';
+
+        $product->product_category_id = $request->product_category_id;
+        $product->product_type_id = $request->product_type_id;
+        $product->product_brand_id = $request->product_brand_id;
+        $product->product_collection_id = $request->product_collection_id;
+        $product->product_model_id = $request->product_model_id;
+        $product->name = $request->name;
+        $product->product_color_id = $request->product_color_id;
+        $product->product_material_id = $request->product_material_id;
+        $product->description = $request->description;
+        $product->sku = $request->sku;
+        $product->product_country_id = $request->product_country_id;
+        $product->price = $request->price;
+
         if ($request->hasFile('image')) {
-            $image_path = $request->file('image')->store('image/product', 'public');
-        } else {
-            Storage::delete("public/" . $request->image);
-            $image_path = $request->oldImage;
+            Storage::delete("public/" . $request->old_image);
+            $product->image = $request->file('image')->store('image/product', 'public');
         }
 
-        $product = DB::table('products')->where('id', $product->id)->update([
-            'product_category_id' => $request->category,
-            'product_type_id' => $request->type,
-            'product_brand_id' => $request->brand,
-            'product_collection_id' => $request->collection,
-            'product_model_id' => $request->model,
-            'name' => $request->name,
-            'product_color_id' => $request->color,
-            'product_material_id' => $request->material,
-            'description' => $request->description,
-            'sku' => $request->sku,
-            'product_country_id' => $request->country,
-            'image' => $image_path,
-            'price' => $request->price,
-            'user_id' => Auth::id(),
-        ]);
-
-        return Redirect::back();
+        $product->save();
+        return Redirect::route('product.show', $product->id);
     }
 
     /**

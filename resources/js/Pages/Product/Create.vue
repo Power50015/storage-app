@@ -1,11 +1,12 @@
 <template>
   <AppLayout title="المنتجات">
     <FormSection
-      title="إضافه منتج"
-      btnTitle="حفظ المنتج"
+      :title="formText.title"
+      :btnTitle="formText.btnTitle"
       :formData="form"
-      formRoute="product.store"
-      toastMsg="تم تسجيل المنتج"
+      :formRoute="form.route"
+      :toastMsg="formText.formText"
+      :toastDescription="form.title"
     >
       <!-- Product Category -->
       <FormSelect
@@ -265,6 +266,7 @@
       <!--ProductImages-->
       <InputImage
         v-model="form.image"
+        :oldImage="form.old_image"
         title="الصوره الرئيسيه للمنتج"
         :error="errors.image"
         :require="true"
@@ -285,7 +287,62 @@ import InputImage from "@/Forms/InputImage.vue";
 import Modal from "@/Components/Modals/Modal.vue";
 import SelectBrand from "../../Forms/SelectBrand.vue";
 
+const props = defineProps([
+  "errors",
+  "ProductCategory",
+  "ProductType",
+  "ProductCollection",
+  "ProductModel",
+  "ProductColor",
+  "ProductMaterial",
+  "ProductCountry",
+  "product",
+]);
+
+const form = reactive({
+  id: props.product ? props.product[0].id : null,
+  _method: props.product ? "patch" : "post",
+  route: props.product ? "product.update" : "product.store",
+  product_category_id: props.product
+    ? props.product[0].product_category_id
+    : null,
+  product_type_id: props.product ? props.product[0].product_type_id : null,
+  product_brand_id: props.product ? props.product[0].product_brand_id : null, //nullable
+  product_collection_id: props.product
+    ? props.product[0].product_collection_id
+    : null, //nullable
+  product_model_id: props.product ? props.product[0].product_model_id : null, //nullable
+  name: props.product ? props.product[0].name : null,
+  product_color_id: props.product ? props.product[0].product_color_id : null,
+  product_material_id: props.product
+    ? props.product[0].product_material_id
+    : null,
+  description: props.product ? props.product[0].description : null, //nullable
+  sku: props.product ? props.product[0].sku : null, //nullable
+  price: props.product ? props.product[0].price : 0.0, //nullable
+  product_country_id: props.product ? props.product[0].product_country_id : 0.0,
+  image: null,
+  old_image: props.product ? props.product[0].image : null,
+});
+
+const formText = reactive({
+  title: props.product ? "تعديل بيانات المنتج" : "إضافه منتج ",
+  btnTitle: props.product ? "تعديل البيانات" : "إضافه منتج",
+  formText: props.product ? "تم تعديل منتج" : "تم أضافه منتج",
+});
+
 provide("title", "المنتجات");
+if (props.product) {
+  provide(
+  "breadcrumb",
+  readonly([
+    { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+    { index: 1, linkTitle: "المنتجات", linkRoute: "product.index" },
+    { index: 2, linkTitle: "تعديل المنتج : " + props.product[0].name, linkRoute: "#" },
+  ])
+);
+} else {
+  
 provide(
   "breadcrumb",
   readonly([
@@ -294,33 +351,10 @@ provide(
     { index: 2, linkTitle: "إضافه منتج", linkRoute: "#" },
   ])
 );
+  
+}
 
-const props = defineProps([
-  "errors",
-  "ProductCategory",
-  "ProductType",
-  "ProductBrand",
-  "ProductCollection",
-  "ProductModel",
-  "ProductColor",
-  "ProductMaterial",
-  "ProductCountry",
-]);
-const form = reactive({
-  product_category_id: null,
-  product_type_id: null,
-  product_brand_id: null, //nullable
-  product_collection_id: null, //nullable
-  product_model_id: null, //nullable
-  name: null,
-  product_color_id: null,
-  product_material_id: null,
-  description: null, //nullable
-  sku: null, //nullable
-  price: 0.0, //nullable
-  product_country_id: null,
-  image: null,
-});
+
 
 const categoryForm = reactive({
   modelToggle: false,
@@ -349,12 +383,6 @@ const brandForm = reactive({
   modelToggle: false,
   name: null,
   product_country_id: null,
-});
-
-const brand = computed(() => {
-  return props.ProductBrand.map((item) => {
-    return { label: item.name, index: item.id, image: item.logo };
-  });
 });
 
 const collectionForm = reactive({

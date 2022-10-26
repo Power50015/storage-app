@@ -16,6 +16,7 @@ use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\ProductAttachmentController;
 use App\Http\Controllers\Product\ProductImageController;
 use App\Http\Controllers\Product\ProductNoteController;
+use App\Models\Product\Product;
 
 Route::resource('/product-category', ProductCategoryController::class);
 Route::resource('/product-type', ProductTypeController::class);
@@ -40,7 +41,7 @@ Route::resource('/product-image', ProductImageController::class)->only([
 ]);
 
 Route::resource('/product', ProductController::class);
-Route::get('/product-data',[ProductController::class, 'data']);
+Route::get('/product-data', [ProductController::class, 'data']);
 Route::get('/product-action', [ProductController::class, 'actionData']);
 Route::get('/product-stock', [ProductController::class, 'stockData']);
 Route::get('/product-kits', [ProductController::class, 'kits']);
@@ -49,4 +50,14 @@ Route::resource('/destructible-goods', DestructibleGoodsController::class);
 Route::resource('/destructible-goods-action', DestructibleGoodsActionController::class);
 
 Route::resource('/product-brand', ProductBrandController::class);
-Route::get('/product-brand-data',[ProductBrandController::class, 'data']);
+Route::get('/product-brand-data', [ProductBrandController::class, 'data']);
+
+Route::get('/product-no-stock-count', function () {
+    return Product::get()->where('total_number_of_product',  0)->count();
+});
+Route::get('/product-no-stock-count', function () {
+    return Product::get()->where('total_number_of_product',  0)->count();
+});
+Route::get('/destructible-goods-count', function () {
+    return Product::get()->where('destructible_goods', ">", '0')->count();
+});

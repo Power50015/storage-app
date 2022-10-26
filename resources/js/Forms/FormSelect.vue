@@ -1,15 +1,15 @@
 <template>
-  <div class="mb-5">
-    <FromLabel :title="title" :require="require" :error="error"  v-if="title"/>
-    <div class="flex">
+  <div class="mb-5 w-full">
+    <FromLabel :title="title" :require="require" :error="error" v-if="title" />
+    <div class="flex w-full">
       <v-select
         :clearable="false"
-        :options="options"
+        :options="optionSelected"
+        :closeOnSelect="true"
         v-model="select"
         :reduce="(item) => item.index"
         @option:selected="change"
         @option:deselected="$emit('update:modelValue', null)"
-        @scroll="scroll"
         dir="rtl"
         class="
           w-full
@@ -57,7 +57,7 @@
 <script setup>
 import FromLabel from "@/Forms/FromLabel.vue";
 import { ref } from "@vue/reactivity";
-import { onMounted, onUnmounted, onUpdated } from "@vue/runtime-core";
+import { computed, onMounted, onUnmounted, onUpdated } from "@vue/runtime-core";
 import vSelect from "vue-select";
 
 const props = defineProps({
@@ -71,6 +71,10 @@ const emit = defineEmits(["update:modelValue", "changeSelect"]);
 
 const select = ref(props.modelValue);
 
+const optionSelected = computed(() => {
+  return [{ label: "", index: null }, ...props.options];
+});
+
 onMounted(() => (select.value = props.modelValue));
 onUpdated(() => (select.value = props.modelValue));
 onUnmounted(() => (select.value = props.modelValue));
@@ -78,9 +82,7 @@ function change() {
   emit("update:modelValue", select.value);
   emit("changeSelect");
 }
-function scroll(IntersectionObserver) {
-  console.log(213432);
-}
+
 </script>
 <style scoped>
 >>> {
