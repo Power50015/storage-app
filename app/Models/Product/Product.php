@@ -197,8 +197,6 @@ class Product extends Model
         $DestructibleGoodsAction = DestructibleGoodsAction::where('action', 0)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
         $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 2)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
         $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
-
-
         return $DestructibleGoodsAction;
     }
 }

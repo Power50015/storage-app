@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductModelRequest extends FormRequest
 {
-    /**
+  /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,22 @@ class UpdateProductModelRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            //
+            'name' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'name.required' => 'يجب إدخال موديل المنتج',
         ];
     }
 }

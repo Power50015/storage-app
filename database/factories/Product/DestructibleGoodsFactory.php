@@ -22,8 +22,6 @@ class DestructibleGoodsFactory extends Factory
     {
         $faker = FakerFactory::create('ar_SA');
         return [
-            'title' => $faker->unique()->word(),
-            'description' => $faker->unique()->text(),
             'product_id' => $faker->unique()->randomElement(Product::all('id')),
             'warehouse_id' => $faker->unique()->randomElement(Warehouse::all('id')),
             'user_id' => $faker->unique()->randomElement(User::all('id')),

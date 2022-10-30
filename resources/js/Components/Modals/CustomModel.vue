@@ -1,5 +1,5 @@
 <template>
-  <div class="action" @click="OpenModel" :class="customBtnAreaClass">
+  <div class="action cursor-pointer" @click="OpenModel" :class="customBtnAreaClass">
     <slot name="btn"  />
   </div>
   <div class="model" v-if="modelValue">

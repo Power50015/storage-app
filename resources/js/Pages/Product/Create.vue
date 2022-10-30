@@ -320,7 +320,7 @@ const form = reactive({
   description: props.product ? props.product[0].description : null, //nullable
   sku: props.product ? props.product[0].sku : null, //nullable
   price: props.product ? props.product[0].price : 0.0, //nullable
-  product_country_id: props.product ? props.product[0].product_country_id : 0.0,
+  product_country_id: props.product ? props.product[0].product_country_id : null,
   image: null,
   old_image: props.product ? props.product[0].image : null,
 });

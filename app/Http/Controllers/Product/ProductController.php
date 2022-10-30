@@ -15,22 +15,15 @@ use App\Models\Product\ProductColor;
 use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductCountry;
 use Illuminate\Support\Facades\Request;
-
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
 use App\Models\Kit\Kit;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\Product\DestructibleGoods;
 use App\Models\Product\DestructibleGoodsAction;
-use App\Models\Product\ProductAttachment;
-use App\Models\Product\ProductImage;
-use App\Models\Product\ProductNote;
 use App\Models\Transfer\TransferContent;
 use App\Models\Warehouse\Warehouse;
 use App\Models\Warehouse\WarehouseStockContent;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -44,6 +37,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+
         $product_count = Product::count();
 
         return Inertia::render('Product/Index', [
@@ -89,7 +83,7 @@ class ProductController extends Controller
             })->when(Request::input('price_from'), function ($query, $price_from) {
                 $query->where('price', '>=', $price_from);
             })->when(Request::input('price_to'), function ($query, $price_to) {
-                $query->where('price_to', '<=', $price_to);
+                $query->where('price', '<=', $price_to);
             })->when(Request::input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('sku', 'like', "%{$search}%")
@@ -103,6 +97,24 @@ class ProductController extends Controller
                     ->orWhereRelation('product_color', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
+            })->when(Request::input('product_stock'), function ($query, $product_stock) {
+                $ids = [];
+                $sql = Product::get('id')->where('total_number_of_product', '<=', 0);
+                foreach ($sql as $key => $value) {
+                    $ids[] = ($sql[$key]['id']);
+                }
+                $product_stock == "1" ?
+                    $query->whereIn('id', $ids) :
+                    $query->whereNotIn('id', $ids);
+            })->when(Request::input('destructible_goods'), function ($query, $destructible_goods) {
+                $ids = [];
+                $sql = Product::get('id')->where('destructible_goods', '<=', 0);
+                foreach ($sql as $key => $value) {
+                    $ids[] = ($sql[$key]['id']);
+                }
+                $destructible_goods == "1" ?
+                    $query->whereIn('id', $ids) :
+                    $query->whereNotIn('id', $ids);
             })->paginate(12)->withQueryString(),
             'filters' => Request::only([
                 'search',
@@ -115,7 +127,9 @@ class ProductController extends Controller
                 'product_material_id',
                 'product_country_id',
                 'price_from',
-                'price_to'
+                'price_to',
+                'product_stock',
+                'destructible_goods'
             ])
         ]);
     }
@@ -147,7 +161,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create(
+        $product = Product::create(
             [
                 'name' => $request->name,
                 'description' => $request->description,
@@ -166,7 +180,7 @@ class ProductController extends Controller
             ]
         );
 
-        return Redirect::back();
+        return Redirect::route('product.show', $product->id);
     }
 
     /**

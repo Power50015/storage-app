@@ -181,20 +181,7 @@ class PeopleSeeder extends Seeder
             'type' => 'مورد',
             'user_id' => User::all()->random()->id,
         ]);
-        People::factory()->create([
-            'name' => 'بفاريا',
-            'phone' => '01515436432',
-            'logo' => function () {
-                $url = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/1200px-Disney_wordmark.svg.png";
-                $contents = file_get_contents($url);
-                $name = substr($url, strrpos($url, '/') + 1);
-                Storage::put('public/image/people/' . $name, $contents);
-                return 'image/people/' . $name;
-            },
-            'address' => 'عين شمس',
-            'type' => 'مورد',
-            'user_id' => User::all()->random()->id,
-        ]);
+        
         People::factory()->create([
             'name' => 'سبوتى فاى',
             'phone' => '01515436432',

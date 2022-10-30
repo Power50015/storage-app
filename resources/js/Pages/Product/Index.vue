@@ -1,20 +1,14 @@
 <template>
   <AppLayout title="المنتجات">
     <SectionTemplate>
-      <div class="grid lg:grid-cols-7 grid-cols-2 gap-2">
-        <btn-primary>
+      <div class="grid lg:grid-cols-6 grid-cols-2 gap-2">
+        <btn-primary :element="Link" :to="route('product-category.index')">
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد الأقسام</h4>
             <h4 class="text-xl font-bold">{{ product_category_count }}</h4>
           </div>
         </btn-primary>
-        <btn-info>
-          <div class="flex flex-col items-center justify-center text-center">
-            <h4 class="mb-3">عدد أنواع المنتجات</h4>
-            <h4 class="text-xl font-bold">{{ product_type_count }}</h4>
-          </div>
-        </btn-info>
-        <btn-warning>
+        <btn-warning :element="Link" :to="route('product-brand.index')">
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد الماركات</h4>
             <h4 class="text-xl font-bold">{{ product_brand_count }}</h4>
@@ -26,41 +20,42 @@
             <h4 class="text-xl font-bold">{{ product_count }}</h4>
           </div>
         </btn-success>
-        <btn-primary>
+        <card-primary>
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">المنتجات متاحه المخزون</h4>
-            <h4 class="text-xl font-bold" v-if="product_no_stock_count">
-              {{ product_no_stock_count }}
+            <h4 class="text-xl font-bold">
+              {{ product_stock_count }}
             </h4>
           </div>
-        </btn-primary>
-        <btn-info>
+        </card-primary>
+        <card-info>
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد المنتجات بدون المخزون</h4>
-            <h4 class="text-xl font-bold">{{ product_stock_count }}</h4>
+            <h4 class="text-xl font-bold">{{ product_no_stock_count }}</h4>
           </div>
-        </btn-info>
-        <btn-danger>
+        </card-info>
+        <card-danger>
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد الهالك</h4>
             <h4 class="text-xl font-bold">{{ destructible_goods_count }}</h4>
           </div>
-        </btn-danger>
+        </card-danger>
       </div>
     </SectionTemplate>
     <SectionTemplate>
-      <h2 class="title font-bold mb-3">المنتجات</h2>
       <div class="flex items-center justify-between my-3">
-        <InputText
-          v-model="form.search"
-          placeholder="بحث ...."
-          class="w-5/6 mx-3 mb-0"
-        />
+        <h2 class="title font-bold mb-3">المنتجات</h2>
         <btn-info :element="Link" :to="route('product.create')">
           أضف منتج
         </btn-info>
       </div>
-      <div class="grid lg:grid-cols-5 grid-cols-2 gap-2 mt-5">
+      <div class="flex items-center justify-between my-3">
+        <InputText v-model="form.search" placeholder="بحث ...." />
+        <btn-success @click="filter = !filter"
+          ><span class="mx-2">فلتر</span> <i class="fa-solid fa-filter"></i
+        ></btn-success>
+      </div>
+      <div class="grid lg:grid-cols-4 grid-cols-2 gap-2 mt-5" v-if="filter">
         <!-- Product Category -->
         <FormSelect
           v-model="form.product_category_id"
@@ -92,6 +87,48 @@
           v-model="form.product_model_id"
           title="موديل المنتج"
           :options="model"
+        />
+        <!-- Product Price From -->
+        <InputNumber
+          v-model="form.price_from"
+          title="السعر من"
+          :options="model"
+        />
+        <!-- Product Price To -->
+        <InputNumber
+          v-model="form.price_to"
+          title="السعر الى"
+          :options="model"
+        />
+        <!-- Product Stock -->
+        <FormSelect
+          v-model="form.product_stock"
+          title="المخزون"
+          :options="product_stock"
+        />
+        <!-- destructible goods -->
+        <FormSelect
+          v-model="form.destructible_goods"
+          title="الهالك"
+          :options="destructible_goods"
+        />
+        <!-- Product color -->
+        <FormSelect
+          v-model="form.product_color_id"
+          title="اللون"
+          :options="color"
+        />
+        <!-- Product Matiral -->
+        <FormSelect
+          v-model="form.product_material_id"
+          title="الخامه"
+          :options="material"
+        />
+        <!-- Product country -->
+        <FormSelect
+          v-model="form.product_country_id"
+          title="البلد"
+          :options="country"
         />
       </div>
 
@@ -198,10 +235,12 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";
 import InputText from "@/Forms/InputText.vue";
+import InputNumber from "@/Forms/InputNumber.vue";
 import FormSelect from "@/Forms/FormSelect.vue";
 import SelectBrand from "@/Forms/SelectBrand.vue";
 import CardInfo from "@/Components/Cards/Statistics/CardInfo.vue";
 import CardPrimary from "@/Components/Cards/Statistics/CardPrimary.vue";
+import CardDanger from "@/Components/Cards/Statistics/CardDanger.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
 import BtnDanger from "@/Components/Buttons/BtnDanger.vue";
@@ -230,6 +269,7 @@ const props = defineProps([
   "product_collection",
   "product_model",
   "product_color",
+  "product_country",
   "product_material",
   "product_count",
   "products",
@@ -248,7 +288,20 @@ const form = reactive({
   product_color_id: Number(props.filters.product_color_id) || null,
   product_material_id: Number(props.filters.product_material_id) || null,
   product_country_id: Number(props.filters.product_country_id) || null,
+  price_from: Number(props.filters.price_to) || null,
+  price_to: Number(props.filters.price_to) || null,
+  product_stock: Number(props.filters.product_stock) || null,
+  destructible_goods: Number(props.filters.destructible_goods) || null,
 });
+
+const product_stock = [
+  { label: "بدون مخزون", index: 1 },
+  { label: "مع مخزون", index: 2 },
+];
+const destructible_goods = [
+  { label: "بدون هالك", index: 1 },
+  { label: "هالك", index: 2 },
+];
 
 const category = computed(() => {
   return props.product_category.map((item) => {
@@ -309,7 +362,12 @@ watch(form, (value) => {
       product_collection_id: value.product_collection_id,
       product_model_id: value.product_model_id,
       product_material_id: value.product_material_id,
+      product_color_id: value.product_color_id,
       product_country_id: value.product_country_id,
+      price_from: value.price_from,
+      price_to: value.price_to,
+      product_stock: value.product_stock,
+      destructible_goods: value.destructible_goods,
     },
     {
       preserveState: true,
@@ -321,6 +379,8 @@ watch(form, (value) => {
 const product_no_stock_count = ref();
 const product_stock_count = ref();
 const destructible_goods_count = ref();
+const filter = ref(false);
+
 function categoryChange() {
   form.product_type_id = null;
 }

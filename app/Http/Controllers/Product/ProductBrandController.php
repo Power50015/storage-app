@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\ProductBrand;
 use App\Http\Requests\Product\StoreProductBrandRequest;
 use App\Http\Requests\Product\UpdateProductBrandRequest;
+use App\Models\Product\ProductCollection;
+use App\Models\Product\ProductCountry;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class ProductBrandController extends Controller
 {
@@ -18,7 +21,16 @@ class ProductBrandController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Product/Brand/Index', [
+            "ProductCountry" => ProductCountry::all(),
+            "product_brand_count" => ProductBrand::count(),
+            "product_brand" => ProductBrand::query()->with('user', 'product_country')->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            'filters' => Request::only([
+                'search',
+            ])
+        ]);
     }
 
     /**
@@ -59,7 +71,17 @@ class ProductBrandController extends Controller
      */
     public function show(ProductBrand $productBrand)
     {
-        //
+        return Inertia::render('Product/Brand/Show', [
+            "ProductCountry" => ProductCountry::all(),
+            "product_brand" => ProductBrand::with('user', 'product_country')->where('id', $productBrand->id)->get(),
+            "product_collections_count" => ProductCollection::where('product_brand_id', $productBrand->id)->count(),
+            "product_collections" => ProductCollection::query()->with('user')->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->where('product_brand_id', $productBrand->id)->paginate()->withQueryString(),
+            'filters' => Request::only([
+                'search',
+            ])
+        ]);
     }
 
     /**
@@ -82,7 +104,13 @@ class ProductBrandController extends Controller
      */
     public function update(UpdateProductBrandRequest $request, ProductBrand $productBrand)
     {
-        //
+        $productBrand->name = $request->name;
+        $productBrand->logo = $request->hasFile('image') ?
+            $request->file('image')->store('image/brand', 'public') : 'no_image.png';
+
+        $productBrand->product_country_id = $request->product_country_id;
+        $productBrand->save();
+        return Redirect::route('product-brand.show', $productBrand->id);
     }
 
     /**

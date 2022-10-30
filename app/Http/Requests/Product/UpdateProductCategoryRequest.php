@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Models\Product\ProductCategory;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductCategoryRequest extends FormRequest
@@ -13,7 +14,7 @@ class UpdateProductCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,28 @@ class UpdateProductCategoryRequest extends FormRequest
      */
     public function rules()
     {
+        $ProductCategory = ProductCategory::find($this->id);
+        if ($ProductCategory->name == $this->name)
+            return [
+                'name' => 'required',
+            ];
+
         return [
-            //
+            'name' => 'required|unique:product_categories,name',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'name.required' => 'يجب إدخال قسم المنتج',
+            'name.unique' => 'يجب أن يكون أسم القسم فريد',
         ];
     }
 }

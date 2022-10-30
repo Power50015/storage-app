@@ -76,7 +76,9 @@ class ProductTypeController extends Controller
      */
     public function update(UpdateProductTypeRequest $request, ProductType $productType)
     {
-        //
+        $productType->name = $request->name;
+        $productType->save();
+        return Redirect::route('product-category.show', $productType->id);
     }
 
     /**

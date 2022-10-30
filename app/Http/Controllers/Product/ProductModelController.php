@@ -76,7 +76,9 @@ class ProductModelController extends Controller
      */
     public function update(UpdateProductModelRequest $request, ProductModel $productModel)
     {
-        //
+        $productModel->name = $request->name;
+        $productModel->save();
+        return Redirect::route('product-collection.show', $productModel->product_collection_id);
     }
 
     /**
