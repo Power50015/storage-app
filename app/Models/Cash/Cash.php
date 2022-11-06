@@ -2,6 +2,8 @@
 
 namespace App\Models\Cash;
 
+use App\Models\Debtor\Debtor;
+use App\Models\Debtor\DebtorPay;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\User;
@@ -34,5 +36,19 @@ class Cash extends Model
     public function outgoing_invoices()
     {
         return $this->hasMany(OutgoingInvoice::class);
+    }
+    /**
+     * Get the Debtor for the Cashs.
+     */
+    public function debtors()
+    {
+        return $this->hasMany(Debtor::class);
+    }
+    /**
+     * Get the Debtor for the Cashs.
+     */
+    public function debtor_pays()
+    {
+        return $this->hasMany(DebtorPay::class);
     }
 }

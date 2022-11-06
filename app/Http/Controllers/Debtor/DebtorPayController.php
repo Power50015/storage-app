@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Debtor;
 
+use App\Http\Controllers\Controller;
 use App\Models\Debtor\DebtorPay;
 use App\Http\Requests\Debtor\StoreDebtorPayRequest;
 use App\Http\Requests\Debtor\UpdateDebtorPayRequest;
 use App\Models\Cash\Cash;
 use App\Models\Debtor\DebtorPayAttachment;
 use App\Models\People\People;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use App\Http\Controllers\Controller;
 
 class DebtorPayController extends Controller
 {
@@ -32,9 +33,8 @@ class DebtorPayController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Debtor/CreateDebtorPay', [
+        return Inertia::render('Debtor/Pay/Create', [
             "cash" => Cash::all(),
-            "companies" => People::orderBy("type")->get()
         ]);
     }
 
@@ -52,24 +52,13 @@ class DebtorPayController extends Controller
             'amount' => $request->amount,
             'description' => $request->description,
             'pay_type' => $request->pay_type,
-            'cash_id' => $request->cash_type,
-            'people_id' => $request->companies,
+            'cash_id' => $request->cash_id,
+            'date' => Carbon::parse($request->date),
+            'people_id' => $request->people_id,
             'user_id' => Auth::id()
         ]);
 
-        // Save Attachment Of Debtor
-        for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][$i]["attachment"] != null) {
-                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/debtorPay', 'public');
-                DebtorPayAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'debtor_pay_id' => $debtorPay['id'],
-                    'user_id' => Auth::id()
-                ]);
-            }
-        }
-
-        return Redirect::back();
+        return Redirect::route('debtor.index');
     }
 
     /**
@@ -80,7 +69,9 @@ class DebtorPayController extends Controller
      */
     public function show(DebtorPay $debtorPay)
     {
-        //
+        return Inertia::render('Debtor/Pay/Show', [
+            "debtorPay" =>  DebtorPay::where('id', $debtorPay->id)->with('user', 'people', 'cash')->get(),
+        ]);
     }
 
     /**
@@ -91,7 +82,10 @@ class DebtorPayController extends Controller
      */
     public function edit(DebtorPay $debtorPay)
     {
-        //
+        return Inertia::render('Debtor/Pay/Create', [
+            "cash" => Cash::all(),
+            "debtor" =>  $debtorPay,
+        ]);
     }
 
     /**
@@ -103,7 +97,15 @@ class DebtorPayController extends Controller
      */
     public function update(UpdateDebtorPayRequest $request, DebtorPay $debtorPay)
     {
-        //
+        $debtorPay->title = $request->title;
+        $debtorPay->amount = $request->amount;
+        $debtorPay->description = $request->description;
+        $debtorPay->pay_type = $request->pay_type;
+        $debtorPay->cash_id = $request->cash_id;
+        $debtorPay->date = $request->date;
+        $debtorPay->people_id = $request->people_id;
+        $debtorPay->save();
+        return Redirect::route('debtor-pay.show', $debtorPay->id);
     }
 
     /**

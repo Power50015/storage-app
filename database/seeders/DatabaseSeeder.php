@@ -16,7 +16,10 @@ use Database\Seeders\Kit\KitSeeder;
 use Database\Seeders\Warehouse\WarehouseSeeder;
 use Database\Seeders\Warehouse\WarehouseStockSeeder;
 use Database\Seeders\Cash\CashSeeder;
+use Database\Seeders\Creditor\CreditorPaySeeder;
+use Database\Seeders\Creditor\CreditorSeeder;
 use Database\Seeders\Debtor\DebtorSeeder;
+use Database\Seeders\Debtor\DebtorPaySeeder;
 use Database\Seeders\Driver\DriverSeeder;
 use Database\Seeders\IncomingInvoice\IncomingInvoiceSeeder;
 use Database\Seeders\Kit\KitOperationSeeder;
@@ -59,12 +62,16 @@ class DatabaseSeeder extends Seeder
         // $this->call(DriverSeeder::class);
         // $this->call(CashSeeder::class);
         // $this->call(IncomingInvoiceSeeder::class);
-        // $this->call(OutgoingInvoiceSeeder::class);
-        
-        // $this->call(TransferSeeder::class);
-        // $this->call(KitOperationSeeder::class);
+        $this->call(OutgoingInvoiceSeeder::class);
+        $this->call(TransferSeeder::class);
+        $this->call(KitOperationSeeder::class);
         $this->call(DestructibleGoodsSeeder::class);
-        // $this->call(DebtorSeeder::class);
+
+        $this->call(DebtorSeeder::class);
+        $this->call(DebtorPaySeeder::class);
+        $this->call(CreditorSeeder::class);
+        $this->call(CreditorPaySeeder::class);
+
         // $this->call(ExpenseSeeder::class);
         // \App\Models\User::factory(10)->create();
         // \App\Models\User::factory()->create([

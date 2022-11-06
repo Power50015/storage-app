@@ -48,7 +48,7 @@
                     height="50"
                     class="mx-3"
                   />
-                  <h6>{{ option.label }}</h6>
+                  <h6 class="text-black dark:text-white">{{ option.label }}</h6>
                 </div>
               </li>
             </template>

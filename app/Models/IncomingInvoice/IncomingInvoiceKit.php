@@ -32,4 +32,11 @@ class IncomingInvoiceKit extends Model
     {
         return $this->belongsTo(Kit::class);
     }
+    /**
+     * Get the People for the IncomingInvoice.
+     */
+    public function people()
+    {
+        return $this->belongsTo(People::class);
+    }
 }

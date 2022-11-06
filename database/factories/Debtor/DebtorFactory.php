@@ -23,6 +23,7 @@ class DebtorFactory extends Factory
         return [
             'title' => $faker->unique()->word(),
             'description' => $faker->unique()->word(),
+            'date' => $faker->dateTimeBetween('-400 days', now()),
             'amount' => $faker->unique()->numberBetween($min = 3000, $max = 250000),
             'people_id' => People::all()->random()->id,
             'user_id' => User::all()->random()->id,

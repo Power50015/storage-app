@@ -87,99 +87,63 @@ class IncomingInvoice extends Model
      **/
     public function getTotalBeforeDiscountAttribute()
     {
-        return 0;
-        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
-        $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
-        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
-        $rkits = ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
-        $total = 0;
-        foreach ($items as $key => $value) {
-            $quantity = 0;
-            foreach ($rItem as $key2 => $value2) {
-                if ($value["product_id"] == $value2["product_id"])
-                    $quantity = $value2["quantity"];
-            }
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-
-        foreach ($kits as $key => $value) {
-            $quantity = 0;
-            foreach ($rkits as $key2 => $value2) {
-                if ($value["kit_id"] == $value2["kit_id"])
-                    $quantity = $value2["quantity"];
-            }
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-        return floatval($total);
+        $totalIncomingInvoice = IncomingInvoiceContent::query()->where('incoming_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->where('product_id', $query->product_id)->sum('quantity')));
+        }) + IncomingInvoiceKit::query()->where('incoming_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $this->id)->where('kit_id', $query->kit_id)->sum('quantity')));
+        });
+        return floatval($totalIncomingInvoice);
     }
     /**
      * Get The Total After Discount
      **/
     public function getTotalAfterDiscountAttribute()
     {
-        return 0;
-        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
-        $rItem = ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->get();
-        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
-        $rkits = ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
-        $total = 0;
-        foreach ($items as $key => $value) {
-            $quantity = 0;
-            foreach ($rItem as $key2 => $value2) {
-                if ($value["product_id"] == $value2["product_id"])
-                    $quantity = $value2["quantity"];
-            }
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-
-        foreach ($kits as $key => $value) {
-            $quantity = 0;
-            foreach ($rkits as $key2 => $value2) {
-                if ($value["kit_id"] == $value2["kit_id"])
-                    $quantity = $value2["quantity"];
-            }
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-        return floatval($total - $this->discount);
+        $totalIncomingInvoice = IncomingInvoiceContent::query()->where('incoming_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedIncomingInvoice::where('incoming_invoice_id', $this->id)->where('product_id', $query->product_id)->sum('quantity')));
+        }) + IncomingInvoiceKit::query()->where('incoming_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedIncomingInvoiceKit::where('incoming_invoice_id', $this->id)->where('kit_id', $query->kit_id)->sum('quantity')));
+        });
+        return floatval($totalIncomingInvoice - $this->discount);
     }
     /**
      * Get The Total Before Discount And Returned 
      **/
     public function getTotalBeforeDiscountAndReturnedAttribute()
     {
-        return 0;
-        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
-        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
-        $total = 0;
-        foreach ($items as $key => $value) {
-            $quantity = 0;
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
+        // return 0;
+        // $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
+        // $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
+        // $total = 0;
+        // foreach ($items as $key => $value) {
+        //     $quantity = 0;
+        //     $total += ($value["price"] * ($value["quantity"] - $quantity));
+        // }
 
-        foreach ($kits as $key => $value) {
-            $quantity = 0;
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-        return floatval($total);
+        // foreach ($kits as $key => $value) {
+        //     $quantity = 0;
+        //     $total += ($value["price"] * ($value["quantity"] - $quantity));
+        // }
+        // return floatval($total);
     }
     /**
      * Get The Total After Discount Befour Returned
      **/
     public function getTotalAfterDiscountBefoureReturnedAttribute()
     {
-        return 0;
-        $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
-        $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
-        $total = 0;
-        foreach ($items as $key => $value) {
-            $quantity = 0;
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
+        // return 0;
+        // $items = IncomingInvoiceContent::where('incoming_invoice_id', $this->id)->get();
+        // $kits = IncomingInvoiceKit::where('incoming_invoice_id', $this->id)->get();
+        // $total = 0;
+        // foreach ($items as $key => $value) {
+        //     $quantity = 0;
+        //     $total += ($value["price"] * ($value["quantity"] - $quantity));
+        // }
 
-        foreach ($kits as $key => $value) {
-            $quantity = 0;
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-        return floatval($total - $this->discount);
+        // foreach ($kits as $key => $value) {
+        //     $quantity = 0;
+        //     $total += ($value["price"] * ($value["quantity"] - $quantity));
+        // }
+        // return floatval($total - $this->discount);
     }
 }

@@ -24,13 +24,10 @@ class StoreDebtorPayRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'company' => 'numeric',
+            'people_id' => 'required|numeric',
             'pay_type' => 'required',
-            'cash_type' => 'required_if:pay_type,true',
+            'cash_id' => 'required_if:pay_type,true',
             'amount' => 'required|numeric',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
         ];
     }
     /**
@@ -41,8 +38,7 @@ class StoreDebtorPayRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'يجب إدخال بند الدين',
-            'company.required' => 'يجب إدخال الشركه',
+            'people_id.*' => 'يجب إدخال الشركه',
             'amount.required' => 'يجب إدخال المخزن المبلغ',
             'amount.numeric' => 'يجب أن يكون المبلغ رقم',
             'cash_type.required_if' => 'يجب إدخال نوع الكاش',

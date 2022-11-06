@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('debtor_pays', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->timestamp('date')->useCurrent();
             $table->decimal('amount', $precision = 8, $scale = 2);

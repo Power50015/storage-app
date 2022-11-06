@@ -33,60 +33,101 @@ class IncomingInvoiceSeeder extends Seeder
                 IncomingInvoiceContent::factory(rand(1, 10))->create([
                     'incoming_invoice_id' => $IncomingInvoice->id,
                     'user_id' => $IncomingInvoice->user_id,
+                    'people_id' => $IncomingInvoice->people_id,
                 ])->each(function ($IncomingInvoiceContent) {
                     if (rand(1, 10) == 5) {
-                        ReturnedIncomingInvoice::create([
+                        $ReturnedIncomingInvoice = ReturnedIncomingInvoice::create([
                             'incoming_invoice_id' => $IncomingInvoiceContent->incoming_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'product_id' => $IncomingInvoiceContent->product_id,
                             'quantity' => rand(1, $IncomingInvoiceContent->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $IncomingInvoiceContent->people_id,
                         ]);
+                        $IncomingInvoice =  IncomingInvoice::find($ReturnedIncomingInvoice->incoming_invoice_id);
+                        $IncomingInvoice->total += ($IncomingInvoiceContent->quantity - $ReturnedIncomingInvoice->quantity) * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
+                    } else {
+                        $IncomingInvoice =  IncomingInvoice::find($IncomingInvoiceContent->incoming_invoice_id);
+                        $IncomingInvoice->total += $IncomingInvoiceContent->quantity * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
                     }
                 });
             } elseif (rand(0, 1)) {
+
                 IncomingInvoiceContent::factory(rand(1, 10))->create([
                     'incoming_invoice_id' => $IncomingInvoice->id,
                     'user_id' => $IncomingInvoice->user_id,
+                    'people_id' => $IncomingInvoice->people_id,
                 ])->each(function ($IncomingInvoiceContent) {
                     if (rand(1, 10) == 5) {
-                        ReturnedIncomingInvoice::create([
+                        $ReturnedIncomingInvoice = ReturnedIncomingInvoice::create([
                             'incoming_invoice_id' => $IncomingInvoiceContent->incoming_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'product_id' => $IncomingInvoiceContent->product_id,
                             'quantity' => rand(1, $IncomingInvoiceContent->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $IncomingInvoiceContent->people_id,
+
                         ]);
+                        $IncomingInvoice =  IncomingInvoice::find($ReturnedIncomingInvoice->incoming_invoice_id);
+                        $IncomingInvoice->total += ($IncomingInvoiceContent->quantity - $ReturnedIncomingInvoice->quantity) * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
+                    } else {
+                        $IncomingInvoice =  IncomingInvoice::find($IncomingInvoiceContent->incoming_invoice_id);
+                        $IncomingInvoice->total += $IncomingInvoiceContent->quantity * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
                     }
                 });
 
                 IncomingInvoiceKit::factory(rand(1, 10))->create([
                     'incoming_invoice_id' => $IncomingInvoice->id,
                     'user_id' => $IncomingInvoice->user_id,
+                    'people_id' => $IncomingInvoice->people_id,
+
                 ])->each(function ($IncomingInvoiceContent) {
                     if (rand(1, 10) == 5) {
-                        ReturnedIncomingInvoiceKit::create([
+                        $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::create([
                             'incoming_invoice_id' => $IncomingInvoiceContent->incoming_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'kit_id' => $IncomingInvoiceContent->kit_id,
                             'quantity' => rand(1, $IncomingInvoiceContent->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $IncomingInvoiceContent->people_id,
+
                         ]);
+                        $IncomingInvoice =  IncomingInvoice::find($ReturnedIncomingInvoiceKit->incoming_invoice_id);
+                        $IncomingInvoice->total += ($IncomingInvoiceContent->quantity - $ReturnedIncomingInvoiceKit->quantity) * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
+                    } else {
+                        $IncomingInvoice =  IncomingInvoice::find($IncomingInvoiceContent->incoming_invoice_id);
+                        $IncomingInvoice->total += $IncomingInvoiceContent->quantity * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
                     }
                 });
             } else {
                 IncomingInvoiceKit::factory(rand(1, 10))->create([
                     'incoming_invoice_id' => $IncomingInvoice->id,
                     'user_id' => $IncomingInvoice->user_id,
+                    'people_id' => $IncomingInvoice->people_id,
                 ])->each(function ($IncomingInvoiceContent) {
                     if (rand(1, 10) == 5) {
-                        ReturnedIncomingInvoiceKit::create([
+                        $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::create([
                             'incoming_invoice_id' => $IncomingInvoiceContent->incoming_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'kit_id' => $IncomingInvoiceContent->kit_id,
                             'quantity' => rand(1, $IncomingInvoiceContent->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $IncomingInvoiceContent->people_id,
+
                         ]);
+                        $IncomingInvoice =  IncomingInvoice::find($ReturnedIncomingInvoiceKit->incoming_invoice_id);
+                        $IncomingInvoice->total += ($IncomingInvoiceContent->quantity - $ReturnedIncomingInvoiceKit->quantity) * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
+                    } else {
+                        $IncomingInvoice =  IncomingInvoice::find($IncomingInvoiceContent->incoming_invoice_id);
+                        $IncomingInvoice->total += $IncomingInvoiceContent->quantity * $IncomingInvoiceContent->price;
+                        $IncomingInvoice->save();
                     }
                 });
             }

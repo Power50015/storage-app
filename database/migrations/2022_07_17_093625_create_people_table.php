@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('logo')->nullable();
             $table->text('address')->nullable();
-            $table->string('type');
             $table->foreignId('user_id');
         });
     }

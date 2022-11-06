@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('debtor_pay_attachments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->text('title');
             $table->text('attachment');
             $table->foreignId('user_id');
             $table->foreignId('debtor_pay_id');

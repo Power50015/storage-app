@@ -48,13 +48,7 @@ Route::middleware([
         'index', 'store'
     ]);
     
-    // Creditor
-    Route::resource('/creditor', CreditorController::class)->only([
-        'index', 'create', 'store'
-    ]);
-    Route::resource('/creditor-pay', CreditorPayController::class)->only([
-        'create', 'store'
-    ]);
+   
     
     // Driver
     Route::resource('/driver', DriverController::class)->only([

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignId('incoming_invoice_id');
             $table->foreignId('product_id');
             $table->foreignId('user_id');
+            $table->foreignId('people_id');
+
         });
     }
 

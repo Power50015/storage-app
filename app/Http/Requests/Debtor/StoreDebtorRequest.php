@@ -25,10 +25,8 @@ class StoreDebtorRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'company' => 'numeric',
+            'required' => 'required',
             'amount' => 'required|numeric',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
         ];
     }
     /**
@@ -40,7 +38,7 @@ class StoreDebtorRequest extends FormRequest
     {
         return [
             'title.required' => 'يجب إدخال بند الدين',
-            'company.required' => 'يجب إدخال الشركه',
+            'people_id.*' => 'يجب إدخال الشركه',
             'amount.required' => 'يجب إدخال المخزن المبلغ ',
             'amount.numeric' => 'يجب أن يكون المبلغ رقم',
         ];

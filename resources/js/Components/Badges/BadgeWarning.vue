@@ -13,6 +13,7 @@
       dark:bg-[#f1bc00]
       bg-[#fff8dd]
       text-[#ffc700]
+      dark:text-white
       rounded-md
     "
   >

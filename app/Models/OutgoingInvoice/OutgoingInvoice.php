@@ -78,35 +78,49 @@ class OutgoingInvoice extends Model
      **/
     public function getTotalBeforeDiscountAttribute()
     {
-        $items = OutgoingInvoiceContent::where('outgoing_invoice_id', $this->id)->get();
-        $rItem = ReturnedOutgoingInvoice::where('outgoing_invoice_id', $this->id)->get();
-        $total = 0;
-        foreach ($items as $key => $value) {
-            $quantity = 0;
-            foreach ($rItem as $key2 => $value2) {
-                if ($value["product_id"] == $value2["product_id"])
-                    $quantity = $value2["quantity"];
-            }
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-        return floatval($total);
+        // $items = OutgoingInvoiceContent::where('outgoing_invoice_id', $this->id)->get();
+        // $rItem = ReturnedOutgoingInvoice::where('outgoing_invoice_id', $this->id)->get();
+        // $total = 0;
+        // foreach ($items as $key => $value) {
+        //     $quantity = 0;
+        //     foreach ($rItem as $key2 => $value2) {
+        //         if ($value["product_id"] == $value2["product_id"])
+        //             $quantity = $value2["quantity"];
+        //     }
+        //     $total += ($value["price"] * ($value["quantity"] - $quantity));
+        // }
+        // return floatval($total);
+
+        $totalOutgoingInvoice = OutgoingInvoiceContent::query()->where('outgoing_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedOutgoingInvoice::where('outgoing_invoice_id', $this->id)->where('product_id', $query->product_id)->sum('quantity')));
+        }) + OutgoingInvoiceKit::query()->where('outgoing_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedOutgoingInvoiceKit::where('outgoing_invoice_id', $this->id)->where('kit_id', $query->kit_id)->sum('quantity')));
+        });
+        return floatval($totalOutgoingInvoice);
     }
     /**
      * Get The Total After Discount
      **/
     public function getTotalAfterDiscountAttribute()
     {
-        $items = OutgoingInvoiceContent::where('outgoing_invoice_id', $this->id)->get();
-        $rItem = ReturnedOutgoingInvoice::where('outgoing_invoice_id', $this->id)->get();
-        $total = 0;
-        foreach ($items as $key => $value) {
-            $quantity = 0;
-            foreach ($rItem as $key2 => $value2) {
-                if ($value["product_id"] == $value2["product_id"])
-                    $quantity = $value2["quantity"];
-            }
-            $total += ($value["price"] * ($value["quantity"] - $quantity));
-        }
-        return floatval($total - $this->discount);
+        // $items = OutgoingInvoiceContent::where('outgoing_invoice_id', $this->id)->get();
+        // $rItem = ReturnedOutgoingInvoice::where('outgoing_invoice_id', $this->id)->get();
+        // $total = 0;
+        // foreach ($items as $key => $value) {
+        //     $quantity = 0;
+        //     foreach ($rItem as $key2 => $value2) {
+        //         if ($value["product_id"] == $value2["product_id"])
+        //             $quantity = $value2["quantity"];
+        //     }
+        //     $total += ($value["price"] * ($value["quantity"] - $quantity));
+        // }
+        // return floatval($total - $this->discount);
+
+        $totalOutgoingInvoice = OutgoingInvoiceContent::query()->where('outgoing_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedOutgoingInvoice::where('outgoing_invoice_id', $this->id)->where('product_id', $query->product_id)->sum('quantity')));
+        }) + OutgoingInvoiceKit::query()->where('outgoing_invoice_id', $this->id)->get()->sum(function ($query) {
+            return ($query->price * ($query->quantity - ReturnedOutgoingInvoiceKit::where('outgoing_invoice_id', $this->id)->where('kit_id', $query->kit_id)->sum('quantity')));
+        });
+        return floatval($totalOutgoingInvoice - $this->discount);
     }
 }

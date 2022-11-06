@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('warehouse_id');
             $table->foreignId('cash_id')->nullable();
             $table->foreignId('user_id');
+            $table->decimal('total', $precision = 11, $scale = 2)->default(0.00);
         });
     }
 

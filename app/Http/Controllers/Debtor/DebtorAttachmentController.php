@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Debtor\DebtorAttachment;
 use App\Http\Requests\Debtor\StoreDebtorAttachmentRequest;
 use App\Http\Requests\Debtor\UpdateDebtorAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DebtorAttachmentController extends Controller
 {
@@ -16,7 +20,14 @@ class DebtorAttachmentController extends Controller
      */
     public function index()
     {
-        //
+        $file = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "attachment" => DebtorAttachment::with('user')->latest()->where('debtor_id', $file)->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,14 @@ class DebtorAttachmentController extends Controller
      */
     public function store(StoreDebtorAttachmentRequest $request)
     {
-        //
+        $attachment_path = $request["attachment"]->store('attachment/kits', 'public');
+        DebtorAttachment::create([
+            'attachment' =>  $attachment_path,
+            'debtor_id' => $request->id,
+            'title' => $request->title,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +100,9 @@ class DebtorAttachmentController extends Controller
      */
     public function destroy(DebtorAttachment $debtorAttachment)
     {
-        //
+        Storage::delete("public/" . $debtorAttachment["attachment"]);
+        $debtorAttachment->delete();
+
+        return Redirect::back();
     }
 }

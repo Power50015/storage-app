@@ -8,6 +8,7 @@ use App\Http\Requests\People\StorePeopleRequest;
 use App\Http\Requests\People\UpdatePeopleRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class PeopleController extends Controller
@@ -97,5 +98,17 @@ class PeopleController extends Controller
     public function destroy(People $people)
     {
         //
+    }
+
+    public function data()
+    {
+        if (Request::input('id')) {
+            return People::where('id', Request::input('id'))->get();
+        }
+        return People::query()->when(Request::input('search'), function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%")
+                ->orWhere('address', 'like', "%{$search}%");
+        })->paginate(10)->withQueryString();
     }
 }

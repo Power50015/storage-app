@@ -4,8 +4,7 @@
       shrink-0
       xl:block
       top-[-210px]
-      xl:top-auto
-      xl:static
+      xl:top-auto xl:static
       absolute
       h-full
       print:hidden
@@ -123,10 +122,10 @@
         </li> -->
           <li class="mx-5">
             <Link
-              :href="route('debtor.create')"
+              :href="route('debtor.index')"
               class="py-3 px-4 block rounded-lg my-3"
               :class="
-                route().current('debtor.*')
+                route().current('debtor.*') || route().current('debtor-pay.*')
                   ? 'bg-[#009ef7]'
                   : 'hover:text-[#009ef7]'
               "
@@ -146,20 +145,21 @@
           >
             الأقل إستخداماً
           </li>
-          <!-- <li class="mx-5">
-          <Link
-            :href="route('creditor.create')"
-            class="py-3 px-4 block rounded-lg my-3"
-            :class="
-              route().current('creditor.*')
-                ? 'bg-[#009ef7]'
-                : 'hover:text-[#009ef7]'
-            "
-          >
-            <i class="fa-solid fa-money-check-dollar"></i>
-            <span class="mx-3">دائنون</span>
-          </Link>
-        </li> -->
+          <li class="mx-5">
+            <Link
+              :href="route('creditor.index')"
+              class="py-3 px-4 block rounded-lg my-3"
+              :class="
+                route().current('creditor.*') ||
+                route().current('creditor-pay.*')
+                  ? 'bg-[#009ef7]'
+                  : 'hover:text-[#009ef7]'
+              "
+            >
+              <i class="fa-solid fa-money-check-dollar"></i>
+              <span class="mx-3">دائنون</span>
+            </Link>
+          </li>
           <li class="mx-5">
             <Link
               :href="route('kit.index')"

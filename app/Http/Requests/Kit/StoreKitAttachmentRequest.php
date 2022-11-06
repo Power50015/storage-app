@@ -38,7 +38,7 @@ class StoreKitAttachmentRequest extends FormRequest
 
         return [
             'title.*' => 'يجب إدخال عنوان ',
-            // 'attachment.*' => 'يجب إدخال الملف ',
+            'attachment.*' => 'يجب إدخال الملف ',
         ];
     }
 }

@@ -32,60 +32,98 @@ class OutgoingInvoiceSeeder extends Seeder
                 OutgoingInvoiceContent::factory(rand(1, 10))->create([
                     'outgoing_invoice_id' => $OutgoingInvoice->id,
                     'user_id' => $OutgoingInvoice->user_id,
+                    'people_id' => $OutgoingInvoice->people_id,
                 ])->each(function ($OutgoingInvoiceKit) {
                     if (rand(1, 10) == 5) {
-                        ReturnedOutgoingInvoice::create([
+                        $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::create([
                             'outgoing_invoice_id' => $OutgoingInvoiceKit->outgoing_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'product_id' => $OutgoingInvoiceKit->product_id,
                             'quantity' => rand(1, $OutgoingInvoiceKit->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $OutgoingInvoiceKit->people_id,
                         ]);
+                        $OutgoingInvoice =  OutgoingInvoice::find($ReturnedOutgoingInvoice->outgoing_invoice_id);
+                        $OutgoingInvoice->total += ($OutgoingInvoiceKit->quantity - $ReturnedOutgoingInvoice->quantity) * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
+                    }
+                    else {
+                        $OutgoingInvoice =  OutgoingInvoice::find($OutgoingInvoiceKit->outgoing_invoice_id);
+                        $OutgoingInvoice->total += $OutgoingInvoiceKit->quantity * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
                     }
                 });
             } elseif (rand(0, 1)) {
                 OutgoingInvoiceContent::factory(rand(1, 10))->create([
                     'outgoing_invoice_id' => $OutgoingInvoice->id,
                     'user_id' => $OutgoingInvoice->user_id,
+                    'people_id' => $OutgoingInvoice->people_id,
                 ])->each(function ($OutgoingInvoiceKit) {
                     if (rand(1, 10) == 5) {
-                        ReturnedOutgoingInvoice::create([
+                        $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::create([
                             'outgoing_invoice_id' => $OutgoingInvoiceKit->outgoing_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'product_id' => $OutgoingInvoiceKit->product_id,
                             'quantity' => rand(1, $OutgoingInvoiceKit->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $OutgoingInvoiceKit->people_id,
                         ]);
+                        $OutgoingInvoice =  OutgoingInvoice::find($ReturnedOutgoingInvoice->outgoing_invoice_id);
+                        $OutgoingInvoice->total += ($OutgoingInvoiceKit->quantity - $ReturnedOutgoingInvoice->quantity) * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
+                    }else {
+                        $OutgoingInvoice =  OutgoingInvoice::find($OutgoingInvoiceKit->outgoing_invoice_id);
+                        $OutgoingInvoice->total += $OutgoingInvoiceKit->quantity * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
                     }
                 });
 
                 OutgoingInvoiceKit::factory(rand(1, 10))->create([
                     'outgoing_invoice_id' => $OutgoingInvoice->id,
                     'user_id' => $OutgoingInvoice->user_id,
+                    'people_id' => $OutgoingInvoice->people_id,
                 ])->each(function ($OutgoingInvoiceKit) {
                     if (rand(1, 10) == 5) {
-                        ReturnedOutgoingInvoiceKit::create([
+                        $ReturnedOutgoingInvoice = ReturnedOutgoingInvoiceKit::create([
                             'outgoing_invoice_id' => $OutgoingInvoiceKit->outgoing_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'kit_id' => $OutgoingInvoiceKit->kit_id,
                             'quantity' => rand(1, $OutgoingInvoiceKit->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $OutgoingInvoiceKit->people_id,
                         ]);
+                        $OutgoingInvoice =  OutgoingInvoice::find($ReturnedOutgoingInvoice->outgoing_invoice_id);
+                        $OutgoingInvoice->total += ($OutgoingInvoiceKit->quantity - $ReturnedOutgoingInvoice->quantity) * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
+                    }else {
+                        $OutgoingInvoice =  OutgoingInvoice::find($OutgoingInvoiceKit->outgoing_invoice_id);
+                        $OutgoingInvoice->total += $OutgoingInvoiceKit->quantity * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
                     }
                 });
             } else {
                 OutgoingInvoiceKit::factory(rand(1, 10))->create([
                     'outgoing_invoice_id' => $OutgoingInvoice->id,
                     'user_id' => $OutgoingInvoice->user_id,
+                    'people_id' => $OutgoingInvoice->people_id,
                 ])->each(function ($OutgoingInvoiceKit) {
                     if (rand(1, 10) == 5) {
-                        ReturnedOutgoingInvoiceKit::create([
+                        $ReturnedOutgoingInvoice =ReturnedOutgoingInvoiceKit::create([
                             'outgoing_invoice_id' => $OutgoingInvoiceKit->outgoing_invoice_id,
                             'date' => Carbon::today()->subDays(rand(0, 10)),
                             'kit_id' => $OutgoingInvoiceKit->kit_id,
                             'quantity' => rand(1, $OutgoingInvoiceKit->quantity),
                             'user_id' => User::all()->random()->id,
+                            'people_id' => $OutgoingInvoiceKit->people_id,
                         ]);
+                        $OutgoingInvoice =  OutgoingInvoice::find($ReturnedOutgoingInvoice->outgoing_invoice_id);
+                        $OutgoingInvoice->total += ($OutgoingInvoiceKit->quantity - $ReturnedOutgoingInvoice->quantity) * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
+                    }
+                    else {
+                        $OutgoingInvoice =  OutgoingInvoice::find($OutgoingInvoiceKit->outgoing_invoice_id);
+                        $OutgoingInvoice->total += $OutgoingInvoiceKit->quantity * $OutgoingInvoiceKit->price;
+                        $OutgoingInvoice->save();
                     }
                 });
             }
