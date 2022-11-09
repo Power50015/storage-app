@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('creditor_pay_notes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('tag');
+            $table->text('tag')->nullable();
             $table->text('note');
             $table->foreignId('creditor_pay_id');
             $table->foreignId('user_id');

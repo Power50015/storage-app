@@ -2,6 +2,8 @@
 
 namespace App\Models\Cash;
 
+use App\Models\Creditor\Creditor;
+use App\Models\Creditor\CreditorPay;
 use App\Models\Debtor\Debtor;
 use App\Models\Debtor\DebtorPay;
 use App\Models\IncomingInvoice\IncomingInvoice;
@@ -50,5 +52,19 @@ class Cash extends Model
     public function debtor_pays()
     {
         return $this->hasMany(DebtorPay::class);
+    }
+    /**
+     * Get the Creditor for the Cashs.
+     */
+    public function creditors()
+    {
+        return $this->hasMany(Creditor::class);
+    }
+    /**
+     * Get the Creditor for the Cashs.
+     */
+    public function creditor_pays()
+    {
+        return $this->hasMany(CreditorPay::class);
     }
 }

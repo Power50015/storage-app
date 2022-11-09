@@ -48,7 +48,7 @@ class DebtorAttachmentController extends Controller
      */
     public function store(StoreDebtorAttachmentRequest $request)
     {
-        $attachment_path = $request["attachment"]->store('attachment/kits', 'public');
+        $attachment_path = $request["attachment"]->store('attachment/debtors', 'public');
         DebtorAttachment::create([
             'attachment' =>  $attachment_path,
             'debtor_id' => $request->id,

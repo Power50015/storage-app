@@ -20,9 +20,9 @@ class DebtorPayImageController extends Controller
      */
     public function index()
     {
-        $debtor = Request::input('id');
+        $image = Request::input('id');
         return [
-            "image" => DebtorPayImage::where('debtor_pay_id', $debtor)->with('user')->latest()->paginate()
+            "image" => DebtorPayImage::where('debtor_pay_id', $image)->with('user')->latest()->paginate()
         ];
     }
 

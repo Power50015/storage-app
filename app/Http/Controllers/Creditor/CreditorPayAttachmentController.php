@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Creditor\CreditorPayAttachment;
 use App\Http\Requests\Creditor\StoreCreditorPayAttachmentRequest;
 use App\Http\Requests\Creditor\UpdateCreditorPayAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CreditorPayAttachmentController extends Controller
 {
@@ -16,7 +20,14 @@ class CreditorPayAttachmentController extends Controller
      */
     public function index()
     {
-        //
+        $file = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "attachment" => CreditorPayAttachment::with('user')->latest()->where('creditor_pay_id', $file)->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,14 @@ class CreditorPayAttachmentController extends Controller
      */
     public function store(StoreCreditorPayAttachmentRequest $request)
     {
-        //
+        $attachment_path = $request["attachment"]->store('attachment/creditor_pays', 'public');
+        CreditorPayAttachment::create([
+            'attachment' =>  $attachment_path,
+            'creditor_pay_id' => $request->id,
+            'title' => $request->title,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +100,8 @@ class CreditorPayAttachmentController extends Controller
      */
     public function destroy(CreditorPayAttachment $creditorPayAttachment)
     {
-        //
+        Storage::delete("public/" . $creditorPayAttachment["attachment"]);
+        $creditorPayAttachment->delete();
+        return Redirect::back();
     }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('creditor_pay_attachments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('title');
             $table->text('attachment');
             $table->foreignId('user_id');
             $table->foreignId('creditor_pay_id');

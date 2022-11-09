@@ -106,7 +106,7 @@
               <span class="mx-3">الفاوتير الصادرة</span>
             </Link>
           </li>
-          <!-- <li class="mx-5">
+          <li class="mx-5">
           <Link
             :href="route('transfer.create')"
             class="py-3 px-4 block rounded-lg my-3"
@@ -119,7 +119,7 @@
             <i class="fa-solid fa-truck"></i>
             <span class="mx-3">نقل بضائع</span>
           </Link>
-        </li> -->
+        </li>
           <li class="mx-5">
             <Link
               :href="route('debtor.index')"
@@ -185,7 +185,7 @@
               "
             >
               <i class="fas fa-user-friends"></i>
-              <span class="mx-3">العملاء و الموردين</span>
+              <span class="mx-3">الشركات</span>
             </Link>
           </li>
           <li class="mx-5">

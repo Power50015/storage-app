@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCreditorPayNoteRequest extends FormRequest
 {
-    /**
+       /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,19 @@ class StoreCreditorPayNoteRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'note' => 'required',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'note.required' => 'يجب إدخال الملاحظه .',
         ];
     }
 }

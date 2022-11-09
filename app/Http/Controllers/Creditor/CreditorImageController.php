@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Creditor\CreditorImage;
 use App\Http\Requests\Creditor\StoreCreditorImageRequest;
 use App\Http\Requests\Creditor\UpdateCreditorImageRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CreditorImageController extends Controller
 {
@@ -16,7 +20,10 @@ class CreditorImageController extends Controller
      */
     public function index()
     {
-        //
+        $id = Request::input('id');
+        return [
+            "image" => CreditorImage::where('creditor_id', $id)->with('user')->latest()->paginate()
+        ];
     }
 
     /**
@@ -37,7 +44,12 @@ class CreditorImageController extends Controller
      */
     public function store(StoreCreditorImageRequest $request)
     {
-        //
+        CreditorImage::create([
+            'image' =>  $request["image"]->store('image/creditors', 'public'),
+            'creditor_id' => $request->id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +94,9 @@ class CreditorImageController extends Controller
      */
     public function destroy(CreditorImage $creditorImage)
     {
-        //
+        Storage::delete("public/" . $creditorImage["image"]);
+        $creditorImage->delete();
+
+        return Redirect::back();
     }
 }

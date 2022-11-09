@@ -403,7 +403,7 @@ class ProductController extends Controller
             }
         }
 
-        $actionData = $actionData->sortByDesc('date')->sortByDesc('created_at')->paginate();
+        $actionData = $actionData->sortByDesc('date')->paginate();
 
         return $actionData;
     }

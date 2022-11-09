@@ -126,18 +126,53 @@ class People extends Model
         return $this->hasMany(DebtorPay::class);
     }
     /**
+     * Get the Creditor for the Cashs.
+     */
+    public function creditors()
+    {
+        return $this->hasMany(Creditor::class);
+    }
+    /**
+     * Get the Creditor for the Cashs.
+     */
+    public function creditor_pays()
+    {
+        return $this->hasMany(CreditorPay::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function people_notes()
+    {
+        return $this->hasMany(PeopleNote::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function people_images()
+    {
+        return $this->hasMany(PeopleImage::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function people_attachments()
+    {
+        return $this->hasMany(PeopleAttachment::class);
+    }
+    /**
      * Get the totla Credit.
      */
     public function getTotalCreditAttribute()
     {
         $credit = 0;
-        $credit -= IncomingInvoice::where('pay_type', 0)->where('people_id', $this->id)->sum('total');
+
         $credit += OutgoingInvoice::where('pay_type', 0)->where('people_id', $this->id)->sum('total');
         $credit += Debtor::where('people_id', $this->id)->sum('amount');
+        $credit += CreditorPay::where('people_id', $this->id)->sum('amount');
         $credit -= DebtorPay::where('people_id', $this->id)->sum('amount');
         $credit -= Creditor::where('people_id', $this->id)->sum('amount');
-        $credit += CreditorPay::where('people_id', $this->id)->sum('amount');
+        $credit -= IncomingInvoice::where('pay_type', 0)->where('people_id', $this->id)->sum('total');
         return  $credit;
-
     }
 }

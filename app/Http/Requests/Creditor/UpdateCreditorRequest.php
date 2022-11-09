@@ -13,7 +13,7 @@ class UpdateCreditorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,22 @@ class UpdateCreditorRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'required' => 'required',
+            'amount' => 'required|numeric',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'title.required' => 'يجب إدخال بند الدين',
+            'people_id.*' => 'يجب إدخال الشركه',
+            'amount.*' => 'يجب إدخال المبلغ ',
         ];
     }
 }

@@ -88,7 +88,7 @@
           py-4
           px-2
           text-right
-          md:flex-row
+          lg:flex-row
           flex-col
         "
       >
@@ -146,7 +146,7 @@
           px-2
           text-right
           font-bold
-          md:flex-row
+          lg:flex-row
           flex-col
         "
       >
@@ -206,7 +206,7 @@
           px-2
           text-right
           font-bold
-          md:flex-row
+          lg:flex-row
           flex-col
         "
       >

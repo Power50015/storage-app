@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Creditor\CreditorPayNote;
 use App\Http\Requests\Creditor\StoreCreditorPayNoteRequest;
 use App\Http\Requests\Creditor\UpdateCreditorPayNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class CreditorPayNoteController extends Controller
 {
@@ -16,7 +19,15 @@ class CreditorPayNoteController extends Controller
      */
     public function index()
     {
-        //
+        $note = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => CreditorPayNote::with('user')->latest()->where('creditor_pay_id', $note)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,13 @@ class CreditorPayNoteController extends Controller
      */
     public function store(StoreCreditorPayNoteRequest $request)
     {
-        //
+        CreditorPayNote::create([
+            'note' => $request->note,
+            'creditor_pay_id' => $request->id,
+            'tag' => $request->tag,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +99,8 @@ class CreditorPayNoteController extends Controller
      */
     public function destroy(CreditorPayNote $creditorPayNote)
     {
-        //
+        $creditorPayNote->delete();
+
+        return Redirect::back();
     }
 }

@@ -102,7 +102,7 @@ class DebtorPayController extends Controller
         $debtorPay->description = $request->description;
         $debtorPay->pay_type = $request->pay_type;
         $debtorPay->cash_id = $request->cash_id;
-        $debtorPay->date = $request->date;
+        $debtorPay->date = Carbon::parse($request->date);
         $debtorPay->people_id = $request->people_id;
         $debtorPay->save();
         return Redirect::route('debtor-pay.show', $debtorPay->id);

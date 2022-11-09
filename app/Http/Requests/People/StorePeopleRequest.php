@@ -26,7 +26,6 @@ class StorePeopleRequest extends FormRequest
         return [
             'name' => 'required|unique:people,name',
             'phone' => 'nullable|numeric|unique:people,phone',
-            'type' => 'required',
             'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg'
         ];
     }
@@ -43,7 +42,6 @@ class StorePeopleRequest extends FormRequest
             'name.unique' => 'يجب أن يكون أسم الشركه فريد',
             'phone.numeric' => 'يجب أن يكون رقم الشركه رقم',
             'phone.unique' => 'يجب أن يكون رقم الشركه فريد',
-            'type.required' => 'يجب إدخال نوع الشركه',
             'logo.image' => 'يجب إدخال شعار الشركه',
         ];
     }

@@ -25,6 +25,9 @@ use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\People\People;
+use App\Models\People\PeopleAttachment;
+use App\Models\People\PeopleImage;
+use App\Models\People\PeopleNote;
 use App\Models\Product\DestructibleGoods;
 use App\Models\Product\DestructibleGoodsAction;
 use App\Models\Product\Product;
@@ -452,5 +455,26 @@ class User extends Authenticatable
     public function destructible_goods_action()
     {
         return $this->hasMany(DestructibleGoodsAction::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function people_notes()
+    {
+        return $this->hasMany(PeopleNote::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function people_images()
+    {
+        return $this->hasMany(PeopleImage::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function people_attachments()
+    {
+        return $this->hasMany(PeopleAttachment::class);
     }
 }

@@ -7,8 +7,7 @@ use App\Models\Creditor\CreditorPay;
 use App\Http\Requests\Creditor\StoreCreditorPayRequest;
 use App\Http\Requests\Creditor\UpdateCreditorPayRequest;
 use App\Models\Cash\Cash;
-use App\Models\Creditor\CreditorPayAttachment;
-use App\Models\People\People;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -32,9 +31,8 @@ class CreditorPayController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Creditor/CreateCreditorPay', [
-            "cash" => Cash::all(),
-            "companies" => People::orderBy("type")->get()
+        return Inertia::render('Creditor/Pay/Create', [
+            "cash" => Cash::all()
         ]);
     }
 
@@ -53,22 +51,10 @@ class CreditorPayController extends Controller
             'description' => $request->description,
             'pay_type' => $request->pay_type,
             'cash_id' => $request->cash_type,
-            'people_id' => $request->companies,
+            'date' => Carbon::parse($request->date),
+            'people_id' => $request->people_id,
             'user_id' => Auth::id()
         ]);
-
-        // Save Attachment Of Creditor
-        for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][$i]["attachment"] != null) {
-                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/creditorPay', 'public');
-                CreditorPayAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'creditor_pay' => $creditorPay['id'],
-                    'user' => Auth::id()
-                ]);
-            }
-        }
-
         return Redirect::back();
     }
 
@@ -80,7 +66,9 @@ class CreditorPayController extends Controller
      */
     public function show(CreditorPay $creditorPay)
     {
-        //
+        return Inertia::render('Creditor/Pay/Show', [
+            "creditorPay" =>  CreditorPay::where('id', $creditorPay->id)->with('user', 'people', 'cash')->get(),
+        ]);
     }
 
     /**
@@ -91,7 +79,10 @@ class CreditorPayController extends Controller
      */
     public function edit(CreditorPay $creditorPay)
     {
-        //
+        return Inertia::render('Creditor/Pay/Create', [
+            "cash" => Cash::all(),
+            "creditorPay" =>  $creditorPay,
+        ]);
     }
 
     /**
@@ -103,7 +94,15 @@ class CreditorPayController extends Controller
      */
     public function update(UpdateCreditorPayRequest $request, CreditorPay $creditorPay)
     {
-        //
+        $creditorPay->title = $request->title;
+        $creditorPay->amount = $request->amount;
+        $creditorPay->description = $request->description;
+        $creditorPay->pay_type = $request->pay_type;
+        $creditorPay->cash_id = $request->cash_id;
+        $creditorPay->date = Carbon::parse($request->date);
+        $creditorPay->people_id = $request->people_id;
+        $creditorPay->save();
+        return Redirect::route('debtor-pay.show', $creditorPay->id);
     }
 
     /**

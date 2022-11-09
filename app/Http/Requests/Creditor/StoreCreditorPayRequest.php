@@ -25,12 +25,10 @@ class StoreCreditorPayRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'company' => 'numeric',
+            'people_id' => 'required',
             'pay_type' => 'required',
             'cash_type' => 'required_if:pay_type,true',
             'amount' => 'required|numeric',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
         ];
     }
     /**
@@ -42,9 +40,8 @@ class StoreCreditorPayRequest extends FormRequest
     {
         return [
             'title.required' => 'يجب إدخال بند الدين',
-            'company.required' => 'يجب إدخال الشركه',
-            'amount.required' => 'يجب إدخال المخزن المبلغ',
-            'amount.numeric' => 'يجب أن يكون المبلغ رقم',
+            'people_id.required' => 'يجب إدخال الشركه',
+            'amount.*' => 'يجب إدخال المبلغ',
             'cash_type.required_if' => 'يجب إدخال نوع الكاش',
             'pay_type.required' => 'يجب إدخال نوع الدفع',
         ];

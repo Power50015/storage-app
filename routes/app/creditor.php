@@ -8,10 +8,21 @@ use App\Http\Controllers\Creditor\CreditorPayController;
 use App\Http\Controllers\Creditor\CreditorPayNoteController;
 use App\Http\Controllers\Creditor\CreditorPayAttachmentController;
 use App\Http\Controllers\Creditor\CreditorPayImageController;
+use App\Models\People\People;
 use Illuminate\Support\Facades\Route;
 
  // Creditor
  Route::resource('/creditor', CreditorController::class);
+
+ Route::get('/creditor-people', [CreditorController::class, 'creditorPeople']);
+Route::get('/creditor-action', [CreditorController::class, 'creditorAction']);
+
+Route::get('/creditor-count', function () {
+    return People::get()->where('total_credit', '<', 0)->count();
+});
+Route::get('/creditor-total', function () {
+    return People::get()->where('total_credit', '<', 0)->sum('total_credit');
+});
 
 Route::resource('/creditor-note', CreditorNoteController::class)->only([
     'index', 'store', 'destroy'

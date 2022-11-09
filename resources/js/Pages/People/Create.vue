@@ -14,14 +14,7 @@
         :error="errors.name"
         :require="true"
       />
-      <!-- People Type -->
-      <FormSelect
-        v-model="form.type"
-        title="نوع الشركه"
-        :error="errors.type"
-        :require="true"
-        :options="type"
-      />
+    
       <!-- People Phone -->
       <InputPhone
         v-model="form.phone"
@@ -35,6 +28,7 @@
         v-model="form.logo"
         title="شعار الشركه"
         :error="errors.logo"
+        :oldImage="form.old_image"
       />
     </FormSection>
   </AppLayout>
@@ -51,26 +45,53 @@ import InputTextArea from "@/Forms/InputTextArea.vue";
 import InputImage from "@/Forms/InputImage.vue";
 
 provide("title", "الشركات");
-provide(
-  "breadcrumb",
-  readonly([
-    { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
-    { index: 1, linkTitle: "الشركات", linkRoute: "#" },
-  ])
-);
 
-const props = defineProps(["errors"]);
+const props = defineProps(["errors", "people"]);
 
 const form = reactive({
-  name: null,
-  phone: null,
-  address: null,
-  type: null,
+  id: props.people ? props.people[0].id : null,
+  _method: props.people ? "patch" : "post",
+  route: props.people ? "people.update" : "people.store",
+  name: props.people ? props.people[0].name : null,
+  phone: props.people ? props.people[0].phone : null,
+  address: props.people ? props.people[0].address : null,
   logo: null,
+  old_image: props.people ? props.people[0].logo : null,
 });
 
-const type = [
-  { label: "عميل", index: "عميل" },
-  { label: "مورد", index: "مورد" },
-];
+
+
+if (props.people) {
+  provide(
+    "breadcrumb",
+    readonly([
+      { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+      {
+        index: 1,
+        linkTitle: "الشركات",
+        linkRoute: "people.index",
+      },
+      { index: 2, linkTitle: "تعديل  الشركه : " + props.people[0].title, linkRoute: "#" },
+    ])
+  );
+} else {
+  provide(
+    "breadcrumb",
+    readonly([
+      { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+      {
+        index: 1,
+        linkTitle: "الشركه",
+        linkRoute: "#",
+      },
+    ])
+  );
+}
+
+const formText = reactive({
+  title: props.people ? "تعديل بيانات  الشركه" : "إضافه شركه ",
+  btnTitle: props.people ? "تعديل الشركه" : "إضافه شركه",
+  formText: props.people ? "تم تعديل الشركه" : "تم أضافه الشركه",
+});
+
 </script>

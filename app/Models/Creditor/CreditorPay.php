@@ -2,6 +2,8 @@
 
 namespace App\Models\Creditor;
 
+use App\Models\Cash\Cash;
+use App\Models\People\People;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,5 +38,19 @@ class CreditorPay extends Model
     public function creditor_pay_notes()
     {
         return $this->hasMany(CreditorPayNote::class);
+    }
+    /**
+     * Get the People for the IncomingInvoice.
+     */
+    public function people()
+    {
+        return $this->belongsTo(People::class);
+    }
+    /**
+     * Get the Cash for the Debtor.
+     */
+    public function cash()
+    {
+        return $this->belongsTo(Cash::class);
     }
 }

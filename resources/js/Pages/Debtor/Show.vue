@@ -89,7 +89,7 @@
       </div>
     </SectionTemplate>
     <SectionTemplate class="print:p-0">
-      <DebtorShowTabs :id="debtor.id" />
+      <DebtorShowTabs :id="debtor.id" url="debtor" />
     </SectionTemplate>
   </AppLayout>
 </template>

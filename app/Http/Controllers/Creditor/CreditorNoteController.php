@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Creditor\CreditorNote;
 use App\Http\Requests\Creditor\StoreCreditorNoteRequest;
 use App\Http\Requests\Creditor\UpdateCreditorNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class CreditorNoteController extends Controller
 {
@@ -16,7 +19,15 @@ class CreditorNoteController extends Controller
      */
     public function index()
     {
-        //
+        $note = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => CreditorNote::with('user')->latest()->where('creditor_id', $note)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,13 @@ class CreditorNoteController extends Controller
      */
     public function store(StoreCreditorNoteRequest $request)
     {
-        //
+        CreditorNote::create([
+            'note' => $request->note,
+            'creditor_id' => $request->id,
+            'tag' => $request->tag,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +99,8 @@ class CreditorNoteController extends Controller
      */
     public function destroy(CreditorNote $creditorNote)
     {
-        //
+        $creditorNote->delete();
+
+        return Redirect::back();
     }
 }

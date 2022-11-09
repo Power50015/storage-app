@@ -11,13 +11,11 @@ use App\Models\Debtor\DebtorAttachment;
 use App\Models\Debtor\DebtorPay;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\People\People;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
-
-
 
 class DebtorController extends Controller
 {
@@ -99,7 +97,7 @@ class DebtorController extends Controller
         $debtor->title = $request->title;
         $debtor->amount = $request->amount;
         $debtor->description = $request->description;
-        $debtor->date = $request->date;
+        $debtor->date = Carbon::parse($request->date);
         $debtor->people_id = $request->people_id;
         $debtor->save();
         return Redirect::route('debtor.show', $debtor->id);

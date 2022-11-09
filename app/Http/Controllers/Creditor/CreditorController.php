@@ -7,10 +7,13 @@ use App\Models\Creditor\Creditor;
 use App\Http\Requests\Creditor\StoreCreditorRequest;
 use App\Http\Requests\Creditor\UpdateCreditorRequest;
 use App\Models\Cash\Cash;
-use App\Models\Creditor\CreditorAttachment;
+use App\Models\Creditor\CreditorPay;
+use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\People\People;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class CreditorController extends Controller
@@ -22,7 +25,7 @@ class CreditorController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Creditor/Index');
     }
 
     /**
@@ -32,10 +35,7 @@ class CreditorController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Creditor/CreateCreditor', [
-            "cash" => Cash::all(),
-            "companies" => People::orderBy("type")->get()
-        ]);
+        return Inertia::render('Creditor/Create');
     }
 
     /**
@@ -51,23 +51,12 @@ class CreditorController extends Controller
             'title' => $request->title,
             'amount' => $request->amount,
             'description' => $request->description,
-            'people_id' => $request->companies,
+            'date' => Carbon::parse($request->date),
+            'people_id' => $request->people_id,
             'user_id' => Auth::id()
         ]);
         
-        // Save Attachment Of Debtor
-        for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][$i]["attachment"] != null) {
-                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/creditor', 'public');
-                CreditorAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'creditor_id' => $creditor['id'],
-                    'user_id' => Auth::id()
-                ]);
-            }
-        }
-
-        return Redirect::back();
+        return Redirect::route('creditor.index');
     }
 
     /**
@@ -78,7 +67,9 @@ class CreditorController extends Controller
      */
     public function show(Creditor $creditor)
     {
-        //
+        return Inertia::render('Creditor/Show', [
+            "creditor" =>  Creditor::where('id', $creditor->id)->with('user','people')->get(),
+        ]);
     }
 
     /**
@@ -89,7 +80,9 @@ class CreditorController extends Controller
      */
     public function edit(Creditor $creditor)
     {
-        //
+        return Inertia::render('Creditor/Create', [
+            "creditor" =>  $creditor,
+        ]);
     }
 
     /**
@@ -101,7 +94,13 @@ class CreditorController extends Controller
      */
     public function update(UpdateCreditorRequest $request, Creditor $creditor)
     {
-        //
+        $creditor->title = $request->title;
+        $creditor->amount = $request->amount;
+        $creditor->description = $request->description;
+        $creditor->date = Carbon::parse($request->date);
+        $creditor->people_id = $request->people_id;
+        $creditor->save();
+        return Redirect::route('creditor.show', $creditor->id);
     }
 
     /**
@@ -113,5 +112,66 @@ class CreditorController extends Controller
     public function destroy(Creditor $creditor)
     {
         //
+    }
+    public function creditorPeople()
+    {
+        $sql2 = "";
+        if (Request::input('search')) {
+            $search = Request::input('search');
+            $sql2 = People::where('name', 'like', "%{$search}%")->get()->where('total_credit', '<', 0)->sortBy('total_credit');
+        } else {
+            $sql2 = People::get()->where('total_credit', '<', 0)->sortBy('total_credit');
+        }
+
+        return [
+            "people" => $sql2->paginate()->withQueryString(),
+            'filters' => Request::only(['search'])
+        ];
+    }
+    public function creditorAction()
+    {
+        
+        $action = Request::input('action');
+
+        // Get Actions
+        $actionData = collect([]);
+        //  Outgoing Invoice
+        if ($action == "IncomingInvoice" || $action == "all") {
+            $IncomingInvoiceContent = IncomingInvoice::with('user', 'people')->where('pay_type', 0)->get();
+            foreach ($IncomingInvoiceContent as $key => $value) {
+                $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
+
+                $actionData->push($IncomingInvoiceContent[$key]);
+            }
+        }
+
+        if ($action == "Creditor" || $action == "all") {
+            $Creditor = Creditor::with('user', 'people', 'cash')->get();
+            foreach ($Creditor as $key => $value) {
+                $Creditor[$key]["dataType"] = "Creditor";
+                $actionData->push($Creditor[$key]);
+            }
+        }
+
+        if ($action == "CreditorKilled" || $action == "all") {
+            $Creditor = CreditorPay::with('user', 'people')->where('pay_type', 0)->get();
+            foreach ($Creditor as $key => $value) {
+                $Creditor[$key]["dataType"] = "CreditorKilled";
+                $actionData->push($Creditor[$key]);
+            }
+        }
+
+        if ($action == "CreditorPay" || $action == "all") {
+            $Creditor = CreditorPay::with('user', 'people', 'cash')->where('pay_type', 1)->get();
+            foreach ($Creditor as $key => $value) {
+                $Creditor[$key]["dataType"] = "CreditorPay";
+                $actionData->push($Creditor[$key]);
+            }
+        }
+
+
+        $actionData = $actionData->sortByDesc('date')->paginate();
+
+        return $actionData;
     }
 }

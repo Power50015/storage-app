@@ -25,10 +25,8 @@ class StoreCreditorRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'company' => 'numeric',
+            'people_id' => 'required',
             'amount' => 'required|numeric',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
         ];
     }
     /**
@@ -40,9 +38,8 @@ class StoreCreditorRequest extends FormRequest
     {
         return [
             'title.required' => 'يجب إدخال بند الدين',
-            'company.required' => 'يجب إدخال الشركه',
-            'amount.required' => 'يجب إدخال المخزن المبلغ ',
-            'amount.numeric' => 'يجب أن يكون المبلغ رقم',
+            'people_id.required' => 'يجب إدخال الشركه',
+            'amount.*' => 'يجب إدخال  المبلغ ',
         ];
     }
 }

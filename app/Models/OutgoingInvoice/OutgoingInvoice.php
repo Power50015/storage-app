@@ -60,6 +60,13 @@ class OutgoingInvoice extends Model
         return $this->hasMany(OutgoingInvoiceContent::class);
     }
     /**
+     * Get the OutgoingInvoiceKit for the OutgoingInvoice.
+     */
+    public function outgoing_invoice_kits()
+    {
+        return $this->hasMany(OutgoingInvoiceKit::class);
+    }
+    /**
      * Get the ReturnedOutgoingInvoice for the IncomingInvoice.
      */
     public function returned_outgoing_invoices()

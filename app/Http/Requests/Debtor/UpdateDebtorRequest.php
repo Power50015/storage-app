@@ -39,8 +39,7 @@ class UpdateDebtorRequest extends FormRequest
         return [
             'title.required' => 'يجب إدخال بند الدين',
             'people_id.*' => 'يجب إدخال الشركه',
-            'amount.required' => 'يجب إدخال المخزن المبلغ ',
-            'amount.numeric' => 'يجب أن يكون المبلغ رقم',
+            'amount.*' => 'يجب إدخال المبلغ ',
         ];
     }
 }

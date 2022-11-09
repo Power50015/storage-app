@@ -96,9 +96,8 @@ class KitController extends Controller
      * @param  \App\Models\Kit  $kit
      * @return \Illuminate\Http\Response
      */
-    public function show($kit)
+    public function show(Kit $kit)
     {
-
         return Inertia::render('Kit/Show', [
             "kit" => Kit::with([
                 'product',
@@ -110,10 +109,7 @@ class KitController extends Controller
                 'product.product_brand',
                 'product.product_type',
                 'product.product_category'
-            ])->where('id', $kit)->get(),
-            "note" => KitNote::where('kit_id', $kit)->get(),
-            "attachment" => KitAttachment::where('kit_id', $kit)->get(),
-            "image" => KitImage::where('kit_id', $kit)->get(),
+            ])->where('id', $kit->id)->get(),
         ]);
     }
 

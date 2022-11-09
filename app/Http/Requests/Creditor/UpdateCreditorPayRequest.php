@@ -13,7 +13,7 @@ class UpdateCreditorPayRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,24 @@ class UpdateCreditorPayRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'people_id' => 'required|numeric',
+            'pay_type' => 'required',
+            'cash_id' => 'required_if:pay_type,true',
+            'amount' => 'required|numeric',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'people_id.*' => 'يجب إدخال الشركه',
+            'amount.*' => 'يجب إدخال المبلغ',
+            'cash_type.required_if' => 'يجب إدخال نوع الكاش',
+            'pay_type.required' => 'يجب إدخال نوع الدفع',
         ];
     }
 }

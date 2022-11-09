@@ -1,5 +1,27 @@
 <template>
   <AppLayout title="الشركات">
+    <SectionTemplate class="pb-0">
+      <div class="grid grid-cols-3 gap-3">
+        <CardPrimary>
+          <h4 class="mb-3"> الشركات</h4>
+          <h4 class="text-xl font-bold">
+            {{ peopleCount }}
+          </h4>
+        </CardPrimary>
+        <CardInfo>
+          <h4 class="mb-3">عدد الدائنون</h4>
+          <h4 class="text-xl font-bold">
+            {{ creditor_count }}
+          </h4>
+        </CardInfo>
+        <CardSuccess>
+          <h4 class="mb-3">عدد المدينون</h4>
+          <h4 class="text-xl font-bold">
+            {{ debtor_count }}
+          </h4>
+        </CardSuccess>
+      </div>
+    </SectionTemplate>
     <SectionTemplate>
       <div class="flex content-center items-center justify-between">
         <h2 class="title font-bold">الشركات</h2>
@@ -7,13 +29,8 @@
           أضف شركه
         </btn-info>
       </div>
-      <DataTable class="w-full" :options="options">
-        <thead>
-          <tr>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody
+      <div class="w-full">
+        <div
           class="
             grid grid-cols-2
             gap-y-10
@@ -24,8 +41,8 @@
             mt-5
           "
         >
-          <tr v-for="i in people" :key="i.date">
-            <td>
+          <div v-for="i in people.data" :key="i.date">
+            <div>
               <Link :href="route('people.show', i.id)" class="group">
                 <div
                   class="
@@ -60,26 +77,28 @@
                   </h3>
                 </div>
               </Link>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr></tr>
-        </tfoot>
-      </DataTable>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Pagination :links="people.links" v-if="people.data.length" />
     </SectionTemplate>
   </AppLayout>
 </template>
 
 <script setup>
-import { provide, readonly } from "@vue/runtime-core";
+import { computed, provide, readonly, ref, watch,onMounted } from "@vue/runtime-core";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
-
 import DataTable from "datatables.net-vue3";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
+import InputText from "@/Forms/InputText.vue";
+import Pagination from "@/Components/Tables/Pagination.vue";
+import CardPrimary from "@/Components/Cards/Statistics/CardPrimary.vue";
+import CardInfo from "@/Components/Cards/Statistics/CardInfo.vue";
+import CardSuccess from "@/Components/Cards/Statistics/CardSuccess.vue";
 
 provide("title", "الشركات");
 provide(
@@ -90,21 +109,35 @@ provide(
   ])
 );
 
-const options = {
-  pageLength: 48,
-  lengthChange: false,
-  info: false,
-  language: {
-    search: "بحث : ",
-    paginate: {
-      next: "التالى",
-      previous: "السابق",
-    },
-    emptyTable: "الجدول فارغ",
-    zeroRecords: "لا يوجد نتائج",
-  },
-  order: [0],
-};
+const props = defineProps(["people", "peopleCount", "filters"]);
 
-const props = defineProps(["people"]);
+const people = computed(() => props.people);
+
+const search = ref(props.filters.search);
+
+watch(search, (value) => {
+  Inertia.get(
+    "/people",
+    {
+      search: value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+      preserveScroll: true,
+    }
+  );
+});
+
+const creditor_count = ref();
+const debtor_count = ref();
+
+onMounted(() => {
+  axios.get("/creditor-count").then(function (response) {
+    creditor_count.value = response.data;
+  });
+  axios.get("/debtor-count").then(function (response) {
+    debtor_count.value = response.data;
+  });
+});
 </script>

@@ -3,9 +3,23 @@
 namespace App\Http\Controllers\People;
 
 use App\Http\Controllers\Controller;
-use App\Models\People\People;
 use App\Http\Requests\People\StorePeopleRequest;
 use App\Http\Requests\People\UpdatePeopleRequest;
+use App\Models\Creditor\Creditor;
+use App\Models\Creditor\CreditorPay;
+use App\Models\Debtor\Debtor;
+use App\Models\Debtor\DebtorPay;
+use App\Models\IncomingInvoice\IncomingInvoice;
+use App\Models\IncomingInvoice\IncomingInvoiceContent;
+use App\Models\IncomingInvoice\IncomingInvoiceKit;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\OutgoingInvoice\OutgoingInvoice;
+use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\People\People;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -21,7 +35,11 @@ class PeopleController extends Controller
     public function index()
     {
         return Inertia::render('People/Index', [
-            "people" => People::all()
+            "people" => People::query()->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->with('user')->paginate(40)->withQueryString(),
+            'peopleCount' => People::count(),
+            'filters' => Request::only(['search'])
         ]);
     }
 
@@ -32,9 +50,7 @@ class PeopleController extends Controller
      */
     public function create()
     {
-        return Inertia::render('People/Create', [
-            "people" => People::all()
-        ]);
+        return Inertia::render('People/Create');
     }
 
     /**
@@ -45,14 +61,17 @@ class PeopleController extends Controller
      */
     public function store(StorePeopleRequest $request)
     {
-        People::create(array_merge(
-            $request->all(),
+        $people = People::create(
             [
+                'name' => $request->name,
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'logo' => $request->logo,
                 'user_id' => auth()->user()->id,
                 'logo' => $request->hasFile('logo') ? $request->file('logo')->store('image/people', 'public') : 'no_image.png'
             ]
-        ));
-        return Redirect::back();
+        );
+        return Redirect::route('people.show', $people->id);
     }
 
     /**
@@ -61,9 +80,11 @@ class PeopleController extends Controller
      * @param  \App\Models\People  $people
      * @return \Illuminate\Http\Response
      */
-    public function show(People $people)
+    public function show($people)
     {
-        //
+        return Inertia::render('People/Show', [
+            "people" => People::where('id', $people)->get(),
+        ]);
     }
 
     /**
@@ -74,7 +95,7 @@ class PeopleController extends Controller
      */
     public function edit(People $people)
     {
-        //
+        dd($people->id);
     }
 
     /**
@@ -110,5 +131,322 @@ class PeopleController extends Controller
                 ->orWhere('phone', 'like', "%{$search}%")
                 ->orWhere('address', 'like', "%{$search}%");
         })->paginate(10)->withQueryString();
+    }
+    public function action()
+    {
+        $people = Request::input('people');
+        $action = Request::input('action');
+
+        // Get Actions
+        $actionData = collect([]);
+
+        if ($action == "IncomingInvoice" || $action == null) {
+            $IncomingInvoiceContent = IncomingInvoice::with('user', 'people', 'warehouse', 'cash')->where('people_id', $people)->get();
+            foreach ($IncomingInvoiceContent as $key => $value) {
+                $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
+                $actionData->push($IncomingInvoiceContent[$key]);
+            }
+        }
+        if ($action == "OutgoingInvoice" || $action == null) {
+            $OutgoingInvoiceContent = OutgoingInvoice::with('user', 'people', 'warehouse', 'cash')->where('people_id', $people)->get();
+            foreach ($OutgoingInvoiceContent as $key => $value) {
+                $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
+                $actionData->push($OutgoingInvoiceContent[$key]);
+            }
+        }
+        if ($action == "Debtor" || $action == null) {
+            $Debtor = Debtor::with('user', 'people')->where('people_id', $people)->get();
+            foreach ($Debtor as $key => $value) {
+                $Debtor[$key]["dataType"] = "Debtor";
+                $actionData->push($Debtor[$key]);
+            }
+        }
+        if ($action == "DebtorPay" || $action == null) {
+            $DebtorPay = DebtorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 1)->get();
+            foreach ($DebtorPay as $key => $value) {
+                $DebtorPay[$key]["dataType"] = "DebtorPay";
+                $actionData->push($DebtorPay[$key]);
+            }
+        }
+        if ($action == "DebtorKilled" || $action == null) {
+            $DebtorPay = DebtorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 0)->get();
+            foreach ($DebtorPay as $key => $value) {
+                $DebtorPay[$key]["dataType"] = "DebtorKilled";
+                $actionData->push($DebtorPay[$key]);
+            }
+        }
+        if ($action == "Creditor" || $action == null) {
+            $Creditor = Creditor::with('user', 'people')->where('people_id', $people)->get();
+            foreach ($Creditor as $key => $value) {
+                $Creditor[$key]["dataType"] = "Creditor";
+                $actionData->push($Creditor[$key]);
+            }
+        }
+        if ($action == "CreditorPay" || $action == null) {
+            $CreditorPay = CreditorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 1)->get();
+            foreach ($CreditorPay as $key => $value) {
+                $CreditorPay[$key]["dataType"] = "CreditorPay";
+                $actionData->push($CreditorPay[$key]);
+            }
+        }
+        if ($action == "CreditorKilled" || $action == null) {
+            $CreditorPay = CreditorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 0)->get();
+            foreach ($CreditorPay as $key => $value) {
+                $CreditorPay[$key]["dataType"] = "CreditorKilled";
+                $actionData->push($CreditorPay[$key]);
+            }
+        }
+        $actionData = $actionData->sortByDesc('date')->paginate();
+
+        return $actionData;
+    }
+    public function actionDetails()
+    {
+        $people = Request::input('people');
+        $action = Request::input('action');
+
+        // Get Actions
+        $actionData = collect([]);
+
+        if ($action == "IncomingInvoice" || $action == null) {
+            $IncomingInvoiceContent = IncomingInvoiceContent::with(
+                'user',
+                'incoming_invoice',
+                'incoming_invoice.people',
+                'incoming_invoice.warehouse',
+                'incoming_invoice.cash',
+                'product',
+                'product.product_category',
+                'product.product_type',
+                'product.product_brand',
+                'product.product_collection',
+                'product.product_model',
+                'product.product_color',
+                'product.product_material',
+                'product.product_country'
+            )->get()->where('incoming_invoice.people_id', $people);
+            foreach ($IncomingInvoiceContent as $key => $value) {
+                $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
+                $IncomingInvoiceContent[$key]["date"] = $IncomingInvoiceContent[$key]["incoming_invoice"]["date"];
+                $actionData->push($IncomingInvoiceContent[$key]);
+            }
+        }
+        if ($action == "IncomingInvoiceKit" || $action == null) {
+            $IncomingInvoiceKit = IncomingInvoiceKit::with(
+                'user',
+                'incoming_invoice',
+                'incoming_invoice.people',
+                'incoming_invoice.warehouse',
+                'incoming_invoice.cash',
+                'incoming_invoice.incoming_invoice_kits',
+                'kit',
+                'kit.product',
+                'kit.product.product_category',
+                'kit.product.product_type',
+                'kit.product.product_brand',
+                'kit.product.product_collection',
+                'kit.product.product_model',
+                'kit.product.product_color',
+                'kit.product.product_material',
+                'kit.product.product_country'
+            )->get()->where('incoming_invoice.people_id', $people);
+            foreach ($IncomingInvoiceKit as $key => $value) {
+                $IncomingInvoiceKit[$key]["dataType"] = "IncomingInvoiceKit";
+                $actionData->push($IncomingInvoiceKit[$key]);
+            }
+        }
+        if ($action == "ReturnedIncomingInvoice" || $action == null) {
+            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with([
+                'user',
+                'incoming_invoice',
+                'incoming_invoice.people',
+                'incoming_invoice.warehouse',
+                'incoming_invoice.cash',
+                'incoming_invoice.incoming_invoice_contents',
+                'product',
+                'product.product_category',
+                'product.product_type',
+                'product.product_brand',
+                'product.product_collection',
+                'product.product_model',
+                'product.product_color',
+                'product.product_material',
+                'product.product_country'
+            ])->get()->where('incoming_invoice.people_id', $people);
+            foreach ($ReturnedIncomingInvoice as $key => $value) {
+                $ReturnedIncomingInvoice[$key]["dataType"] = "ReturnedIncomingInvoice";
+                $actionData->push($ReturnedIncomingInvoice[$key]);
+            }
+        }
+        if ($action == "ReturnedIncomingInvoiceKit" || $action == null) {
+            $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::with(
+                'user',
+                'incoming_invoice',
+                'incoming_invoice.people',
+                'incoming_invoice.warehouse',
+                'incoming_invoice.cash',
+                'incoming_invoice.incoming_invoice_kits',
+                'kit',
+                'kit.product',
+                'kit.product.product_category',
+                'kit.product.product_type',
+                'kit.product.product_brand',
+                'kit.product.product_collection',
+                'kit.product.product_model',
+                'kit.product.product_color',
+                'kit.product.product_material',
+                'kit.product.product_country'
+            )->get()->where('incoming_invoice.people_id', $people);
+            foreach ($ReturnedIncomingInvoiceKit as $key => $value) {
+                $ReturnedIncomingInvoiceKit[$key]["dataType"] = "ReturnedIncomingInvoiceKit";
+                $actionData->push($ReturnedIncomingInvoiceKit[$key]);
+            }
+        }
+        if ($action == "OutgoingInvoice" || $action == null) {
+            $OutgoingInvoiceContent = OutgoingInvoiceContent::with(
+                'user',
+                'outgoing_invoice',
+                'outgoing_invoice.people',
+                'outgoing_invoice.warehouse',
+                'outgoing_invoice.cash',
+                'product',
+                'product.product_category',
+                'product.product_type',
+                'product.product_brand',
+                'product.product_collection',
+                'product.product_model',
+                'product.product_color',
+                'product.product_material',
+                'product.product_country'
+            )->where('people_id', $people)->get()->where('outgoing_invoice.people_id', $people);
+            foreach ($OutgoingInvoiceContent as $key => $value) {
+                $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
+                $OutgoingInvoiceContent[$key]["date"] = $OutgoingInvoiceContent[$key]["outgoing_invoice"]["date"];
+                $actionData->push($OutgoingInvoiceContent[$key]);
+            }
+        }
+        if ($action == "ReturnedOutgoingInvoice" || $action == null) {
+            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with(
+                'user',
+                'outgoing_invoice',
+                'outgoing_invoice.people',
+                'outgoing_invoice.warehouse',
+                'outgoing_invoice.cash',
+                'outgoing_invoice.outgoing_invoice_contents',
+                'product',
+                'product.product_category',
+                'product.product_type',
+                'product.product_brand',
+                'product.product_collection',
+                'product.product_model',
+                'product.product_color',
+                'product.product_material',
+                'product.product_country'
+            )->get()->where('outgoing_invoice.people_id', $people);
+            foreach ($ReturnedOutgoingInvoice as $key => $value) {
+                $ReturnedOutgoingInvoice[$key]["dataType"] = "ReturnedOutgoingInvoice";
+                $actionData->push($ReturnedOutgoingInvoice[$key]);
+            }
+        }
+        if ($action == "OutgoingInvoiceKit" || $action == null) {
+            $OutgoingInvoiceKit = OutgoingInvoiceKit::with(
+                'user',
+                'outgoing_invoice',
+                'outgoing_invoice.people',
+                'outgoing_invoice.warehouse',
+                'outgoing_invoice.cash',
+                'outgoing_invoice.outgoing_invoice_kits',
+                'kit',
+                'kit.product',
+                'kit.product.product_category',
+                'kit.product.product_type',
+                'kit.product.product_brand',
+                'kit.product.product_collection',
+                'kit.product.product_model',
+                'kit.product.product_color',
+                'kit.product.product_material',
+                'kit.product.product_country'
+            )->get()->where('outgoing_invoice.people_id', $people);
+            foreach ($OutgoingInvoiceKit as $key => $value) {
+                $OutgoingInvoiceKit[$key]["dataType"] = "OutgoingInvoiceKit";
+                $actionData->push($OutgoingInvoiceKit[$key]);
+            }
+        }
+        if ($action == "ReturnedOutgoingInvoiceKit" || $action == null) {
+            $ReturnedOutgoingInvoiceKit = ReturnedOutgoingInvoiceKit::with(
+                'user',
+                'outgoing_invoice',
+                'outgoing_invoice.people',
+                'outgoing_invoice.warehouse',
+                'outgoing_invoice.cash',
+                'outgoing_invoice.outgoing_invoice_kits',
+                'kit',
+                'kit.product',
+                'kit.product.product_category',
+                'kit.product.product_type',
+                'kit.product.product_brand',
+                'kit.product.product_collection',
+                'kit.product.product_model',
+                'kit.product.product_color',
+                'kit.product.product_material',
+                'kit.product.product_country'
+            )->get()->where('outgoing_invoice.people_id', $people);
+            foreach ($ReturnedOutgoingInvoiceKit as $key => $value) {
+                $ReturnedOutgoingInvoiceKit[$key]["dataType"] = "ReturnedOutgoingInvoiceKit";
+                $actionData->push($ReturnedOutgoingInvoiceKit[$key]);
+            }
+        }
+        if ($action == "Debtor" || $action == null) {
+            $Debtor = Debtor::with('user', 'people')->where('people_id', $people)->get();
+            foreach ($Debtor as $key => $value) {
+                $Debtor[$key]["dataType"] = "Debtor";
+                $Debtor[$key]["date"] = $Debtor[$key]["date"];
+                $actionData->push($Debtor[$key]);
+            }
+        }
+        if ($action == "DebtorPay" || $action == null) {
+            $DebtorPay = DebtorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 1)->get();
+            foreach ($DebtorPay as $key => $value) {
+                $DebtorPay[$key]["dataType"] = "DebtorPay";
+                $DebtorPay[$key]["date"] = $DebtorPay[$key]["date"];
+                $actionData->push($DebtorPay[$key]);
+            }
+        }
+        if ($action == "DebtorKilled" || $action == null) {
+            $DebtorPay = DebtorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 0)->get();
+            foreach ($DebtorPay as $key => $value) {
+                $DebtorPay[$key]["dataType"] = "DebtorKilled";
+                $DebtorPay[$key]["date"] = $DebtorPay[$key]["date"];
+                $actionData->push($DebtorPay[$key]);
+            }
+        }
+        if ($action == "Creditor" || $action == null) {
+            $Creditor = Creditor::with('user', 'people')->where('people_id', $people)->get();
+            foreach ($Creditor as $key => $value) {
+                $Creditor[$key]["dataType"] = "Creditor";
+                $Creditor[$key]["date"] = $Creditor[$key]["date"];
+                $actionData->push($Creditor[$key]);
+            }
+        }
+        if ($action == "CreditorPay" || $action == null) {
+            $CreditorPay = CreditorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 1)->get();
+            foreach ($CreditorPay as $key => $value) {
+                $CreditorPay[$key]["dataType"] = "CreditorPay";
+                $CreditorPay[$key]["date"] = $CreditorPay[$key]["date"];
+                $actionData->push($CreditorPay[$key]);
+            }
+        }
+        if ($action == "CreditorKilled" || $action == null) {
+            $CreditorPay = CreditorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 0)->get();
+            foreach ($CreditorPay as $key => $value) {
+                $CreditorPay[$key]["dataType"] = "CreditorKilled";
+                $CreditorPay[$key]["date"] = $CreditorPay[$key]["date"];
+                $actionData->push($CreditorPay[$key]);
+            }
+        }
+        
+        $actionData = $actionData->sortByDesc('date')->paginate();
+
+        return $actionData;
     }
 }
