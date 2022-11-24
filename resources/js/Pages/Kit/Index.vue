@@ -21,7 +21,7 @@
       <div class="flex content-center items-center justify-between">
         <h2 class="title font-bold">قطع الغيار</h2>
         <btn-info :element="Link" :to="route('kit.create')">
-          أضف منتج
+          أضف قطعه غيار
         </btn-info>
       </div>
       <InputText v-model="search" placeholder="بحث ...." />

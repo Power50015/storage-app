@@ -48,7 +48,7 @@ class PeopleAttachmentController extends Controller
      */
     public function store(StorePeopleAttachmentRequest $request)
     {
-        $attachment_path = $request["attachment"]->store('attachment/peoples', 'public');
+        $attachment_path = $request["attachment"]->store('attachment/people', 'public');
         PeopleAttachment::create([
             'attachment' =>  $attachment_path,
             'people_id' => $request->id,

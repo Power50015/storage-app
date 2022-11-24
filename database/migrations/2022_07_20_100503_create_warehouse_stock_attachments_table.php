@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('warehouse_stock_attachments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('title');
             $table->text('attachment');
             $table->foreignId('warehouse_stock_id');
             $table->foreignId('user_id');

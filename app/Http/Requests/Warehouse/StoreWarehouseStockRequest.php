@@ -23,7 +23,6 @@ class StoreWarehouseStockRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->request->all()["content"]);
         return [
             'title' => 'required',
             'warehouses' => 'required',

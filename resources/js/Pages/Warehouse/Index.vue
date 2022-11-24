@@ -30,68 +30,56 @@
     <SectionTemplate>
       <h2 class="font-bold">بيانات المخازن</h2>
       <InputText v-model="search" placeholder="بحث ...." />
-      <table class="min-w-max w-full table-auto mt-5">
-        <tbody>
-          <tr
-            class="text-right"
-            v-for="item in warehouses.data"
-            :key="item.index"
-          >
-            <td class="py-3 px-6 whitespace-nowrap text-right">
-              <div class="flex items-center justify-start">
-                <Link
-                  :href="route('warehouse.show', item.id)"
-                  class="hover:text-[#009ef7]"
-                >
-                  <h3 class="pb-3 font-bold">
-                    {{ item.name }}
-                  </h3>
-                  <div v-html="item.address" class="text-xs"></div>
-                </Link>
-              </div>
-            </td>
-            <td class="py-3 px-6 text-left">
-              <div class="flex items-left justify-end">
-                <warehouse-table
-                  :name="item.name"
-                  :address="item.address"
-                  :id="item.id"
+      <div class="min-w-max w-full mt-5">
+        <div
+          class="flex flex-col lg:flex-row justify-between items-center my-3"
+          v-for="item in warehouses.data"
+          :key="item.index"
+        >
+          <div class="whitespace-nowrap w-full">
+            <div class="flex items-center justify-start">
+              <Link
+                :href="route('warehouse.show', item.id)"
+                class="hover:text-[#009ef7]"
+              >
+                <h3 class="pb-3 font-bold">
+                  {{ item.name }}
+                </h3>
+                <div v-html="item.address" class="text-xs"></div>
+              </Link>
+            </div>
+          </div>
+          <div class="py-3 px-6 lg:text-left w-full">
+            <div class="flex lg:items-left lg:justify-end">
+              <div class="mr-2">
+                <img
+                  class="w-6 h-6 rounded-full"
+                  :src="item.user.profile_photo_url"
                 />
               </div>
-            </td>
-
-            <td class="py-3 px-6 text-left">
-              <div class="flex items-left justify-end">
-                <div class="mr-2">
-                  <img
-                    class="w-6 h-6 rounded-full"
-                    :src="item.user.profile_photo_url"
-                  />
-                </div>
-                <Link
-                  :href="route('warehouse.show', item.id)"
-                  class="hover:text-[#009ef7]"
-                >
-                  <h6 class="mx-2">{{ item.user.name }}</h6>
-                  <h6 class="mx-2">
-                    {{
-                      new Date(item.created_at).toLocaleDateString(
-                        "ar-EG-u-nu-latn",
-                        {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        }
-                      )
-                    }}
-                  </h6>
-                </Link>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <Link
+                :href="route('warehouse.show', item.id)"
+                class="hover:text-[#009ef7]"
+              >
+                <h6 class="mx-2">{{ item.user.name }}</h6>
+                <h6 class="mx-2">
+                  {{
+                    new Date(item.created_at).toLocaleDateString(
+                      "ar-EG-u-nu-latn",
+                      {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )
+                  }}
+                </h6>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
       <Pagination :links="warehouses.links" v-if="warehouses.data.length" />
       <div v-else>لا يوجد بيانات</div>
     </SectionTemplate>
@@ -111,12 +99,9 @@ import {
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import FormSection from "@/Forms/FormSection.vue";
 import InputText from "@/Forms/InputText.vue";
-import InputTextArea from "@/Forms/InputTextArea.vue";
 import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
-import WarehouseTable from "@/Components/Warehouse/WarehouseTable.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import Modal from "@/Components/Modals/Modal.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";
@@ -136,17 +121,19 @@ const props = defineProps([
   "warehouses",
   "filters",
   "totalWarehouse",
-  "totalEmptyWarehouse",
 ]);
 
 const warehouses = computed(() => props.warehouses);
 
-const form = reactive({
-  name: null,
-  address: null,
-});
 
 const search = ref(props.filters.search);
+const totalEmptyWarehouse = ref();
+
+onMounted(() => {
+  axios.get("/warehouse-empty-total").then(function (response) {
+    totalEmptyWarehouse.value = response.data;
+  });
+});
 
 watch(search, (value) => {
   Inertia.get(

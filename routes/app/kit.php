@@ -27,3 +27,5 @@ Route::resource('/kit-image', KitImageController::class)->only([
 Route::resource('/kit-operation', KitOperationController::class)->only([
     'update', 'store', 'destroy'
 ]);
+
+Route::get('/kit-data', [KitController::class, 'data']);

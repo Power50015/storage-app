@@ -47,9 +47,14 @@ use App\Models\Transfer\TransferAttachment;
 use App\Models\Transfer\TransferContent;
 use App\Models\Transfer\TransferKit;
 use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseAttachment;
+use App\Models\Warehouse\WarehouseImage;
+use App\Models\Warehouse\WarehouseNote;
 use App\Models\Warehouse\WarehouseStock;
 use App\Models\Warehouse\WarehouseStockAttachment;
 use App\Models\Warehouse\WarehouseStockContent;
+use App\Models\Warehouse\WarehouseStockImage;
+use App\Models\Warehouse\WarehouseStockNote;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -277,11 +282,47 @@ class User extends Authenticatable
         return $this->hasMany(Warehouse::class);
     }
     /**
+     * Get the Warehouse for the user.
+     */
+    public function warehouse_notes()
+    {
+        return $this->hasMany(WarehouseNote::class);
+    }
+    /**
+     * Get the Warehouse for the user.
+     */
+    public function warehouse_images()
+    {
+        return $this->hasMany(WarehouseImage::class);
+    }
+    /**
+     * Get the Warehouse for the user.
+     */
+    public function warehouse_attachments()
+    {
+        return $this->hasMany(WarehouseAttachment::class);
+    }
+    /**
      * Get the WarehouseStock for the user.
      */
     public function warehouse_stocks()
     {
         return $this->hasMany(WarehouseStock::class);
+    }
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function warehouse_stock_images()
+    {
+        return $this->hasMany(WarehouseStockImage::class);
+    }
+
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function warehouse_stock_notes()
+    {
+        return $this->hasMany(WarehouseStockNote::class);
     }
     /**
      * Get the WarehouseStockAttachment for the user.

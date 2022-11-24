@@ -35,9 +35,7 @@ class WarehouseStockController extends Controller
     public function create()
     {
         return Inertia::render('WarehouseStock/Create', [
-            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "warehouses" => Warehouse::all(),
-            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
         ]);
     }
 
@@ -83,7 +81,33 @@ class WarehouseStockController extends Controller
      */
     public function show(WarehouseStock $warehouseStock)
     {
-        //
+        return Inertia::render('WarehouseStock/Show', [
+            "warehouseStock" => WarehouseStock::with(
+                'warehouse',
+                'user',
+                'warehouse_stock_contents',
+                'kit_stocks',
+                'warehouse_stock_contents.product',
+                'warehouse_stock_contents.product.product_category',
+                'warehouse_stock_contents.product.product_type',
+                'warehouse_stock_contents.product.product_brand',
+                'warehouse_stock_contents.product.product_collection',
+                'warehouse_stock_contents.product.product_model',
+                'warehouse_stock_contents.product.product_color',
+                'warehouse_stock_contents.product.product_material',
+                'warehouse_stock_contents.product.product_country',
+                'kit_stocks.kit',
+                'kit_stocks.kit.product',
+                'kit_stocks.kit.product.product_category',
+                'kit_stocks.kit.product.product_type',
+                'kit_stocks.kit.product.product_brand',
+                'kit_stocks.kit.product.product_collection',
+                'kit_stocks.kit.product.product_model',
+                'kit_stocks.kit.product.product_color',
+                'kit_stocks.kit.product.product_material',
+                'kit_stocks.kit.product.product_country'
+            )->where('id', $warehouseStock->id)->get(),
+        ]);
     }
 
     /**
@@ -94,7 +118,12 @@ class WarehouseStockController extends Controller
      */
     public function edit(WarehouseStock $warehouseStock)
     {
-        //
+        return Inertia::render('WarehouseStock/Create', [
+            "warehouses" => Warehouse::all(),
+            "warehouseStock" => $warehouseStock,
+            "warehouseStockContent" => WarehouseStockContent::where('warehouse_stock_id', $warehouseStock->id)->get(),
+            "kitStock" => KitStock::where('warehouse_stock_id', $warehouseStock->id)->get(),
+        ]);
     }
 
     /**
@@ -106,7 +135,26 @@ class WarehouseStockController extends Controller
      */
     public function update(UpdateWarehouseStockRequest $request, WarehouseStock $warehouseStock)
     {
-        //
+        $warehouseStock->title = $request->title;
+        $warehouseStock->warehouse_id = $request->warehouses;
+        WarehouseStockContent::where('warehouse_stock_id', $warehouseStock['id'])->delete();
+        // Save The Content Of Incoming Invoice
+        for ($i = 0; $i <  count($request["content"]); $i++) {
+            WarehouseStockContent::create(array_merge(
+                $request["content"][$i],
+                ['warehouse_stock_id' => $warehouseStock['id'], 'user_id' => auth()->user()->id]
+            ));
+        }
+        KitStock::where('warehouse_stock_id', $warehouseStock['id'])->delete();
+        // Save The Kit Of Incoming Invoice
+        for ($i = 0; $i <  count($request["kit"]); $i++) {
+            KitStock::create(array_merge(
+                $request["kit"][$i],
+                ['warehouse_stock_id' => $warehouseStock['id'], 'user_id' => auth()->user()->id]
+            ));
+        }
+        $warehouseStock->save();
+        return Redirect::back();
     }
 
     /**

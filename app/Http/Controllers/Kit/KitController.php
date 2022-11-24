@@ -289,4 +289,40 @@ class KitController extends Controller
 
         return $warehousesData;
     }
+    /**
+     * Get All Data of the Kit
+     */
+    public function data()
+    {
+        if (Request::input('id')) {
+            return Kit::with(
+                [
+                    'product',
+                    'product.product_country',
+                    'product.product_material',
+                    'product.product_color',
+                    'product.product_model',
+                    'product.product_collection',
+                    'product.product_brand',
+                    'product.product_type',
+                    'product.product_category'
+                ]
+            )->where('id', Request::input('id'))->get();
+        }
+        return Kit::query()->with(
+            [
+                'product',
+                'product.product_country',
+                'product.product_material',
+                'product.product_color',
+                'product.product_model',
+                'product.product_collection',
+                'product.product_brand',
+                'product.product_type',
+                'product.product_category'
+            ]
+        )->when(Request::input('search'), function ($query, $search) {
+            $query->where('title', 'like', "%{$search}%");
+        })->paginate(10)->withQueryString();
+    }
 }

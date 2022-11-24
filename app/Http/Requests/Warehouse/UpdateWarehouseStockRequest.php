@@ -13,7 +13,7 @@ class UpdateWarehouseStockRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,32 @@ class UpdateWarehouseStockRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'warehouses' => 'required',
+            'content' => $this->request->all()["kit"] == [] ? 'required' : '',
+            'content.*.product_id' => $this->request->all()["kit"] == [] ? 'required|numeric' : '',
+            'content.*.quantity' => $this->request->all()["kit"] == [] ? 'required|numeric|min:1' : '',
+            'kit' => $this->request->all()["content"] == [] ? 'required' : '',
+            'kit.*.kit_id' => $this->request->all()["content"] == [] ? 'required|numeric' : '',
+            'kit.*.quantity' => $this->request->all()["content"] == [] ?  'required|numeric|min:1' : '',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'title.required' => 'يجب إدخال البند',
+            'warehouses.required' => 'يجب إدخال المخزن  ',
+            'content.*' => 'يجب إدخال محتوى المخزون',
+            'content.*.product_id.*' => 'يجب إدخال المنتجات للمخزون',
+            'content.*.quantity.*' =>  'يجب إدخال كميه المنتج فى المخزون',
+            'kit.*' => 'يجب إدخال محتوى المخزون',
+            'kit.*.kit_id.*' => 'يجب إدخال المنتجات للمخزون',
+            'kit.*.quantity.*' =>  'يجب إدخال كميه المنتج فى المخزون',
         ];
     }
 }

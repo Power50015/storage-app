@@ -23,6 +23,7 @@ use App\Models\People\People;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PeopleController extends Controller
@@ -93,9 +94,11 @@ class PeopleController extends Controller
      * @param  \App\Models\People  $people
      * @return \Illuminate\Http\Response
      */
-    public function edit(People $people)
+    public function edit($people)
     {
-        dd($people->id);
+        return Inertia::render('People/Create', [
+            "people" => People::where('id', $people)->get(),
+        ]);
     }
 
     /**
@@ -105,9 +108,19 @@ class PeopleController extends Controller
      * @param  \App\Models\People  $people
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePeopleRequest $request, People $people)
+    public function update(UpdatePeopleRequest $request, $people)
     {
-        //
+        $People = People::find($people);
+        $People->name = $request->name;
+        $People->address = $request->address;
+        $People->phone = $request->phone;
+        if ($request->hasFile('logo')) {
+            if ($request->old_image == "no_image.png")
+                Storage::delete("public/" . $request->old_image);
+            $People->logo = $request->file('logo')->store('image/people', 'public');
+        }
+        $People->save();
+        return Redirect::route('people.show', $People->id);
     }
 
     /**
@@ -444,7 +457,7 @@ class PeopleController extends Controller
                 $actionData->push($CreditorPay[$key]);
             }
         }
-        
+
         $actionData = $actionData->sortByDesc('date')->paginate();
 
         return $actionData;

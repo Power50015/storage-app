@@ -30,9 +30,11 @@
           </div>
         </div>
         <ul v-if="openState" @scroll="handleScroll" ref="scrollComponent">
-          <template v-if="products.length == 0">
-            <li>لا يوجد بيانات</li>
-          </template>
+          <template v-if="products.length == 0 && !loading">
+            <li>لا يوجد بيانات</li> </template
+          ><template v-else-if="products.length == 0 && loading">
+            جاى تحميل البيانات ....</template
+          >
           <template v-else>
             <li
               v-for="option in products"
@@ -74,7 +76,7 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const select = ref(props.modelValue);
-
+const loading = ref(true);
 onMounted(() => {
   select.value = props.modelValue;
   axios
@@ -101,6 +103,7 @@ onMounted(() => {
         if (props.modelValue == item.id) {
           placeholderText.value = name;
         }
+        loading.value = false;
       });
     });
 });

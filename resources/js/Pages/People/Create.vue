@@ -1,11 +1,12 @@
 <template>
   <AppLayout title="الشركات">
     <FormSection
-      title="إضافه شركه"
-      btnTitle="حفظ الشركه"
+      :title="formText.title"
+      :btnTitle="formText.btnTitle"
       :formData="form"
-      formRoute="people.store"
-      toastMsg="تم تسجيل الشركه"
+      :formRoute="form.route"
+      :toastMsg="formText.formText"
+      :toastDescription="form.title"
     >
       <!-- People Name -->
       <InputText
@@ -14,7 +15,7 @@
         :error="errors.name"
         :require="true"
       />
-    
+
       <!-- People Phone -->
       <InputPhone
         v-model="form.phone"
@@ -59,8 +60,6 @@ const form = reactive({
   old_image: props.people ? props.people[0].logo : null,
 });
 
-
-
 if (props.people) {
   provide(
     "breadcrumb",
@@ -71,7 +70,11 @@ if (props.people) {
         linkTitle: "الشركات",
         linkRoute: "people.index",
       },
-      { index: 2, linkTitle: "تعديل  الشركه : " + props.people[0].title, linkRoute: "#" },
+      {
+        index: 2,
+        linkTitle: "تعديل  الشركه : " + props.people[0].title,
+        linkRoute: "#",
+      },
     ])
   );
 } else {
@@ -93,5 +96,4 @@ const formText = reactive({
   btnTitle: props.people ? "تعديل الشركه" : "إضافه شركه",
   formText: props.people ? "تم تعديل الشركه" : "تم أضافه الشركه",
 });
-
 </script>

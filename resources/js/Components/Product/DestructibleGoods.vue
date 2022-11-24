@@ -42,7 +42,6 @@ const rowData = reactive([]);
 const goods = reactive([]);
 const inputText = ref();
 function getGoodsData(reload = false, page = 1) {
-  console.log(25345342534543);
   if (reload) goods.length = 0;
   if (reload) rowData.length = 0;
   axios

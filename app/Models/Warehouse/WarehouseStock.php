@@ -50,5 +50,20 @@ class WarehouseStock extends Model
     {
         return $this->hasMany(KitStock::class);
     }
+
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function warehouse_stock_images()
+    {
+        return $this->hasMany(WarehouseStockImage::class);
+    }
    
+    /**
+     * Get the Debtor for the DebtorAttachment.
+     */
+    public function warehouse_stock_notes()
+    {
+        return $this->hasMany(WarehouseStockNote::class);
+    }
 }

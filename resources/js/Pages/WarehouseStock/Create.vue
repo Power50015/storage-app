@@ -1,11 +1,12 @@
 <template>
   <AppLayout title="إضافه مخزون">
     <FormSection
-      title="إضافه مخزون"
-      btnTitle="حفظ المخزون"
+    :title="formText.title"
+      :btnTitle="formText.btnTitle"
       :formData="form"
-      formRoute="warehouse-stock.store"
-      toastMsg="تم تسجيل المخزون"
+      :formRoute="form.route"
+      :toastMsg="formText.formText"
+      :toastDescription="form.title"
     >
       <FormSelect
         v-model="form.warehouses"
@@ -27,10 +28,9 @@
         </h2>
         <div v-for="(i, index) in form.content" :key="index" class="mb-3">
           <!-- product -->
-          <FormSelect
+          <select-product
             v-model="form.content[index].product_id"
-            title="المنتج"
-            :options="products"
+            title=" المنتج"
           />
           <div class="w-full flex items-end justify-around">
             <!-- Quanty -->
@@ -62,11 +62,7 @@
         </h2>
         <div v-for="(i, index) in form.kit" :key="index" class="mb-3">
           <!-- kit -->
-          <FormSelect
-            v-model="form.kit[index].kit_id"
-            title="قطعه الغيار"
-            :options="kits"
-          />
+          <select-kits v-model="form.kit[index].kit_id" title=" قطعه الغيار" />
           <div class="w-full flex items-end justify-around">
             <!-- Quanty -->
             <InputNumber
@@ -104,90 +100,23 @@ import FormSelect from "@/Forms/FormSelect.vue";
 import InputNumber from "@/Forms/InputNumber.vue";
 import BtnDanger from "@/Components/Buttons/BtnDanger.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
+import SelectProduct from "@/Forms/SelectProduct.vue";
+import SelectKits from "@/Forms/SelectKits.vue";
 
-provide("title", "إضافه مخزون");
-provide(
-  "breadcrumb",
-  readonly([
-    { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
-    {
-      index: 1,
-      linkTitle: "المخازن",
-      linkRoute: "warehouse.index",
-    },
-    {
-      index: 2,
-      linkTitle: "إضافه مخزون",
-      linkRoute: "#",
-    },
-  ])
-);
-
-const props = defineProps(["errors", "products", "warehouses", "kits"]);
-
-const products = computed(() => {
-  return props.products.map((item) => {
-    return {
-      index: item.id,
-      image: item.image,
-      label:
-        item.name +
-        (item.product_collection ? " | " + item.product_collection.name : "") +
-        (item.product_model ? " | " + item.product_model.name : "") +
-        (item.product_brand ? " | " + item.product_brand.name : "") +
-        (item.product_category ? " | " + item.product_category.name : "") +
-        (item.product_type ? " | " + item.product_type.name : "") +
-        (item.product_color ? " | " + item.product_color.name : "") +
-        (item.product_material ? " | " + item.product_material.name : "") +
-        (item.product_country ? " | " + item.product_country.name : ""),
-    };
-  });
-});
-const kits = computed(() => {
-  return props.kits.map((item) => {
-    return {
-      index: item.id,
-      image: item.image,
-      label:
-        item.title +
-        (item.product ? " | " + item.product.name : "") +
-        (item.product && item.product.product_collection
-          ? " | " + item.product.product_collection.name
-          : "") +
-        (item.product && item.product.product_model
-          ? " | " + item.product.product_model.name
-          : "") +
-        (item.product && item.product.product_brand
-          ? " | " + item.product.product_brand.name
-          : "") +
-        (item.product && item.product.product_category
-          ? " | " + item.product.product_category.name
-          : "") +
-        (item.product && item.product.product_type
-          ? " | " + item.product.product_type.name
-          : "") +
-        (item.product && item.product.product_color
-          ? " | " + item.product.product_color.name
-          : "") +
-        (item.product && item.product.product_material
-          ? " | " + item.product.product_material.name
-          : "") +
-        (item.product && item.product.product_country
-          ? " | " + item.product.product_country.name
-          : ""),
-    };
-  });
-});
+const props = defineProps(["errors", "warehouses", "warehouseStock","warehouseStockContent","kitStock"]);
 
 const options = props.warehouses.map((item) => {
   return { label: item.name, index: item.id };
 });
 
 const form = reactive({
-  title: null,
-  warehouses: null,
-  content: [],
-  kit: [],
+  id: props.warehouseStock ? props.warehouseStock.id : null,
+  _method: props.warehouseStock ? "patch" : "post",
+  route: props.warehouseStock ? "warehouse-stock.update" : "warehouse-stock.store",
+  title: props.warehouseStock.title,
+  warehouses: props.warehouseStock.warehouse_id,
+  content: props.warehouseStockContent,
+  kit: props.kitStock,
 });
 
 function pushToContent() {
@@ -205,4 +134,38 @@ function pushToKit() {
     quantity: 1,
   });
 }
+
+if (props.warehouse) {
+  provide(
+    "breadcrumb",
+    readonly([
+      { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+      {
+        index: 1,
+        linkTitle: "المخزون",
+        linkRoute: "warehouse.index",
+      },
+      {
+        index: 2,
+        linkTitle: "تعديل المخزون : " + props.warehouseStock.title,
+        linkRoute: "#",
+      },
+    ])
+  );
+} else {
+  provide(
+    "breadcrumb",
+    readonly([
+      { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
+      { index: 1, linkTitle: "المخزون", linkRoute: "#" },
+    ])
+  );
+}
+
+
+const formText = reactive({
+  title: props.warehouseStock ? "تعديل بيانات  المخزون" : "إضافه مخزون ",
+  btnTitle: props.warehouseStock ? "تعديل المخزون" : "إضافه مخزون",
+  formText: props.warehouseStock ? "تم تعديل المخزون" : "تم أضافه مخزون",
+});
 </script>

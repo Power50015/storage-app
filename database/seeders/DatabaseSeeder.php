@@ -66,7 +66,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TransferSeeder::class);
         $this->call(KitOperationSeeder::class);
         $this->call(DestructibleGoodsSeeder::class);
-
         $this->call(DebtorSeeder::class);
         $this->call(DebtorPaySeeder::class);
         $this->call(CreditorSeeder::class);

@@ -45,7 +45,7 @@ class PeopleImageController extends Controller
     public function store(StorePeopleImageRequest $request)
     {
         PeopleImage::create([
-            'image' =>  $request["image"]->store('image/peoples', 'public'),
+            'image' =>  $request["image"]->store('image/people', 'public'),
             'people_id' => $request->id,
             'user_id' => Auth::id()
         ]);

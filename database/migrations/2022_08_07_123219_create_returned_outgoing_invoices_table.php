@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->timestamp('date')->useCurrent();
             $table->integer('quantity');
+            $table->decimal('price', $precision = 11, $scale = 2);
             $table->foreignId('outgoing_invoice_id');
             $table->foreignId('product_id');
             $table->foreignId('user_id');
