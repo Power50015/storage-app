@@ -119,7 +119,46 @@ onMounted(() => {
       });
     });
 });
-onUpdated(() => (select.value = props.modelValue));
+onUpdated(() => {
+  select.value = props.modelValue;
+  axios
+    .get("/kit-data", {
+      params: {
+        id: props.modelValue,
+      },
+    })
+    .then(function (response) {
+      rowData.length = 0;
+      if (inputText.value) products.length = 0;
+      rowData.push(response.data); // The row Data
+      response.data.forEach((item) => {
+        let name = item.title;
+        if (item.product) {
+          name = name + " | " + item.product.name;
+          if (item.product.product_collection)
+            name = name + " | " + item.product.product_collection.name;
+          if (item.product.product_model)
+            name = name + " | " + item.product.product_model.name;
+          if (item.product.product_brand)
+            name = name + " | " + item.product.product_brand.name;
+          if (item.product.product_category)
+            name = name + " | " + item.product.product_category.name;
+          if (item.product.product_type)
+            name = name + " | " + item.product.product_type.name;
+          if (item.product.product_color)
+            name = name + " | " + item.product.product_color.name;
+          if (item.product.product_material)
+            name = name + " | " + item.product.product_material.name;
+          if (item.product.product_country)
+            name = name + " | " + item.product.product_country.name;
+        }
+        if (props.modelValue == item.id) {
+          placeholderText.value = name;
+        }
+        loading.value = false;
+      });
+    });
+});
 onUnmounted(() => (select.value = props.modelValue));
 
 // Select Code
@@ -226,7 +265,7 @@ input {
                 rounded-md;
 }
 ul {
-  @apply relative
+  @apply absolute
                 w-full
                 max-h-56
                 overflow-y-scroll

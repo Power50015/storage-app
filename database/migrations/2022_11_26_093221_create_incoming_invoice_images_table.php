@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('incoming_invoice_attachments', function (Blueprint $table) {
+        Schema::create('incoming_invoice_images', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title');
-            $table->text('attachment');
-            $table->foreignId('user_id');
+            $table->text('image');
             $table->foreignId('incoming_invoice_id');
+            $table->foreignId('user_id');
         });
     }
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('incoming_invoice_attachments');
+        Schema::dropIfExists('incoming_invoice_images');
     }
 };

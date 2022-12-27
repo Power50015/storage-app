@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
 use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceAttachmentRequest;
 use App\Http\Requests\IncomingInvoice\UpdateIncomingInvoiceAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class IncomingInvoiceAttachmentController extends Controller
 {
@@ -16,7 +20,14 @@ class IncomingInvoiceAttachmentController extends Controller
      */
     public function index()
     {
-        //
+        $file = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "attachment" => IncomingInvoiceAttachment::with('user')->latest()->where('incoming_invoice_id', $file)->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,14 @@ class IncomingInvoiceAttachmentController extends Controller
      */
     public function store(StoreIncomingInvoiceAttachmentRequest $request)
     {
-        //
+        $attachment_path = $request["attachment"]->store('attachment/incoming_invoice', 'public');
+        IncomingInvoiceAttachment::create([
+            'attachment' =>  $attachment_path,
+            'incoming_invoice_id' => $request->id,
+            'title' => $request->title,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +100,9 @@ class IncomingInvoiceAttachmentController extends Controller
      */
     public function destroy(IncomingInvoiceAttachment $incomingInvoiceAttachment)
     {
-        //
+        Storage::delete("public/" . $incomingInvoiceAttachment["attachment"]);
+        $incomingInvoiceAttachment->delete();
+
+        return Redirect::back();
     }
 }

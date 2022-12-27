@@ -45,12 +45,26 @@ class IncomingInvoice extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
-    /**
-     * Get the IncomingInvoiceAttachment for the IncomingInvoice.
+     /**
+     * Get the IncomingInvoiceAttachment for the user.
      */
     public function incoming_invoice_attachments()
     {
         return $this->hasMany(IncomingInvoiceAttachment::class);
+    }
+    /**
+     * Get the IncomingInvoiceNote for the user.
+     */
+    public function incoming_invoice_notes()
+    {
+        return $this->hasMany(IncomingInvoiceNote::class);
+    }
+    /**
+     * Get the IncomingInvoiceImage for the user.
+     */
+    public function incoming_invoice_images()
+    {
+        return $this->hasMany(IncomingInvoiceImage::class);
     }
 
     /**

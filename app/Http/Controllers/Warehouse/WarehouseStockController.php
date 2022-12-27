@@ -12,6 +12,7 @@ use App\Models\Product\Product;
 use App\Models\Warehouse\KitStock;
 use App\Models\Warehouse\Warehouse;
 use App\Models\Warehouse\WarehouseStockContent;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -51,6 +52,7 @@ class WarehouseStockController extends Controller
         $invice = WarehouseStock::create([
             'title' => $request->title,
             'warehouse_id' => $request->warehouses,
+            'date' => Carbon::parse($request->date),
             'user_id' => auth()->user()->id,
         ]);
 
@@ -70,7 +72,7 @@ class WarehouseStockController extends Controller
                 ['warehouse_stock_id' => $invice['id'], 'user_id' => auth()->user()->id]
             ));
         }
-        return redirect()->route('warehouse.index');
+        return redirect()->route('warehouse.show',$invice['id']);
     }
 
     /**

@@ -519,61 +519,6 @@
         </div>
       </div>
     </div>
-    <!-- Attachment-->
-    <div class="mb-5 print:hidden">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div
-          class="
-            dark:bg-[#1e1e2d]
-            bg-white
-            dark:text-white
-            text-black
-            overflow-hidden
-            shadow-xl
-            rounded-md
-            p-4
-          "
-        >
-          <h2>الملفات المرفقه</h2>
-          <table
-            class="border border-dashed border-slate-700 w-full text-right"
-            id="xyz"
-          >
-            <thead>
-              <tr>
-                <th
-                  class="
-                    border border-dashed border-slate-700
-                    py-3
-                    px-3
-                    font-bold
-                  "
-                >
-                  الملف
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="attachment in incoming_invoice_attachment"
-                :key="attachment.index"
-                class=""
-              >
-                <td class="border border-dashed border-slate-700 py-3 px-3">
-                  <a
-                    :href="`/storage/${attachment.attachment}`"
-                    class="hover:text-[#0095e8]"
-                    target="_blank"
-                  >
-                    {{ attachment.attachment }}
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
   </AppLayout>
 </template>
 

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamp('date')->useCurrent();
             $table->foreignId('cash_id')->nullable();
             $table->foreignId('user_id');
-            $table->foreignId('people_id');
+            $table->foreignId('people_id')->nullable();
             $table->foreignId('warehouse_id');
             $table->decimal('total', $precision = 11, $scale = 2)->default(0.00);
         });

@@ -4,9 +4,9 @@ namespace App\Http\Requests\IncomingInvoice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreIncomingInvoiceAttachmentRequest extends FormRequest
+class StoreIncomingInvoiceNoteRequest extends FormRequest
 {
-    /**
+     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -24,8 +24,7 @@ class StoreIncomingInvoiceAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'attachment' => 'required|file|mimes:csv,txt,jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls'
+            'note' => 'required',
         ];
     }
     /**
@@ -37,8 +36,7 @@ class StoreIncomingInvoiceAttachmentRequest extends FormRequest
     {
 
         return [
-            'title.*' => 'يجب إدخال عنوان ',
-            'attachment.*' => 'يجب إدخال الملف ',
+            'note.required' => 'يجب إدخال الملاحظه .',
         ];
     }
 }

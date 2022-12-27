@@ -63,11 +63,9 @@ class IncomingInvoiceController extends Controller
     public function create()
     {
         return Inertia::render('IncomingInvoice/Create', [
-            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
-            "suppliers" => People::orderByDesc("type")->get(),
-            "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
+            "suppliers" => People::all(),
         ]);
     }
 
@@ -79,6 +77,13 @@ class IncomingInvoiceController extends Controller
      */
     public function store(StoreIncomingInvoiceRequest $request)
     {
+        $totalPrice = 0;
+        if (!is_null($request["content"]))
+            for ($i = 0; $i <  count($request["content"]); $i++)
+                $totalPrice = $totalPrice + ($request["content"][$i]["price"] * $request["content"][$i]["quantity"]);
+        if (!is_null($request["kit"]))
+            for ($i = 0; $i <  count($request["kit"]); $i++)
+                $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
 
         // Save the Incoming Invoice
         $invice = IncomingInvoice::create([
@@ -86,35 +91,23 @@ class IncomingInvoiceController extends Controller
             'pay_type' => $request->pay_type,
             'cash_id' => $request->cash_type,
             'discount' => $request->discount,
-            'date' => $request->date,
-            'people_id' => $request->supplier,
-            'warehouse_id' => $request->warehouses,
+            'date' => Carbon::parse($request->date),
+            'people_id' => $request->people_id,
+            'warehouse_id' => $request->warehouse_id,
+            'total' => $totalPrice - $request->discount,
             'user_id' => Auth::id()
         ]);
-
-        // Save Attachment Of Incoming Invoice
-        if (!is_null($request["attachment"]))
-            for ($i = 0; $i <  count($request["attachment"]); $i++) {
-                if ($request["attachment"][$i]["attachment"] != null) {
-                    $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
-                    IncomingInvoiceAttachment::create([
-                        'attachment' =>  $attachment_path,
-                        'incoming_invoice_id' => $invice['id'],
-                        'user_id' => Auth::id()
-                    ]);
-                }
-            }
-
 
         // Save The Content Of Incoming Invoice
         if (!is_null($request["content"]))
             for ($i = 0; $i <  count($request["content"]); $i++) {
                 IncomingInvoiceContent::create([
-                    'product_id' => $request["content"][$i]["product"],
+                    'product_id' => $request["content"][$i]["product_id"],
                     'price' => $request["content"][$i]["price"],
                     'quantity' => $request["content"][$i]["quantity"],
                     'incoming_invoice_id' => $invice['id'],
-                    'user_id' => Auth::id()
+                    'user_id' => Auth::id(),
+                    'people_id' => $request->people_id,
                 ]);
             }
 
@@ -123,15 +116,16 @@ class IncomingInvoiceController extends Controller
         if (!is_null($request["kit"]))
             for ($i = 0; $i <  count($request["kit"]); $i++) {
                 IncomingInvoiceKit::create([
-                    'kit_id' => $request["kit"][$i]["kit"],
+                    'kit_id' => $request["kit"][$i]["kit_id"],
                     'quantity' => $request["kit"][$i]["quantity"],
                     'price' => $request["kit"][$i]["price"],
                     'incoming_invoice_id' => $invice['id'],
+                    'people_id' => $request->people_id,
                     'user_id' => Auth::id()
                 ]);
             }
 
-        return Redirect::back();
+        return redirect()->route('incoming-invoice.show', $invice['id']);
     }
 
     /**
@@ -142,14 +136,13 @@ class IncomingInvoiceController extends Controller
      */
     public function show($incomingInvoice)
     {
-        // return Inertia::render('IncomingInvoice/ShowIncomingInvoice', [
-        //     "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
-        //     "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        //     "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
-        //     "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
-        //     "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        //     "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        // ]);
+        return Inertia::render('IncomingInvoice/Show', [
+            "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
+            "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
+            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+        ]);
     }
 
     /**
@@ -161,18 +154,14 @@ class IncomingInvoiceController extends Controller
     public function edit($incomingInvoice)
     {
 
-        // return Inertia::render('IncomingInvoice/EditIncomingInvoice', [
-        //     "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
-        //     "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        //     "incomingInvoiceAttachment" => IncomingInvoiceAttachment::where('incoming_invoice_id', $incomingInvoice)->get(),
-        //     "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        //     "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
-        //     "cash" => Cash::all(),
-        //     "warehouses" => Warehouse::all(),
-        //     "suppliers" => People::orderByDesc("type")->get(),
-        //     "kits" => Kit::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->get(),
-        //     "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-        // ]);
+        return Inertia::render('IncomingInvoice/Create', [
+            "invoice" => IncomingInvoice::where('id', $incomingInvoice)->get(),
+            "invoiceContent" => IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice)->get(),
+            "invoiceKit" => IncomingInvoiceKit::where('incoming_invoice_id', $incomingInvoice)->get(),
+            "cash" => Cash::all(),
+            "warehouses" => Warehouse::all(),
+            "suppliers" => People::all(),
+        ]);
     }
 
     /**
@@ -184,101 +173,53 @@ class IncomingInvoiceController extends Controller
      */
     public function update(UpdateIncomingInvoiceRequest $request, IncomingInvoice $incomingInvoice)
     {
-        /*
-        // Edit the Incoming Invoice
-        $invice = DB::table('incoming_invoices')->where('id', $incomingInvoice->id)->update([
-            'number' => $request->number,
-            'pay_type' => $request->pay_type,
-            'cash_id' => $request->cash_type,
-            'discount' => $request->discount,
-            'date' => $request->date,
-            'people_id' => $request->supplier,
-            'warehouse_id' => $request->warehouses,
-        ]);
+        $totalPrice = 0;
+        if (!is_null($request["content"]))
+            for ($i = 0; $i <  count($request["content"]); $i++)
+                $totalPrice = $totalPrice + ($request["content"][$i]["price"] * $request["content"][$i]["quantity"]);
+        if (!is_null($request["kit"]))
+            for ($i = 0; $i <  count($request["kit"]); $i++)
+                $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
+        $incomingInvoice->number = $request->number;
+        $incomingInvoice->pay_type = $request->pay_type;
+        $incomingInvoice->cash_id = $request->cash_id;
+        $incomingInvoice->discount = $request->discount;
+        $incomingInvoice->date = $request->date;
+        $incomingInvoice->total = $totalPrice - $request->discount;
+        $incomingInvoice->people_id = $request->people_id;
+        $incomingInvoice->warehouse_id = $request->warehouse_id;
+        $incomingInvoice->save();
+        IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice->id)->delete();
+        IncomingInvoiceKit::where('incoming_invoice_id', $incomingInvoice->id)->delete();
 
-        // Save New Attachment Of Incoming Invoice
-
-        //Delete The old items removed
-
-        if (is_array($request["oldAttachment"])) {
-
-            $oldAttachmentId = [];
-            for ($i = 0; $i <  count($request["oldAttachment"]); $i++) {
-                $oldAttachmentId[] = $request["oldAttachment"][$i]["id"];
-            }
-            $item = IncomingInvoiceAttachment::whereNotIn('id', $oldAttachmentId)->where('incoming_invoice_id', $incomingInvoice->id)->get();
-            for ($i = 0; $i <  count($item); $i++) {
-                Storage::delete("public/" . $item[$i]["attachment"]);
-                $item[$i]->delete();
-            }
-        }
-
-        for ($i = 0; $i <  count($request["attachment"]); $i++) {
-            if ($request["attachment"][$i]["attachment"] != null) {
-                $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/incomingInvoice', 'public');
-                IncomingInvoiceAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'incoming_invoice_id' => $incomingInvoice->id,
-                    'user_id' => Auth::id()
-                ]);
-            } else {
-                IncomingInvoiceAttachment::create([
-                    'attachment' =>  $attachment_path,
-                    'incoming_invoice_id' => $incomingInvoice->id,
-                    'user_id' => Auth::id()
-                ]);
-            }
-        }
-
-        // Save The Content Of Incoming Invoice.
-        IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice->id)->delete(); // Delete Data
-
-        for ($i = 0; $i <  count($request["content"]); $i++) {
-            if ($request["content"][$i]["quantity"] > 0)
+        // Save The Content Of Incoming Invoice
+        if (!is_null($request["content"]))
+            for ($i = 0; $i <  count($request["content"]); $i++) {
                 IncomingInvoiceContent::create([
-                    'product_id' => $request["content"][$i]["product"],
+                    'product_id' => $request["content"][$i]["product_id"],
                     'price' => $request["content"][$i]["price"],
                     'quantity' => $request["content"][$i]["quantity"],
-                    'incoming_invoice_id' => $incomingInvoice->id,
-                    'user_id' => Auth::id()
+                    'incoming_invoice_id' => $incomingInvoice['id'],
+                    'user_id' => Auth::id(),
+                    'people_id' => $request->people_id,
                 ]);
-        }
-        
-        for ($i = 0; $i <  count($request["oldContent"]); $i++) {
-            if ($request["oldContent"][$i]["quantity"] > 0)
-                IncomingInvoiceContent::create([
-                    'product_id' => $request["oldContent"][$i]["product_id"],
-                    'price' => $request["oldContent"][$i]["price"],
-                    'quantity' => $request["oldContent"][$i]["quantity"],
-                    'incoming_invoice_id' => $incomingInvoice->id,
-                    'user_id' => Auth::id()
-                ]);
-        }
-        
-        // Save The Kit Of Incoming Invoice.
-        IncomingInvoiceKit::where('incoming_invoice_id', $incomingInvoice->id)->delete();
-        for ($i = 0; $i <  count($request["kit"]); $i++) {
-            if ($request["kit"][$i]["quantity"] > 0)
+            }
+
+
+        // Save The Kit Of Incoming Invoice
+        if (!is_null($request["kit"]))
+            for ($i = 0; $i <  count($request["kit"]); $i++) {
                 IncomingInvoiceKit::create([
-                    'kit_id' => $request["kit"][$i]["kit"],
+                    'kit_id' => $request["kit"][$i]["kit_id"],
                     'quantity' => $request["kit"][$i]["quantity"],
                     'price' => $request["kit"][$i]["price"],
-                    'incoming_invoice_id' => $incomingInvoice->id,
+                    'incoming_invoice_id' => $incomingInvoice['id'],
+                    'people_id' => $request->people_id,
                     'user_id' => Auth::id()
                 ]);
-        }
-        for ($i = 0; $i <  count($request["oldKit"]); $i++) {
-            if ($request["oldKit"][$i]["quantity"] > 0)
-                IncomingInvoiceKit::create([
-                    'kit_id' => $request["oldKit"][$i]["kit_id"],
-                    'quantity' => $request["oldKit"][$i]["quantity"],
-                    'price' => $request["oldKit"][$i]["price"],
-                    'incoming_invoice_id' => $incomingInvoice->id,
-                    'user_id' => Auth::id()
-                ]);
-        }
+            }
 
-        return Redirect::back();*/
+        return redirect()->route('incoming-invoice.show', $incomingInvoice['id']);
     }
 
     /**

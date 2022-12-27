@@ -14,6 +14,7 @@ class UpdateIncomingInvoiceRequest extends FormRequest
     public function authorize()
     {
         return true;
+        
     }
 
     /**
@@ -25,8 +26,8 @@ class UpdateIncomingInvoiceRequest extends FormRequest
     {
         return [
             'number' => 'required',
-            'supplier' => 'required',
-            'warehouses' => 'required',
+            'people_id' => 'required',
+            'warehouse_id' => 'required',
             'pay_type' => 'required',
             'cash_type' =>'required_if:pay_type,true',
             'discount' => 'numeric',

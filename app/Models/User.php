@@ -11,7 +11,9 @@ use App\Models\Driver\Driver;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
+use App\Models\IncomingInvoice\IncomingInvoiceImage;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
+use App\Models\IncomingInvoice\IncomingInvoiceNote;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Kit\Kit;
@@ -138,6 +140,20 @@ class User extends Authenticatable
     public function incoming_invoice_attachments()
     {
         return $this->hasMany(IncomingInvoiceAttachment::class);
+    }
+    /**
+     * Get the IncomingInvoiceNote for the user.
+     */
+    public function incoming_invoice_notes()
+    {
+        return $this->hasMany(IncomingInvoiceNote::class);
+    }
+    /**
+     * Get the IncomingInvoiceImage for the user.
+     */
+    public function incoming_invoice_images()
+    {
+        return $this->hasMany(IncomingInvoiceImage::class);
     }
     /**
      * Get the IncomingInvoiceContent for the user.

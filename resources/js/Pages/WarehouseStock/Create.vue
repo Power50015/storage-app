@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="إضافه مخزون">
     <FormSection
-    :title="formText.title"
+      :title="formText.title"
       :btnTitle="formText.btnTitle"
       :formData="form"
       :formRoute="form.route"
@@ -26,7 +26,12 @@
         <h2 class="px-3 dark:text-gray-300 title font-bold mb-4">
           محتوى المخزون من المنتجات
         </h2>
-        <div v-for="(i, index) in form.content" :key="index" class="mb-3">
+        <div
+          v-for="(i, index) in form.content"
+          :key="index"
+          class="mb-3"
+          :id="`product-${index}`"
+        >
           <!-- product -->
           <select-product
             v-model="form.content[index].product_id"
@@ -42,11 +47,7 @@
               :require="true"
             />
             <!-- Delete -->
-            <BtnDanger
-              @click="
-                form.content = form.content.filter((item) => item.id != i.id);
-                total();
-              "
+            <BtnDanger @click="remove(i, index, 'content')"
               ><i class="fa-solid fa-xmark"></i
             ></BtnDanger>
           </div>
@@ -73,11 +74,7 @@
               :require="true"
             />
             <!-- Delete -->
-            <BtnDanger
-              @click="
-                form.kit = form.kit.filter((item) => item.id != i.id);
-                total();
-              "
+            <BtnDanger @click="remove(i, index, 'kit')"
               ><i class="fa-solid fa-xmark"></i
             ></BtnDanger>
           </div>
@@ -103,7 +100,13 @@ import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
 import SelectProduct from "@/Forms/SelectProduct.vue";
 import SelectKits from "@/Forms/SelectKits.vue";
 
-const props = defineProps(["errors", "warehouses", "warehouseStock","warehouseStockContent","kitStock"]);
+const props = defineProps([
+  "errors",
+  "warehouses",
+  "warehouseStock",
+  "warehouseStockContent",
+  "kitStock",
+]);
 
 const options = props.warehouses.map((item) => {
   return { label: item.name, index: item.id };
@@ -112,11 +115,16 @@ const options = props.warehouses.map((item) => {
 const form = reactive({
   id: props.warehouseStock ? props.warehouseStock.id : null,
   _method: props.warehouseStock ? "patch" : "post",
-  route: props.warehouseStock ? "warehouse-stock.update" : "warehouse-stock.store",
-  title: props.warehouseStock.title,
-  warehouses: props.warehouseStock.warehouse_id,
-  content: props.warehouseStockContent,
-  kit: props.kitStock,
+  route: props.warehouseStock
+    ? "warehouse-stock.update"
+    : "warehouse-stock.store",
+  title: props.warehouseStock ? props.warehouseStock.title : null,
+  warehouses: props.warehouseStock ? props.warehouseStock.warehouse_id : null,
+  content: props.warehouseStock ? props.warehouseStockContent : [],
+  kit: props.warehouseStock ? props.kitStock : [],
+  date: props.warehouseStock
+    ? new Date(props.warehouseStock.date).toISOString().slice(0, 10)
+    : new Date().toISOString().slice(0, 10),
 });
 
 function pushToContent() {
@@ -162,10 +170,15 @@ if (props.warehouse) {
   );
 }
 
-
 const formText = reactive({
   title: props.warehouseStock ? "تعديل بيانات  المخزون" : "إضافه مخزون ",
   btnTitle: props.warehouseStock ? "تعديل المخزون" : "إضافه مخزون",
   formText: props.warehouseStock ? "تم تعديل المخزون" : "تم أضافه مخزون",
 });
+
+function remove(i, index, content) {
+  let x = form[content];
+  x = form[content].filter((item) => item.id != i.id);
+  form[content] = x;
+}
 </script>

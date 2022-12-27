@@ -3,8 +3,8 @@
     <FromLabel :title="title" :require="require" :error="error" />
     <input
       type="number"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
+      v-model="select"
+      @input="changeData"
       :min="min"
       :max="max"
       :step="step"
@@ -28,7 +28,9 @@
 </template>
   <script setup>
 import FromLabel from "@/Forms/FromLabel.vue";
-defineProps({
+import { ref } from "@vue/reactivity";
+import { onUnmounted } from "@vue/runtime-core";
+const props = defineProps({
   modelValue: { default: "" },
   title: { default: "" },
   error: { default: "" },
@@ -37,6 +39,12 @@ defineProps({
   step: { default: 0.01 },
   max: {},
 });
-defineEmits(["update:modelValue"]);
+const select = ref(props.modelValue);
+const emit = defineEmits(["update:modelValue", "changeData"]); //changeData
+onUnmounted(() => (select.value = props.modelValue));
+function changeData() {
+  emit("update:modelValue", select.value);
+  emit("changeData");
+}
 </script>
   

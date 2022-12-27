@@ -78,38 +78,70 @@ const emit = defineEmits(["update:modelValue"]);
 const select = ref(props.modelValue);
 const loading = ref(true);
 onMounted(() => {
-  select.value = props.modelValue;
-  axios
-    .get("/product-data", {
-      params: {
-        id: props.modelValue,
-      },
-    })
-    .then(function (response) {
-      response.data.forEach((item) => {
-        let name = item.name;
-        if (item.product_collection)
-          name = name + " | " + item.product_collection.name;
-        if (item.product_model) name = name + " | " + item.product_model.name;
-        if (item.product_brand) name = name + " | " + item.product_brand.name;
-        if (item.product_category)
-          name = name + " | " + item.product_category.name;
-        if (item.product_type) name = name + " | " + item.product_type.name;
-        if (item.product_color) name = name + " | " + item.product_color.name;
-        if (item.product_material)
-          name = name + " | " + item.product_material.name;
-        if (item.product_country)
-          name = name + " | " + item.product_country.name;
-        if (props.modelValue == item.id) {
-          placeholderText.value = name;
-        }
-        loading.value = false;
+  if (props.modelValue) {
+    select.value = props.modelValue;
+    axios
+      .get("/product-data", {
+        params: {
+          id: props.modelValue,
+        },
+      })
+      .then(function (response) {
+        response.data.forEach((item) => {
+          let name = item.name;
+          if (item.product_collection)
+            name = name + " | " + item.product_collection.name;
+          if (item.product_model) name = name + " | " + item.product_model.name;
+          if (item.product_brand) name = name + " | " + item.product_brand.name;
+          if (item.product_category)
+            name = name + " | " + item.product_category.name;
+          if (item.product_type) name = name + " | " + item.product_type.name;
+          if (item.product_color) name = name + " | " + item.product_color.name;
+          if (item.product_material)
+            name = name + " | " + item.product_material.name;
+          if (item.product_country)
+            name = name + " | " + item.product_country.name;
+          if (props.modelValue == item.id) {
+            placeholderText.value = name;
+          }
+          loading.value = false;
+        });
       });
-    });
+  }
 });
-onUpdated(() => (select.value = props.modelValue));
+onUpdated(() => {
+  if (props.modelValue) {
+    select.value = props.modelValue;
+    axios
+      .get("/product-data", {
+        params: {
+          id: props.modelValue,
+        },
+      })
+      .then(function (response) {
+        response.data.forEach((item) => {
+          let name = item.name;
+          if (item.product_collection)
+            name = name + " | " + item.product_collection.name;
+          if (item.product_model) name = name + " | " + item.product_model.name;
+          if (item.product_brand) name = name + " | " + item.product_brand.name;
+          if (item.product_category)
+            name = name + " | " + item.product_category.name;
+          if (item.product_type) name = name + " | " + item.product_type.name;
+          if (item.product_color) name = name + " | " + item.product_color.name;
+          if (item.product_material)
+            name = name + " | " + item.product_material.name;
+          if (item.product_country)
+            name = name + " | " + item.product_country.name;
+          if (props.modelValue == item.id) {
+            placeholderText.value = name;
+          }
+          loading.value = false;
+        });
+      });
+  }
+});
 onUnmounted(() => (select.value = props.modelValue));
-
 // Select Code
 // Get Data
 const rowData = reactive([]);
