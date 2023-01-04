@@ -4,7 +4,7 @@ namespace App\Http\Requests\OutgoingInvoice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateReturnedOutgoingInvoiceRequest extends FormRequest
+class StoreOutgoingInvoiceImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class UpdateReturnedOutgoingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => 'required|date',
-            
+            'image' => 'required|file|mimes:jpeg,jpg,png,gif,svg'
         ];
     }
     /**
@@ -35,9 +34,9 @@ class UpdateReturnedOutgoingInvoiceRequest extends FormRequest
      */
     public function messages()
     {
+
         return [
-            'date.required' => 'يجب إدخال تاريخ المرتجع',
-            'date.date' => 'يجب إدخال تاريخ المرتجع',
+            'image.required' => 'يجب إدخال صوره  ',
         ];
     }
 }

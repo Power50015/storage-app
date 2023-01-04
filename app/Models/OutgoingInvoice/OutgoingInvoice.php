@@ -53,6 +53,21 @@ class OutgoingInvoice extends Model
     }
 
     /**
+     * Get the OutgoingInvoiceImage for the user.
+     */
+    public function outgoing_invoice_images()
+    {
+        return $this->hasMany(OutgoingInvoiceImage::class);
+    }
+    /**
+     * Get the OutgoingInvoiceNote for the user.
+     */
+    public function outgoing_invoice_notes()
+    {
+        return $this->hasMany(OutgoingInvoiceNote::class);
+    }
+
+    /**
      * Get the OutgoingInvoiceContent for the OutgoingInvoice.
      */
     public function outgoing_invoice_contents()

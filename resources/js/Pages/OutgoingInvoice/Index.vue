@@ -52,7 +52,7 @@
           >
             <td class="py-3 px-6 whitespace-nowrap text-right">
               <Link
-                :href="route('incoming-invoice.show', item.id)"
+                :href="route('outgoing-invoice.show', item.id)"
                 class="data hover:text-[#009ef7]"
               >
                 <h3 class="pb-2">رقم الفاتوره : {{ item.id }}</h3>

@@ -24,9 +24,8 @@ class UpdateReturnedIncomingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'Rdate' => 'required|date',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'date' => 'required|date',
+            
         ];
     }
     /**
@@ -37,8 +36,8 @@ class UpdateReturnedIncomingInvoiceRequest extends FormRequest
     public function messages()
     {
         return [
-            'Rdate.required' => 'يجب إدخال تاريخ الفاتوره',
-            'Rdate.date' => 'يجب إدخال تاريخ الفاتوره',
+            'date.required' => 'يجب إدخال تاريخ المرتجع',
+            'date.date' => 'يجب إدخال تاريخ المرتجع',
         ];
     }
 }

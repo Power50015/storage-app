@@ -90,17 +90,17 @@ onMounted(() => {
         response.data.forEach((item) => {
           let name = item.name;
           if (item.product_collection)
-            name = name + " | " + item.product_collection.name;
-          if (item.product_model) name = name + " | " + item.product_model.name;
-          if (item.product_brand) name = name + " | " + item.product_brand.name;
+            name = name + " - " + item.product_collection.name;
+          if (item.product_model) name = name + " - " + item.product_model.name;
+          if (item.product_brand) name = name + " - " + item.product_brand.name;
           if (item.product_category)
-            name = name + " | " + item.product_category.name;
-          if (item.product_type) name = name + " | " + item.product_type.name;
-          if (item.product_color) name = name + " | " + item.product_color.name;
+            name = name + " - " + item.product_category.name;
+          if (item.product_type) name = name + " - " + item.product_type.name;
+          if (item.product_color) name = name + " - " + item.product_color.name;
           if (item.product_material)
-            name = name + " | " + item.product_material.name;
+            name = name + " - " + item.product_material.name;
           if (item.product_country)
-            name = name + " | " + item.product_country.name;
+            name = name + " - " + item.product_country.name;
           if (props.modelValue == item.id) {
             placeholderText.value = name;
           }
@@ -122,17 +122,17 @@ onUpdated(() => {
         response.data.forEach((item) => {
           let name = item.name;
           if (item.product_collection)
-            name = name + " | " + item.product_collection.name;
-          if (item.product_model) name = name + " | " + item.product_model.name;
-          if (item.product_brand) name = name + " | " + item.product_brand.name;
+            name = name + " - " + item.product_collection.name;
+          if (item.product_model) name = name + " - " + item.product_model.name;
+          if (item.product_brand) name = name + " - " + item.product_brand.name;
           if (item.product_category)
-            name = name + " | " + item.product_category.name;
-          if (item.product_type) name = name + " | " + item.product_type.name;
-          if (item.product_color) name = name + " | " + item.product_color.name;
+            name = name + " - " + item.product_category.name;
+          if (item.product_type) name = name + " - " + item.product_type.name;
+          if (item.product_color) name = name + " - " + item.product_color.name;
           if (item.product_material)
-            name = name + " | " + item.product_material.name;
+            name = name + " - " + item.product_material.name;
           if (item.product_country)
-            name = name + " | " + item.product_country.name;
+            name = name + " - " + item.product_country.name;
           if (props.modelValue == item.id) {
             placeholderText.value = name;
           }
@@ -162,17 +162,17 @@ function getProductsData(page = 1) {
       response.data.data.forEach((item) => {
         let name = item.name;
         if (item.product_collection)
-          name = name + " | " + item.product_collection.name;
-        if (item.product_model) name = name + " | " + item.product_model.name;
-        if (item.product_brand) name = name + " | " + item.product_brand.name;
+          name = name + " - " + item.product_collection.name;
+        if (item.product_model) name = name + " - " + item.product_model.name;
+        if (item.product_brand) name = name + " - " + item.product_brand.name;
         if (item.product_category)
-          name = name + " | " + item.product_category.name;
-        if (item.product_type) name = name + " | " + item.product_type.name;
-        if (item.product_color) name = name + " | " + item.product_color.name;
+          name = name + " - " + item.product_category.name;
+        if (item.product_type) name = name + " - " + item.product_type.name;
+        if (item.product_color) name = name + " - " + item.product_color.name;
         if (item.product_material)
-          name = name + " | " + item.product_material.name;
+          name = name + " - " + item.product_material.name;
         if (item.product_country)
-          name = name + " | " + item.product_country.name;
+          name = name + " - " + item.product_country.name;
         products.push({
           label: name,
           index: item.id,

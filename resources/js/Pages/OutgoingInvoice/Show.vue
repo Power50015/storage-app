@@ -1,51 +1,51 @@
 <template>
-  <AppLayout title="الفواتير الوارده">
+  <AppLayout title="الفواتير الصادره">
     <SectionTemplate class="pb-0">
       <div class="header">
-        <h2 class="font-bold text-xl mb-2 print:hidden">فاتورة وارده</h2>
+        <h2 class="font-bold text-xl mb-2 print:hidden">فاتورة صادره</h2>
         <h2 class="px-2 text-slate-600 mb-2">
-          تاريخ الإضافه :{{ dateFormat(incoming_invoice.created_at) }}
+          تاريخ الإضافه :{{ dateFormat(outgoing_invoice.created_at) }}
         </h2>
         <h2 class="px-2">
-          تاريخ الفاتورة : {{ dateFormat(incoming_invoice.date) }}
+          تاريخ الفاتورة : {{ dateFormat(outgoing_invoice.date) }}
         </h2>
         <div class="flex justify-between my-3">
           <h2 class="px-2 print:mb-3">
-            رقم الفاتورة : {{ incoming_invoice.number }}
+            رقم الفاتورة : {{ outgoing_invoice.id }}
           </h2>
           <Link
-            :href="route('warehouse.show', incoming_invoice.people.id)"
+            :href="route('warehouse.show', outgoing_invoice.people.id)"
             class="hover:text-[#009ef7]"
           >
             <h2 class="px-2 print:mb-3">
-              المخزن المستلم : {{ incoming_invoice.warehouse.name }}
+              المخزن المستلم : {{ outgoing_invoice.warehouse.name }}
             </h2>
           </Link>
         </div>
         <div class="flex justify-between my-3">
           <Link
-            :href="route('people.show', incoming_invoice.people.id)"
+            :href="route('people.show', outgoing_invoice.people.id)"
             class="hover:text-[#009ef7]"
           >
             <h2 class="px-2 print:mb-3">
-              المورد : {{ incoming_invoice.people.name }}
+              المورد : {{ outgoing_invoice.people.name }}
             </h2>
           </Link>
           <div>
             <h2 class="px-2">
-              إضفيت بواسطه : {{ incoming_invoice.user.name }}
+              إضفيت بواسطه : {{ outgoing_invoice.user.name }}
             </h2>
           </div>
         </div>
         <div class="flex justify-between my-3">
-          <h2 class="" v-if="incoming_invoice.pay_type == 0">
+          <h2 class="" v-if="outgoing_invoice.pay_type == 0">
             نوع الدفع : على الحساب
           </h2>
-          <h2 class="" v-if="incoming_invoice.pay_type == 1">
+          <h2 class="" v-if="outgoing_invoice.pay_type == 1">
             نوع الدفع : كاش
           </h2>
-          <h2 class="" v-if="incoming_invoice.pay_type == 1">
-            نوع الكاش : {{ incoming_invoice.cash.title }}
+          <h2 class="" v-if="outgoing_invoice.pay_type == 1">
+            نوع الكاش : {{ outgoing_invoice.cash.title }}
           </h2>
         </div>
       </div>
@@ -54,7 +54,7 @@
         <h2 class="font-bold text-xl my-3">محتويات الفاتورة</h2>
         <table class="border border-slate-700 w-full text-right">
           <thead>
-            <tr v-if="incomingInvoiceContent.length > 0">
+            <tr v-if="outgoingInvoiceContent.length > 0">
               <th class="border border-slate-700 py-3 px-3 font-bold s-border">
                 المنتج
               </th>
@@ -70,9 +70,9 @@
             </tr>
           </thead>
           <tbody>
-            <!--incomingInvoiceContent-->
+            <!--outgoingInvoiceContent-->
             <tr
-              v-for="product in incomingInvoiceContent"
+              v-for="product in outgoingInvoiceContent"
               :key="product.index"
               class=""
             >
@@ -93,8 +93,8 @@
                 {{ product.price * product.quantity }}
               </td>
             </tr>
-            <!--incomingInvoiceKit-->
-            <tr v-if="incomingInvoiceKit.length > 0">
+            <!--outgoingInvoiceKit-->
+            <tr v-if="outgoingInvoiceKit.length > 0">
               <th class="border border-slate-700 py-3 px-3 font-bold s-border">
                 قطع الغيار
               </th>
@@ -108,7 +108,7 @@
                 الإجمالى
               </th>
             </tr>
-            <tr v-for="kit in incomingInvoiceKit" :key="kit.index" class="">
+            <tr v-for="kit in outgoingInvoiceKit" :key="kit.index" class="">
               <td
                 class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]"
               >
@@ -129,12 +129,12 @@
           </tbody>
         </table>
       </div>
-      <div class="my-3 returned" v-if="returnedIncomingInvoice.length > 0">
+      <div class="my-3 returned" v-if="returnedOutgoingInvoice.length > 0">
         <hr />
         <h2 class="font-bold text-xl my-2">مرتجع الفاتورة</h2>
         <table class="border border-slate-700 w-full text-right mt-5" id="xyz">
           <tbody>
-            <!--returnedIncomingInvoice-->
+            <!--returnedOutgoingInvoice-->
             <tr>
               <th class="border border-slate-700 py-3 px-3 font-bold s-border">
                 مرتجع المنتجات
@@ -147,7 +147,7 @@
               </th>
             </tr>
             <tr
-              v-for="product in returnedIncomingInvoice"
+              v-for="product in returnedOutgoingInvoice"
               :key="product.index"
               class=""
             >
@@ -171,8 +171,8 @@
                 {{ product.quantity }}
               </td>
             </tr>
-            <!--returnedIncomingInvoiceKit-->
-            <tr v-if="returnedIncomingInvoiceKit.length > 0">
+            <!--returnedOutgoingInvoiceKit-->
+            <tr v-if="returnedOutgoingInvoiceKit.length > 0">
               <th class="border border-slate-700 py-3 px-3 font-bold s-border">
                 مرتجع قطع غيار
               </th>
@@ -183,7 +183,7 @@
                 الكميه
               </th>
             </tr>
-            <tr v-for="kit in returnedIncomingInvoiceKit" :key="kit.index">
+            <tr v-for="kit in returnedOutgoingInvoiceKit" :key="kit.index">
               <td
                 class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]"
               >
@@ -193,7 +193,7 @@
               </td>
               <td class="border border-slate-700 py-3 px-3">
                 {{
-                  new Date(product.date).toLocaleDateString("ar-EG", {
+                  new Date(kit.date).toLocaleDateString("ar-EG", {
                     year: "numeric",
                     month: "numeric",
                     day: "numeric",
@@ -212,13 +212,13 @@
         <div class="flex justify-between">
           <h2 class="p-2 print:w-full print:mb-3">
             الإجمالى قبل الخصم :
-            {{ incoming_invoice.total_before_discount }}
+            {{ outgoing_invoice.total_before_discount }}
           </h2>
-          <h2 class="p-2">الخصم : {{ incoming_invoice.discount }}</h2>
+          <h2 class="p-2">الخصم : {{ outgoing_invoice.discount }}</h2>
         </div>
         <h2 class="p-2 font-bold">
           المطلوب :
-          {{ incoming_invoice.total_after_discount }}
+          {{ outgoing_invoice.total_after_discount }}
         </h2>
       </div>
       <div class="btns flex justify-around print:hidden">
@@ -228,20 +228,20 @@
         </btn-primary>
         <btn-info
           :element="Link"
-          :to="route('returned-incoming-invoice.edit', incoming_invoice.id)"
+          :to="route('returned-outgoing-invoice.edit', outgoing_invoice.id)"
         >
           أضف مرتجع
         </btn-info>
         <btn-success
           :element="Link"
-          :to="route('incoming-invoice.edit', incoming_invoice.id)"
+          :to="route('outgoing-invoice.edit', outgoing_invoice.id)"
         >
           تعديل الفاتورة
         </btn-success>
       </div>
     </SectionTemplate>
     <SectionTemplate class="print:p-0 print:hidden">
-      <IncomingInvoiceTabs :id="incoming_invoice.id" />
+      <OutgoingInvoiceTabs :id="outgoing_invoice.id" />
     </SectionTemplate>
   </AppLayout>
 </template>
@@ -256,35 +256,35 @@ import SectionTemplate from "@/Components/SectionTemplate.vue";
 import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
-import IncomingInvoiceTabs from "@/Components/IncomingInvoice/IncomingInvoiceTabs.vue";
+import OutgoingInvoiceTabs from "@/Components/OutgoingInvoice/OutgoingInvoiceTabs.vue";
 
 const props = defineProps([
-  "incomingInvoice",
-  "incomingInvoiceContent",
-  "returnedIncomingInvoice",
-  "incomingInvoiceKit",
-  "returnedIncomingInvoiceKit",
+  "outgoingInvoice",
+  "outgoingInvoiceContent",
+  "returnedOutgoingInvoice",
+  "outgoingInvoiceKit",
+  "returnedOutgoingInvoiceKit",
 ]);
 
-const incoming_invoice = props.incomingInvoice[0];
-const incoming_invoice_content = props.incomingInvoiceContent;
-const returnedIncomingInvoice = props.returnedIncomingInvoice;
-const incomingInvoiceKit = props.incomingInvoiceKit;
-const returnedIncomingInvoiceKit = props.returnedIncomingInvoiceKit;
+const outgoing_invoice = props.outgoingInvoice[0];
+const outgoing_invoice_content = props.outgoingInvoiceContent;
+const returnedOutgoingInvoice = props.returnedOutgoingInvoice;
+const outgoingInvoiceKit = props.outgoingInvoiceKit;
+const returnedOutgoingInvoiceKit = props.returnedOutgoingInvoiceKit;
 
-provide("title", "الفواتير الوارده");
+provide("title", "الفواتير الصادره");
 provide(
   "breadcrumb",
   readonly([
     { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
     {
       index: 1,
-      linkTitle: "الفواتير الوارده",
+      linkTitle: "الفواتير الصادره",
       linkRoute: "incoming-invoice.index",
     },
     {
       index: 2,
-      linkTitle: "فاتورة " + incoming_invoice.number,
+      linkTitle: "فاتورة " + outgoing_invoice.id,
       linkRoute: "#",
     },
   ])

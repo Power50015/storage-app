@@ -24,6 +24,7 @@ use App\Models\Kit\KitOperation;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\OutgoingInvoice\OutgoingInvoiceImage;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\People\People;
@@ -182,6 +183,20 @@ class User extends Authenticatable
     public function outgoing_invoice_attachments()
     {
         return $this->hasMany(OutgoingInvoiceAttachment::class);
+    }
+     /**
+     * Get the OutgoingInvoiceImage for the user.
+     */
+    public function outgoing_invoice_images()
+    {
+        return $this->hasMany(OutgoingInvoiceImage::class);
+    }
+    /**
+     * Get the OutgoingInvoiceNote for the user.
+     */
+    public function outgoing_invoice_notes()
+    {
+        return $this->hasMany(OutgoingInvoiceNote::class);
     }
     /**
      * Get the OutgoingInvoiceContent for the user.

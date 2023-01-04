@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\OutgoingInvoice;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class IncomingInvoiceImageSeeder extends Seeder
+class OutgoingInvoiceNoteSeeder extends Seeder
 {
     /**
      * Run the database seeds.

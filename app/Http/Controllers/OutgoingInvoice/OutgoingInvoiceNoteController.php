@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\IncomingInvoice;
+namespace App\Http\Controllers\OutgoingInvoice;
 
 use App\Http\Controllers\Controller;
-use App\Models\IncomingInvoice\IncomingInvoiceNote;
-use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceNoteRequest;
-use App\Http\Requests\IncomingInvoice\UpdateIncomingInvoiceNoteRequest;
+use App\Models\OutgoingInvoice\OutgoingInvoiceNote;
+use App\Http\Requests\OutgoingInvoice\StoreOutgoingInvoiceNoteRequest;
+use App\Http\Requests\OutgoingInvoice\UpdateOutgoingInvoiceNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
 
-class IncomingInvoiceNoteController extends Controller
+class OutgoingInvoiceNoteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,7 @@ class IncomingInvoiceNoteController extends Controller
         $note = Request::input('id');
         $search = Request::input('search');
         return [
-            "note" => IncomingInvoiceNote::with('user')->latest()->where('incoming_invoice_id', $note)->when(Request::input('search'), function ($query, $search) {
+            "note" => OutgoingInvoiceNote::with('user')->latest()->where('outgoing_invoice_id', $note)->when(Request::input('search'), function ($query, $search) {
                 $query->where('tag', 'like', "%{$search}%")
                     ->orWhere('note', 'like', "%{$search}%");
             })->paginate()->withQueryString(),
@@ -38,19 +38,20 @@ class IncomingInvoiceNoteController extends Controller
      */
     public function create()
     {
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreIncomingInvoiceNoteRequest  $request
+     * @param  \App\Http\Requests\StoreOutgoingInvoiceNoteRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreIncomingInvoiceNoteRequest $request)
+    public function store(StoreOutgoingInvoiceNoteRequest $request)
     {
-        IncomingInvoiceNote::create([
+        OutgoingInvoiceNote::create([
             'note' => $request->note,
-            'incoming_invoice_id' => $request->id,
+            'outgoing_invoice_id' => $request->id,
             'tag' => $request->tag,
             'user_id' => Auth::id()
         ]);
@@ -60,10 +61,10 @@ class IncomingInvoiceNoteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\IncomingInvoiceNote  $incomingInvoiceNote
+     * @param  \App\Models\OutgoingInvoice\OutgoingInvoiceNote  $outgoingInvoiceNote
      * @return \Illuminate\Http\Response
      */
-    public function show(IncomingInvoiceNote $incomingInvoiceNote)
+    public function show(OutgoingInvoiceNote $outgoingInvoiceNote)
     {
         //
     }
@@ -71,10 +72,10 @@ class IncomingInvoiceNoteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\IncomingInvoiceNote  $incomingInvoiceNote
+     * @param  \App\Models\OutgoingInvoice\OutgoingInvoiceNote  $outgoingInvoiceNote
      * @return \Illuminate\Http\Response
      */
-    public function edit(IncomingInvoiceNote $incomingInvoiceNote)
+    public function edit(OutgoingInvoiceNote $outgoingInvoiceNote)
     {
         //
     }
@@ -82,11 +83,11 @@ class IncomingInvoiceNoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateIncomingInvoiceNoteRequest  $request
-     * @param  \App\Models\IncomingInvoiceNote  $incomingInvoiceNote
+     * @param  \App\Http\Requests\UpdateOutgoingInvoiceNoteRequest  $request
+     * @param  \App\Models\OutgoingInvoice\OutgoingInvoiceNote  $outgoingInvoiceNote
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateIncomingInvoiceNoteRequest $request, IncomingInvoiceNote $incomingInvoiceNote)
+    public function update(UpdateOutgoingInvoiceNoteRequest $request, OutgoingInvoiceNote $outgoingInvoiceNote)
     {
         //
     }
@@ -94,12 +95,12 @@ class IncomingInvoiceNoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\IncomingInvoiceNote  $incomingInvoiceNote
+     * @param  \App\Models\OutgoingInvoice\OutgoingInvoiceNote  $outgoingInvoiceNote
      * @return \Illuminate\Http\Response
      */
-    public function destroy(IncomingInvoiceNote $incomingInvoiceNote)
+    public function destroy(OutgoingInvoiceNote $outgoingInvoiceNote)
     {
-        $incomingInvoiceNote->delete();
+        $outgoingInvoiceNote->delete();
 
         return Redirect::back();
     }

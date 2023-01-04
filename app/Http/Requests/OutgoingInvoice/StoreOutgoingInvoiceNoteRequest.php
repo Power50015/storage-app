@@ -4,9 +4,9 @@ namespace App\Http\Requests\OutgoingInvoice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateReturnedOutgoingInvoiceRequest extends FormRequest
+class StoreOutgoingInvoiceNoteRequest extends FormRequest
 {
-    /**
+     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -24,8 +24,7 @@ class UpdateReturnedOutgoingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => 'required|date',
-            
+            'note' => 'required',
         ];
     }
     /**
@@ -35,9 +34,9 @@ class UpdateReturnedOutgoingInvoiceRequest extends FormRequest
      */
     public function messages()
     {
+
         return [
-            'date.required' => 'يجب إدخال تاريخ المرتجع',
-            'date.date' => 'يجب إدخال تاريخ المرتجع',
+            'note.required' => 'يجب إدخال الملاحظه .',
         ];
     }
 }

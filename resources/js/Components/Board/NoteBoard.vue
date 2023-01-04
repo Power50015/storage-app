@@ -49,7 +49,11 @@
     >
       <div class="flex flex-col items-start mb-3">
         <div class="w-full flex justify-between">
-          <BadgePrimary class="mb-3">{{ item.tag }} </BadgePrimary>
+          <div>
+            <BadgePrimary class="mb-3" v-if="item.tag"
+            >{{ item.tag }}
+          </BadgePrimary>
+          </div>
           <DeleteModel
             :id="item.id"
             :title="` الملاحظه   : ${item.tag}`"

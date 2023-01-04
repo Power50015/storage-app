@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->text('tag')->nullable();
             $table->text('note');
-            $table->foreignId('warehouse_id');
+            $table->foreignId('user_id');
             $table->foreignId('incoming_invoice_id');
         });
     }

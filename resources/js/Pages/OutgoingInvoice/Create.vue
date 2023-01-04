@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="إضافه فاتوره وارده">
+  <AppLayout title="إضافه فاتوره صادره">
     <FormSection
       :title="formText.title"
       :btnTitle="formText.btnTitle"
@@ -8,13 +8,6 @@
       :toastMsg="formText.formText"
       :toastDescription="form.title"
     >
-      <!-- Number -->
-      <InputText
-        v-model="form.number"
-        title="رقم الفاتوره"
-        :error="errors.number"
-        :require="true"
-      />
       <!-- Supplier -->
       <SelectPeople
         v-model="form.people_id"
@@ -202,7 +195,7 @@ import SelectProduct from "@/Forms/SelectProduct.vue";
 import SelectKits from "@/Forms/SelectKits.vue";
 import SelectPeople from "@/Forms/SelectPeople.vue";
 
-provide("title", "إضافه فاتوره وارده");
+provide("title", "إضافه فاتوره صادره");
 
 const props = defineProps([
   "errors",
@@ -216,8 +209,7 @@ const props = defineProps([
 const form = reactive({
   id: props.invoice ? props.invoice[0].id : null,
   _method: props.invoice ? "patch" : "post",
-  route: props.invoice ? "incoming-invoice.update" : "incoming-invoice.store",
-  number: props.invoice ? props.invoice[0].number : null,
+  route: props.invoice ? "outgoing-invoice.update" : "outgoing-invoice.store",
   people_id: props.invoice ? props.invoice[0].people_id : null,
   warehouse_id: props.invoice ? props.invoice[0].warehouse_id : null,
   pay_type: props.invoice ? props.invoice[0].pay_type : 0,
@@ -238,12 +230,12 @@ if (props.invoice) {
       { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
       {
         index: 1,
-        linkTitle: "الفواتير الوارده",
+        linkTitle: "الفواتير الصادره",
         linkRoute: "incoming-invoice.index",
       },
       {
         index: 2,
-        linkTitle: " تعديل فاتوره وارده " + props.invoice[0].number,
+        linkTitle: " تعديل فاتوره صادره " + props.invoice[0].number,
         linkRoute: "#",
       },
     ])
@@ -255,12 +247,12 @@ if (props.invoice) {
       { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
       {
         index: 1,
-        linkTitle: "الفواتير الوارده",
+        linkTitle: "الفواتير الصادره",
         linkRoute: "incoming-invoice.index",
       },
       {
         index: 2,
-        linkTitle: "إضافه فاتوره وارده",
+        linkTitle: "إضافه فاتوره صادره",
         linkRoute: "#",
       },
     ])
@@ -268,9 +260,9 @@ if (props.invoice) {
 }
 
 const formText = reactive({
-  title: props.invoice ? "تعديل بيانات  فاتوره وارده" : "إضافه  فاتوره وارده ",
-  btnTitle: props.invoice ? "تعديل  فاتوره وارده" : "إضافه  فاتوره وارده",
-  formText: props.invoice ? "تم تعديل  فاتوره وارده" : "تم أضافه  فاتوره وارده",
+  title: props.invoice ? "تعديل بيانات  فاتوره صادره" : "إضافه  فاتوره صادره ",
+  btnTitle: props.invoice ? "تعديل  فاتوره صادره" : "إضافه  فاتوره صادره",
+  formText: props.invoice ? "تم تعديل  فاتوره صادره" : "تم أضافه  فاتوره صادره",
 });
 
 const warehouses = computed(() => {

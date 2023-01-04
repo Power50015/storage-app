@@ -9,6 +9,8 @@ use App\Http\Requests\OutgoingInvoice\UpdateReturnedOutgoingInvoiceRequest;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
+use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
+use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -68,10 +70,11 @@ class ReturnedOutgoingInvoiceController extends Controller
     {
         return Inertia::render('OutgoingInvoice/ReturnedOutgoingInvoice', [
             "outgoingInvoice" => OutgoingInvoice::where('id', $returnedOutgoingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
+
             "outgoingInvoiceContent" => OutgoingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('outgoing_invoice_id', $returnedOutgoingInvoice)->get(),
-            "returnedOutgoingInvoice" => ReturnedOutgoingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('outgoing_invoice_id', $returnedOutgoingInvoice)->get(),
-            "outgoingInvoiceAttachment" => OutgoingInvoiceAttachment::where('outgoing_invoice_id', $returnedOutgoingInvoice)->get(),
-            "products" => Product::with('product_country', 'product_material', 'product_color', 'product_model', 'product_collection', 'product_brand', 'product_type', 'product_category')->get(),
+
+            "outgoingInvoiceKit" => OutgoingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('outgoing_invoice_id', $returnedOutgoingInvoice)->get(),
+
         ]);
     }
 
@@ -82,35 +85,54 @@ class ReturnedOutgoingInvoiceController extends Controller
      * @param  \App\Models\ReturnedOutgoingInvoice  $returnedOutgoingInvoice
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateReturnedOutgoingInvoiceRequest $request,$returnedOutgoingInvoice)
+    public function update(UpdateReturnedOutgoingInvoiceRequest $request, $returnedOutgoingInvoice)
     {
-                // Save New Attachment Of Outgoing Invoice
+        $invoice = OutgoingInvoice::find($request->id);
+        $totalPrice = 0;
 
-                for ($i = 0; $i <  count($request["attachment"]); $i++) {
-                    if ($request["attachment"][$i]["attachment"] != null) {
-                        $attachment_path = $request["attachment"][$i]["attachment"]->store('attachment/outgoingInvoice', 'public');
-                        OutgoingInvoiceAttachment::create([
-                            'attachment' =>  $attachment_path,
-                            'outgoing_invoice_id' =>  $returnedOutgoingInvoice,
-                            'user_id' => Auth::id()
-                        ]);
-                    }
-                }
-        
-                // Save The Content Of Incoming Invoice.
-                ReturnedOutgoingInvoice::where('outgoing_invoice_id', $returnedOutgoingInvoice)->delete();
-                for ($i = 0; $i <  count($request["content"]); $i++) {
-                    if ($request["content"][$i]["quantity"] > 0)
-                    ReturnedOutgoingInvoice::create([
-                        'product_id' => $request["content"][$i]["product_id"],
-                        'quantity' => $request["content"][$i]["quantity"],
-                        'outgoing_invoice_id' => $request->id,
-                        'date' => $request->Rdate,
-                        'user_id' => Auth::id()
-                    ]);
-                }
-        
-                return Redirect::back();
+        if (!is_null($request["content"]))
+            for ($i = 0; $i <  count($request["content"]); $i++)
+                $totalPrice = $totalPrice + ($request["content"][$i]["price"] * $request["content"][$i]["quantity"]);
+
+        if (!is_null($request["kit"]))
+            for ($i = 0; $i <  count($request["kit"]); $i++)
+                $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
+
+
+        $invoice->total = $invoice->total -  $totalPrice;
+
+        // Save The Content Of Outgoing Invoice.
+        ReturnedOutgoingInvoice::where('outgoing_invoice_id', $returnedOutgoingInvoice)->delete();
+
+        for ($i = 0; $i <  count($request["content"]); $i++) {
+            if ($request["content"][$i]["quantity"] > 0)
+                ReturnedOutgoingInvoice::create([
+                    'product_id' => $request["content"][$i]["product_id"],
+                    'quantity' => $request["content"][$i]["quantity"],
+                    'outgoing_invoice_id' => $request->id,
+                    'price' => $request["content"][$i]["price"],
+                    'date' => $request->date,
+                    'user_id' => Auth::id(),
+                    'people_id' => $request->people_id,
+                ]);
+        }
+
+        // Save The Kit Of Outgoing Invoice.
+        ReturnedOutgoingInvoiceKit::where('outgoing_invoice_id', $returnedOutgoingInvoice)->delete();
+        for ($i = 0; $i <  count($request["kit"]); $i++) {
+            if ($request["kit"][$i]["quantity"] > 0)
+            ReturnedOutgoingInvoiceKit::create([
+                    'kit_id' => $request["kit"][$i]["kit_id"],
+                    'quantity' => $request["kit"][$i]["quantity"],
+                    'outgoing_invoice_id' => $request->id,
+                    'price' => $request["content"][$i]["price"],
+                    'date' => $request->date,
+                    'user_id' => Auth::id(),
+                    'people_id' => $request->people_id,
+                ]);
+        }
+
+        return redirect()->route('outgoing-invoice.show', $request->id);
     }
 
     /**

@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('returned_incoming_invoices', function (Blueprint $table) {
+        Schema::create('outgoing_invoice_notes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->timestamp('date')->useCurrent();
-            $table->integer('quantity');
-            $table->decimal('price', $precision = 11, $scale = 2);
-            $table->foreignId('incoming_invoice_id');
-            $table->foreignId('product_id');
+            $table->text('tag')->nullable();
+            $table->text('note');
+            $table->foreignId('outgoing_invoice_id');
             $table->foreignId('user_id');
-            $table->foreignId('people_id');
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('returned_incoming_invoices');
+        Schema::dropIfExists('outgoing_invoice_notes');
     }
 };

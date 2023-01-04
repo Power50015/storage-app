@@ -5,7 +5,7 @@ namespace Database\Seeders\IncomingInvoice;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class IncomingInvoiceContentSeeder extends Seeder
+class IncomingInvoiceNoteSeeder extends Seeder
 {
     /**
      * Run the database seeds.

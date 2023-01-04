@@ -7,7 +7,6 @@
           bg-white
           dark:text-white
           text-black
-          shadow-xl
           rounded-md
           p-4
         "

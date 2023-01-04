@@ -65,7 +65,6 @@ class IncomingInvoiceController extends Controller
         return Inertia::render('IncomingInvoice/Create', [
             "cash" => Cash::all(),
             "warehouses" => Warehouse::all(),
-            "suppliers" => People::all(),
         ]);
     }
 
@@ -153,7 +152,6 @@ class IncomingInvoiceController extends Controller
      */
     public function edit($incomingInvoice)
     {
-
         return Inertia::render('IncomingInvoice/Create', [
             "invoice" => IncomingInvoice::where('id', $incomingInvoice)->get(),
             "invoiceContent" => IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice)->get(),

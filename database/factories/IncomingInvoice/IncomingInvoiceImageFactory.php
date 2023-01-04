@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\IncomingInvoice;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\IncomingInvoiceNote>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\IncomingInvoiceImage>
  */
-class IncomingInvoiceNoteFactory extends Factory
+class IncomingInvoiceImageFactory extends Factory
 {
     /**
      * Define the model's default state.

@@ -24,18 +24,20 @@ class UpdateOutgoingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'people' => 'required',
-            'warehouses' => 'required',
+            'people_id' => 'required',
+            'warehouse_id' => 'required',
             'pay_type' => 'required',
-            'cash_type' =>'required_if:pay_type,true',
+            'cash_id' =>'required_if:pay_type,true',
             'discount' => 'numeric',
             'date' => 'required|date',
-            'content' => 'required|array',
-            'content.*.product_id' => 'required',
-            'content.*.price' => 'required|numeric|min:0.01',
-            'content.*.quantity' => 'required|numeric|min:1',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'content' => 'required_if:kit,[]|array',
+            'content.*.product' => 'required_if:kit,[]',
+            'content.*.price' => 'required_if:kit,[]|numeric|min:0.01',
+            'content.*.quantity' => 'required_if:kit,[]|numeric|min:1',
+            'kit' => 'required_if:content,[]|array',
+            'kit.*.kit' => 'required_if:content,[]',
+            'kit.*.quantity' => 'required_if:content,[]|numeric|min:1',
+            'kit.*.price' => 'required_if:content,[]|numeric|min:0',
         ];
     }
     /**
@@ -46,9 +48,9 @@ class UpdateOutgoingInvoiceRequest extends FormRequest
     public function messages()
     {
         return [
-            'people.required' => 'يجب إدخال المورد',
-            'warehouses.required' => 'يجب إدخال المخزن المستقبل ',
-            'cash_type.required_if' => 'يجب إدخال نوع الكاش  ',
+            'people_id.required' => 'يجب إدخال المورد',
+            'warehouse_id.required' => 'يجب إدخال المخزن المستقبل ',
+            'cash_id.required_if' => 'يجب إدخال نوع الكاش  ',
             'discount.numeric' => 'يجب أن يكون الخصم رقم',
             'date.required' => 'يجب إدخال تاريخ الفاتوره',
             'date.date' => 'يجب إدخال تاريخ الفاتوره',

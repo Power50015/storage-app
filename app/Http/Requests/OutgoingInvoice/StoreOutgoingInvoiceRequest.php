@@ -24,18 +24,20 @@ class StoreOutgoingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer' => 'required',
-            'warehouses' => 'required',
+            'people_id' => 'required',
+            'warehouse_id' => 'required',
             'pay_type' => 'required',
-            'cash_type' =>'required_if:pay_type,true',
+            'cash_id' => 'required_if:pay_type,true',
             'discount' => 'numeric',
             'date' => 'required|date',
-            'content' => 'required|array',
-            'content.*.product' => 'required',
-            'content.*.price' => 'required|numeric|min:0.01',
-            'content.*.quantity' => 'required|numeric|min:1',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'content' => 'required_if:kit,[]|array',
+            'content.*.product' => 'required_if:kit,[]',
+            'content.*.price' => 'required_if:kit,[]|numeric|min:0.01',
+            'content.*.quantity' => 'required_if:kit,[]|numeric|min:1',
+            'kit' => 'required_if:content,[]|array',
+            'kit.*.kit' => 'required_if:content,[]',
+            'kit.*.quantity' => 'required_if:content,[]|numeric|min:1',
+            'kit.*.price' => 'required_if:content,[]|numeric|min:0',
         ];
     }
     /**
@@ -46,10 +48,9 @@ class StoreOutgoingInvoiceRequest extends FormRequest
     public function messages()
     {
         return [
-            'number.required' => 'يجب إدخال رقم الفاتورة',
-            'customer.required' => 'يجب إدخال المورد',
-            'warehouses.required' => 'يجب إدخال المخزن المستقبل ',
-            'cash_type.required_if' => 'يجب إدخال نوع الكاش  ',
+            'people_id.required' => 'يجب إدخال العميل',
+            'warehouse_id.required' => 'يجب إدخال المخزن المستقبل ',
+            'cash_id.required_if' => 'يجب إدخال نوع الكاش  ',
             'discount.numeric' => 'يجب أن يكون الخصم رقم',
             'date.required' => 'يجب إدخال تاريخ الفاتوره',
             'date.date' => 'يجب إدخال تاريخ الفاتوره',
@@ -62,6 +63,9 @@ class StoreOutgoingInvoiceRequest extends FormRequest
             'content.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى الفاتورة',
             'content.*.price.min' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
             'content.*.quantity.min' => 'يجب إدخال كميه المنتج فى الفاتورة',
+            'kit.*' => 'يجب إدخال محتوى الفاتورة',
+            'kit.*.kit.required' => 'يجب إدخال المنتجات للفاتورة',
+            'kit.*.quantity.required' =>  'يجب إدخال كميه قطع الغيار فى الفاتورة',
         ];
     }
 }
