@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests\Transfer;
 
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTransferAttachmentRequest extends FormRequest
+class StoreTransferNoteRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
@@ -24,8 +25,7 @@ class StoreTransferAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'attachment' => 'required|file|mimes:csv,txt,jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls'
+            'note' => 'required',
         ];
     }
     /**
@@ -37,8 +37,7 @@ class StoreTransferAttachmentRequest extends FormRequest
     {
 
         return [
-            'title.*' => 'يجب إدخال عنوان ',
-            'attachment.*' => 'يجب إدخال الملف ',
+            'note.required' => 'يجب إدخال الملاحظه .',
         ];
     }
 }

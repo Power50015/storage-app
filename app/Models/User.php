@@ -497,6 +497,20 @@ class User extends Authenticatable
         return $this->hasMany(TransferKit::class);
     }
     /**
+     * Get the Transfer To for the Transfer Note.
+     */
+    public function transfer_notes()
+    {
+        return $this->hasMany(TransferNote::class);
+    }
+    /**
+     * Get the Transfer To for the Transfer Note.
+     */
+    public function transfer_images()
+    {
+        return $this->hasMany(TransferImage::class);
+    }
+    /**
      * Get the IncomingInvoiceKit for the IncomingInvoice.
      */
     public function incoming_invoice_kits()

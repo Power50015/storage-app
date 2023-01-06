@@ -4,7 +4,7 @@ namespace App\Http\Requests\Transfer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTransferAttachmentRequest extends FormRequest
+class StoreTransferImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class StoreTransferAttachmentRequest extends FormRequest
         return true;
     }
 
-    /**
+   /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
@@ -24,8 +24,7 @@ class StoreTransferAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'attachment' => 'required|file|mimes:csv,txt,jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls'
+            'image' => 'required|file|mimes:jpeg,jpg,png,gif,svg'
         ];
     }
     /**
@@ -37,8 +36,7 @@ class StoreTransferAttachmentRequest extends FormRequest
     {
 
         return [
-            'title.*' => 'يجب إدخال عنوان ',
-            'attachment.*' => 'يجب إدخال الملف ',
+            'image.required' => 'يجب إدخال صوره قطعه الغيار',
         ];
     }
 }

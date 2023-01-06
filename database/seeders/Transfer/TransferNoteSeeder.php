@@ -5,7 +5,7 @@ namespace Database\Seeders\Transfer;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TransferKitSeeder extends Seeder
+class TransferNoteSeeder extends Seeder
 {
     /**
      * Run the database seeds.

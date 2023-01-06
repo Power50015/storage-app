@@ -193,7 +193,7 @@
               </td>
               <td class="border border-slate-700 py-3 px-3">
                 {{
-                  new Date(product.date).toLocaleDateString("ar-EG", {
+                  new Date(kit.date).toLocaleDateString("ar-EG", {
                     year: "numeric",
                     month: "numeric",
                     day: "numeric",

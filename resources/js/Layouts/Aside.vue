@@ -108,7 +108,7 @@
           </li>
           <li class="mx-5">
           <Link
-            :href="route('transfer.create')"
+            :href="route('transfer.index')"
             class="py-3 px-4 block rounded-lg my-3"
             :class="
               route().current('transfer.*')

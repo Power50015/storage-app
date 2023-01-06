@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Transfer;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TransferKitSeeder extends Seeder
+class TransferImageSeeder extends Seeder
 {
     /**
      * Run the database seeds.

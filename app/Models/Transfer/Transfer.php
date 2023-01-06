@@ -3,6 +3,8 @@
 namespace App\Models\Transfer;
 
 use App\Models\Driver\Driver;
+use App\Models\TransferImage;
+use App\Models\TransferNote;
 use App\Models\User;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,6 +59,20 @@ class Transfer extends Model
         return $this->hasMany(TransferAttachment::class);
     }
 
+    /**
+     * Get the Transfer To for the Transfer Note.
+     */
+    public function transfer_notes()
+    {
+        return $this->hasMany(TransferNote::class);
+    }
+    /**
+     * Get the Transfer To for the Transfer Note.
+     */
+    public function transfer_images()
+    {
+        return $this->hasMany(TransferImage::class);
+    }
     /**
      * Get the Transfer To for the Transfer Kit.
      */

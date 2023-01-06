@@ -5,7 +5,8 @@ namespace App\Http\Requests\Transfer;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTransferRequest extends FormRequest
-{/**
+{
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -23,14 +24,15 @@ class StoreTransferRequest extends FormRequest
     public function rules()
     {
         return [
-            'warehouseFrom' => 'required',
-            'warehouseTo' => 'required',
+            'warehouse_from_id' => 'required',
+            'warehouse_to_id' => 'required',
             'date' => 'required|date',
-            'content' => 'required|array',
-            'content.*.product' => 'required',
-            'content.*.quantity' => 'required|numeric|min:1',
-            'attachment' => 'nullable|array',
-            'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
+            'content' => 'required_if:kit,[]|array',
+            'content.*.product' => 'required_if:kit,[]',
+            'content.*.quantity' => 'required_if:kit,[]|numeric|min:1',
+            'kit' => 'required_if:content,[]|array',
+            'kit.*.kit' => 'required_if:content,[]',
+            'kit.*.quantity' => 'required_if:content,[]|numeric|min:1',
         ];
     }
     /**
@@ -45,10 +47,13 @@ class StoreTransferRequest extends FormRequest
             'warehouseTo.required' => 'يجب إدخال المخزن المستقبل ',
             'date.*' => 'يجب إدخال التاريخ ',
             'content.*' => 'يجب إدخال محتوى النقله',
-            'content.*.product.required' => 'يجب إدخال المنتجات النقله',
+            'content.*.product.required' => 'يجب إدخال المنتجات للنقله',
             'content.*.quantity.required' =>  'يجب إدخال كميه المنتج فى النقله',
             'content.*.quantity.numeric' => 'يجب إدخال كميه المنتج فى النقله',
             'content.*.quantity.min' => 'يجب إدخال كميه المنتج فى النقله',
+            'kit.*' => 'يجب إدخال محتوى النقله',
+            'kit.*.kit.required' => 'يجب إدخال المنتجات للنقله',
+            'kit.*.quantity.required' =>  'يجب إدخال كميه قطع الغيار فى النقله',
         ];
     }
 }

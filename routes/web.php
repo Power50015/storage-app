@@ -1,14 +1,6 @@
 <?php
 
-use App\Http\Controllers\CashController;
-use App\Http\Controllers\CreditorController;
-use App\Http\Controllers\CreditorPayController;
-use App\Http\Controllers\DebtorController;
-use App\Http\Controllers\DebtorPayController;
-use App\Http\Controllers\DriverController;
-use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\PeopleController;
-use App\Http\Controllers\TransferController;
+use App\Http\Controllers\Driver\DriverController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -38,10 +30,14 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    
+    // Driver
+    Route::resource('/driver', DriverController::class)->only([
+        'store'
+    ]);
     /*
     // Expense
     Route::resource('/expense', ExpenseController::class)->only([
@@ -50,10 +46,7 @@ Route::middleware([
     
    
     
-    // Driver
-    Route::resource('/driver', DriverController::class)->only([
-        'store'
-    ]);
+  
     // Transfer
     Route::resource('/transfer', TransferController::class)->only([
         'index', 'create', 'store'
