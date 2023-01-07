@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Creditor;
+namespace App\Http\Requests\Expense;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCreditorNoteRequest extends FormRequest
+class StoreExpenseAttachmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class StoreCreditorNoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'note' => 'required',
+            'title' => 'required',
+            'attachment' => 'required|file|mimes:csv,txt,jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls'
         ];
     }
     /**
@@ -36,7 +37,8 @@ class StoreCreditorNoteRequest extends FormRequest
     {
 
         return [
-            'note.required' => 'يجب إدخال الملاحظه .',
+            'title.*' => 'يجب إدخال عنوان ',
+            'attachment.*' => 'يجب إدخال الملف ',
         ];
     }
 }

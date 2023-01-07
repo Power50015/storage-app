@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Expense;
 
-use App\Models\Expense;
-use App\Http\Requests\StoreExpenseRequest;
-use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Expense\Expense;
+use App\Http\Requests\Expense\StoreExpenseRequest;
+use App\Http\Requests\Expense\UpdateExpenseRequest;
+use App\Models\Cash\Cash;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -18,8 +22,23 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Expense', [
-            "expense" => Expense::all()
+        return Inertia::render('Expense/Index', [
+            "expense" => Expense::with('user', 'cash')->orderBy('date', 'desc')->latest()->when(
+                Request::input('search'),
+                function ($query, $search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('date', 'like', "%{$search}%")
+                        ->orWhereRelation('cash', 'title', 'like', "%{$search}%");
+                }
+            )->paginate(35)->withQueryString(),
+
+            'filters' => Request::only(['search']),
+            'totalExpense' => Expense::count(),
+            'totalExpenseThisDay' => Expense::where('date', '>=', Carbon::now()->locale('eg')->toDateString())->sum('amount'),
+            'totalExpenseThisWeek' => Expense::where('date', '>=', Carbon::now()->startOfWeek()->subWeek()->toDateString())->sum('amount'),
+            'totalExpenseThisMonth' => Expense::where('date', '>=', Carbon::now()->startOfMonth()->subMonth()->toDateString())->sum('amount'),
+            'totalExpenseThisYear' => Expense::where('date', '>=', Carbon::now()->startOfYear()->subMonth()->toDateString())->sum('amount'),
         ]);
     }
 
@@ -30,7 +49,9 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Expense/Create', [
+            "cash" => Cash::all(),
+        ]);
     }
 
     /**
@@ -41,14 +62,16 @@ class ExpenseController extends Controller
      */
     public function store(StoreExpenseRequest $request)
     {
-        Expense::create([
+        $expense = Expense::create([
             'title' => $request->title,
             'amount' => $request->amount,
             'description' => $request->description,
-            'date' => $request->date,
+            'date' => Carbon::parse($request->date),
+            'cash_id' => $request->cash_id,
             'user_id' => Auth::id()
         ]);
-        return Redirect::back();
+
+        return redirect()->route('expense.show', $expense['id']);
     }
 
     /**
@@ -59,7 +82,9 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense)
     {
-        //
+        return Inertia::render('Expense/Show', [
+            "expense" => Expense::where('id', $expense->id)->with('user', 'cash')->get(),
+        ]);
     }
 
     /**
@@ -70,7 +95,10 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        //
+        return Inertia::render('Expense/Create', [
+            "expense" =>  Expense::where('id', $expense->id)->with('user', 'cash')->get(),
+            "cash" => Cash::all(),
+        ]);
     }
 
     /**
@@ -82,7 +110,13 @@ class ExpenseController extends Controller
      */
     public function update(UpdateExpenseRequest $request, Expense $expense)
     {
-        //
+        $expense->title = $request->title;
+        $expense->amount = $request->amount;
+        $expense->description = $request->description;
+        $expense->date = Carbon::parse($request->date);
+        $expense->cash_id = $request->cash_id;
+        $expense->save();
+        return Redirect::route('expense.show', $expense->id);
     }
 
     /**

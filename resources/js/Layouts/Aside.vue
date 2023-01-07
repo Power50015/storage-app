@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="
+  <div class="
       shrink-0
       xl:block
       top-[-210px]
@@ -8,14 +7,11 @@
       absolute
       h-full
       print:hidden
-    "
-    :class="{
+    " :class="{
       'xl:w-[265px] ': asideOpenStateDesktop,
       'xl:w-0 ': !asideOpenStateDesktop,
-    }"
-  >
-    <aside
-      class="
+    }">
+    <aside class="
         w-[265px]
         h-full
         flex-col
@@ -26,221 +22,163 @@
         transition-all
         xl:block
         duration-1000
-      "
-      :class="{
+      " :class="{
         'xl:right-0 ': asideOpenStateDesktop,
         'xl:right-[-300px]': !asideOpenStateDesktop,
         'right-0': asideOpenStateMobile,
         'right-[-300px]': !asideOpenStateMobile,
-      }"
-    >
+      }">
       <UserCard />
       <perfect-scrollbar>
         <ul class="text-white h-full">
-          <li
-            class="
+          <li class="
               pt-5
               text-center text-xs
               border-t border-[#323248]
               text-slate-600
               block
-            "
-          >
+            ">
             الأكثر إستخداماً
           </li>
           <li class="mx-5">
-            <Link
-              href="/"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('dashboard')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-gauge-high"></i>
-              <span class="mx-3">لوحه التحكم</span>
+            <Link href="/" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('dashboard')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-gauge-high"></i>
+            <span class="mx-3">لوحه التحكم</span>
             </Link>
           </li>
-          <!-- <li class="mx-5">
-          <Link
-            :href="route('expense.index')"
-            class="py-3 px-4 block rounded-lg my-3"
-            :class="
+          <li class="mx-5">
+            <Link :href="route('expense.index')" class="py-3 px-4 block rounded-lg my-3" :class="
               route().current('expense.index')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
-            "
-          >
+            ">
             <i class="fa-solid fa-coins"></i>
             <span class="mx-3">المصاريف</span>
-          </Link>
-        </li> -->
+            </Link>
+          </li>
           <li class="mx-5">
-            <Link
-              :href="route('incoming-invoice.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('incoming-invoice.*') ||
+            <Link :href="route('incoming-invoice.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('incoming-invoice.*') ||
                 route().current('returned-incoming-invoice.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-file-lines"></i>
-              <span class="mx-3">الفاوتير الوارده</span>
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-file-lines"></i>
+            <span class="mx-3">الفاوتير الوارده</span>
             </Link>
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('outgoing-invoice.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('outgoing-invoice.*') ||
+            <Link :href="route('outgoing-invoice.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('outgoing-invoice.*') ||
                 route().current('returned-outgoing-invoice.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-file-invoice"></i>
-              <span class="mx-3">الفاوتير الصادرة</span>
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span class="mx-3">الفاوتير الصادرة</span>
             </Link>
           </li>
           <li class="mx-5">
-          <Link
-            :href="route('transfer.index')"
-            class="py-3 px-4 block rounded-lg my-3"
-            :class="
+            <Link :href="route('transfer.index')" class="py-3 px-4 block rounded-lg my-3" :class="
               route().current('transfer.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
-            "
-          >
+            ">
             <i class="fa-solid fa-truck"></i>
             <span class="mx-3">نقل بضائع</span>
-          </Link>
-        </li>
-          <li class="mx-5">
-            <Link
-              :href="route('debtor.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('debtor.*') || route().current('debtor-pay.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-hand-holding-dollar"></i>
-              <span class="mx-3">مدينون</span>
             </Link>
           </li>
-          <li
-            class="
+          <li class="mx-5">
+            <Link :href="route('debtor.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('debtor.*') || route().current('debtor-pay.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            <span class="mx-3">مدينون</span>
+            </Link>
+          </li>
+          <li class="
               pt-5
               text-center text-xs
               border-t border-[#323248]
               text-slate-600
               block
-            "
-          >
+            ">
             الأقل إستخداماً
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('creditor.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('creditor.*') ||
+            <Link :href="route('creditor.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('creditor.*') ||
                 route().current('creditor-pay.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-money-check-dollar"></i>
-              <span class="mx-3">دائنون</span>
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <span class="mx-3">دائنون</span>
             </Link>
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('kit.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('kit.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-brands fa-buffer"></i>
-              <span class="mx-3">قطع الغيار</span>
+            <Link :href="route('kit.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('kit.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-brands fa-buffer"></i>
+            <span class="mx-3">قطع الغيار</span>
             </Link>
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('people.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('people.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fas fa-user-friends"></i>
-              <span class="mx-3">الشركات</span>
+            <Link :href="route('people.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('people.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fas fa-user-friends"></i>
+            <span class="mx-3">الشركات</span>
             </Link>
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('cash.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('cash.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-money-bill-1-wave"></i>
-              <span class="mx-3">الكاش</span>
+            <Link :href="route('cash.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('cash.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-money-bill-1-wave"></i>
+            <span class="mx-3">الكاش</span>
             </Link>
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('product.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('product.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fa-solid fa-box"></i>
-              <span class="mx-3">المنتجات</span>
+            <Link :href="route('product.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('product.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-box"></i>
+            <span class="mx-3">المنتجات</span>
             </Link>
           </li>
           <li class="mx-5">
-            <Link
-              :href="route('warehouse.index')"
-              class="py-3 px-4 block rounded-lg my-3"
-              :class="
-                route().current('warehouse.*')
-                  ? 'bg-[#009ef7]'
-                  : 'hover:text-[#009ef7]'
-              "
-            >
-              <i class="fas fa-warehouse"></i>
-              <span class="mx-3">المخازن</span>
+            <Link :href="route('warehouse.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('warehouse.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fas fa-warehouse"></i>
+            <span class="mx-3">المخازن</span>
             </Link>
           </li>
         </ul>
       </perfect-scrollbar>
     </aside>
-    <div
-      class="aside-overlay xl:hidden"
-      :class="{
-        block: asideOpenStateMobile,
-        hidden: !asideOpenStateMobile,
-      }"
-      @click="$emit('asideShowMobile')"
-    ></div>
+    <div class="aside-overlay xl:hidden" :class="{
+      block: asideOpenStateMobile,
+      hidden: !asideOpenStateMobile,
+    }" @click="$emit('asideShowMobile')"></div>
   </div>
 </template>
 
@@ -257,6 +195,7 @@ const asideOpenStateMobile = inject("asideOpenStateMobile");
 aside {
   z-index: 81;
 }
+
 .aside-overlay {
   width: 100vw;
   height: 100%;
@@ -268,6 +207,7 @@ aside {
   bottom: 0;
   left: 0;
 }
+
 .ps {
   height: 100%;
 }

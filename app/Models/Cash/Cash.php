@@ -6,6 +6,7 @@ use App\Models\Creditor\Creditor;
 use App\Models\Creditor\CreditorPay;
 use App\Models\Debtor\Debtor;
 use App\Models\Debtor\DebtorPay;
+use App\Models\Expense\Expense;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\User;
@@ -66,5 +67,13 @@ class Cash extends Model
     public function creditor_pays()
     {
         return $this->hasMany(CreditorPay::class);
+    }
+
+    /**
+     * Get the Expense for the Cashs.
+     */
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 }

@@ -55,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware($middleware)->group(base_path('routes/app/incoming-invoice.php'));
             Route::middleware($middleware)->group(base_path('routes/app/outgoing-invoice.php'));
             Route::middleware($middleware)->group(base_path('routes/app/transfer.php'));
-            
+            Route::middleware($middleware)->group(base_path('routes/app/expense.php'));
         });
     }
 

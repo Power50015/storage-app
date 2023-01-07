@@ -8,6 +8,9 @@ use App\Models\Debtor\DebtorAttachment;
 use App\Models\Debtor\DebtorPay;
 use App\Models\Debtor\DebtorPayAttachment;
 use App\Models\Driver\Driver;
+use App\Models\Expense\ExpenseAttachment;
+use App\Models\Expense\ExpenseImage;
+use App\Models\Expense\ExpenseNote;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
@@ -550,17 +553,39 @@ class User extends Authenticatable
         return $this->hasMany(PeopleNote::class);
     }
     /**
-     * Get the Debtor for the DebtorAttachment.
+     * Get the Debtor for the PeopleImage.
      */
     public function people_images()
     {
         return $this->hasMany(PeopleImage::class);
     }
     /**
-     * Get the Debtor for the DebtorAttachment.
+     * Get the Debtor for the PeopleAttachment.
      */
     public function people_attachments()
     {
         return $this->hasMany(PeopleAttachment::class);
+    }
+
+    /**
+     * Get the users for the ExpenseNote.
+     */
+    public function expense_notes()
+    {
+        return $this->hasMany(ExpenseNote::class);
+    }
+    /**
+     * Get the users for the ExpenseImage.
+     */
+    public function expense_images()
+    {
+        return $this->hasMany(ExpenseImage::class);
+    }
+    /**
+     * Get the users for the ExpenseAttachment.
+     */
+    public function expense_attachments()
+    {
+        return $this->hasMany(ExpenseAttachment::class);
     }
 }

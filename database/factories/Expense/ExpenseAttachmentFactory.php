@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Expense;;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Expense>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Expee\ExpenseAttachment>
  */
-class ExpenseFactory extends Factory
+class ExpenseAttachmentFactory extends Factory
 {
     /**
      * Define the model's default state.

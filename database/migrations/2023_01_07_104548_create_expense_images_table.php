@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('expense_images', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title');
-            $table->decimal('amount', $precision = 11, $scale = 2);
-            $table->text('description')->nullable();
-            $table->timestamp('date')->useCurrent();
-            $table->foreignId('cash_id');
+            $table->text('image');
+            $table->foreignId('expense_id');
             $table->foreignId('user_id');
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('expense_images');
     }
 };

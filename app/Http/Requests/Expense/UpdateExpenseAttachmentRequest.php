@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Creditor;
+namespace App\Http\Requests\Expense;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCreditorNoteRequest extends FormRequest
+class UpdateExpenseAttachmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreCreditorNoteRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,19 +24,7 @@ class StoreCreditorNoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'note' => 'required',
-        ];
-    }
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-
-        return [
-            'note.required' => 'يجب إدخال الملاحظه .',
+            //
         ];
     }
 }
