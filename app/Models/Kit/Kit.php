@@ -4,9 +4,7 @@ namespace App\Models\Kit;
 
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
 use App\Models\Product\Product;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\Product\ProductBrand;
 use App\Models\Product\ProductCategory;
 use App\Models\Product\ProductCollection;
@@ -15,6 +13,8 @@ use App\Models\Product\ProductCountry;
 use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductModel;
 use App\Models\Product\ProductType;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Transfer\TransferKit;
 use App\Models\User;
 use App\Models\Warehouse\KitStock;
@@ -99,12 +99,19 @@ class Kit extends Model
     {
         return $this->hasMany(OutgoingInvoiceKit::class);
     }
-    /**
+     /**
      * Get the ReturnedIncomingInvoiceKit for the user.
      */
     public function returned_incoming_invoice_kits()
     {
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceContent for the user.
+     */
+    public function returned_incoming_invoice_contents()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceContent::class);
     }
     /**
      * Get the ReturnedIncomingInvoiceKit for the user.

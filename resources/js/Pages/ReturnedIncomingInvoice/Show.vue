@@ -1,45 +1,45 @@
 <template>
-  <AppLayout title="الفواتير الوارده">
+  <AppLayout title="مرتجع الوارده">
     <SectionTemplate class="pb-0">
       <div class="header">
-        <h2 class="font-bold text-xl mb-2 print:hidden">فاتورة وارده</h2>
+        <h2 class="font-bold text-xl mb-2 print:hidden">مرتجع وارده</h2>
         <h2 class="px-2 text-slate-600 mb-2">
-          تاريخ الإضافه :{{ dateFormat(incoming_invoice.created_at) }}
+          تاريخ الإضافه :{{ dateFormat(returned_incoming_invoice.created_at) }}
         </h2>
         <h2 class="px-2">
-          تاريخ الفاتورة : {{ dateFormat(incoming_invoice.date) }}
+          تاريخ البيان : {{ dateFormat(returned_incoming_invoice.date) }}
         </h2>
         <div class="flex justify-between my-3">
           <h2 class="px-2 print:mb-3">
-            رقم الفاتورة : {{ incoming_invoice.number }}
+            رقم المرتجع : {{ returned_incoming_invoice.number }}
           </h2>
-          <Link :href="route('warehouse.show', incoming_invoice.people.id)" class="hover:text-[#009ef7]">
+          <Link :href="route('warehouse.show', returned_incoming_invoice.people.id)" class="hover:text-[#009ef7]">
           <h2 class="px-2 print:mb-3">
-            المخزن المستلم : {{ incoming_invoice.warehouse.name }}
+            المخزن المسلم : {{ returned_incoming_invoice.warehouse.name }}
           </h2>
           </Link>
         </div>
         <div class="flex justify-between my-3">
-          <Link :href="route('people.show', incoming_invoice.people.id)" class="hover:text-[#009ef7]">
+          <Link :href="route('people.show', returned_incoming_invoice.people.id)" class="hover:text-[#009ef7]">
           <h2 class="px-2 print:mb-3">
-            المورد : {{ incoming_invoice.people.name }}
+            المورد : {{ returned_incoming_invoice.people.name }}
           </h2>
           </Link>
           <div>
             <h2 class="px-2">
-              إضفيت بواسطه : {{ incoming_invoice.user.name }}
+              إضفيت بواسطه : {{ returned_incoming_invoice.user.name }}
             </h2>
           </div>
         </div>
         <div class="flex justify-between my-3">
-          <h2 class="" v-if="incoming_invoice.pay_type == 0">
+          <h2 class="" v-if="returned_incoming_invoice.pay_type == 0">
             نوع الدفع : على الحساب
           </h2>
-          <h2 class="" v-if="incoming_invoice.pay_type == 1">
+          <h2 class="" v-if="returned_incoming_invoice.pay_type == 1">
             نوع الدفع : كاش
           </h2>
-          <h2 class="" v-if="incoming_invoice.pay_type == 1 && incoming_invoice.cash">
-            نوع الكاش : {{ incoming_invoice.cash.title }}
+          <h2 class="" v-if="returned_incoming_invoice.pay_type == 1 && returned_incoming_invoice.cash">
+            نوع الكاش : {{ returned_incoming_invoice.cash.title }}
           </h2>
         </div>
       </div>
@@ -48,7 +48,7 @@
         <h2 class="font-bold text-xl my-3">محتويات الفاتورة</h2>
         <table class="border border-slate-700 w-full text-right">
           <thead>
-            <tr v-if="incomingInvoiceContent.length > 0">
+            <tr v-if="returnedIncomingInvoiceContent.length > 0">
               <th class="border border-slate-700 py-3 px-3 font-bold s-border">
                 المنتج
               </th>
@@ -65,7 +65,7 @@
           </thead>
           <tbody>
             <!--incomingInvoiceContent-->
-            <tr v-for="product in incomingInvoiceContent" :key="product.index" class="">
+            <tr v-for="product in returnedIncomingInvoiceContent" :key="product.index" class="">
               <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
                 <Link :href="route('product.show', product.product.id)">
                 {{ ContentName(product) }}
@@ -82,7 +82,7 @@
               </td>
             </tr>
             <!--incomingInvoiceKit-->
-            <tr v-if="incomingInvoiceKit.length > 0">
+            <tr v-if="returnedIncomingInvoiceKit.length > 0">
               <th class="border border-slate-700 py-3 px-3 font-bold s-border">
                 قطع الغيار
               </th>
@@ -96,7 +96,7 @@
                 الإجمالى
               </th>
             </tr>
-            <tr v-for="kit in incomingInvoiceKit" :key="kit.index" class="">
+            <tr v-for="kit in returnedIncomingInvoiceKit" :key="kit.index" class="">
               <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
                 <Link :href="route('kit.show', kit.kit.id)">
                 {{ KitName(kit) }}
@@ -119,13 +119,13 @@
         <div class="flex justify-between">
           <h2 class="p-2 print:w-full print:mb-3">
             الإجمالى قبل الخصم :
-            {{ ((incoming_invoice.total * 1) + (incoming_invoice.discount * 1) ).toFixed(2)}}
+            {{ ((returned_incoming_invoice.total * 1) + (returned_incoming_invoice.discount * 1)).toFixed(2)}}
           </h2>
-          <h2 class="p-2">الخصم : {{ incoming_invoice.discount }}</h2>
+          <h2 class="p-2">الخصم : {{ returned_incoming_invoice.discount }}</h2>
         </div>
         <h2 class="p-2 font-bold">
           المطلوب :
-          {{ incoming_invoice.total }}
+          {{ returned_incoming_invoice.total }}
         </h2>
       </div>
       <div class="btns flex justify-around print:hidden">
@@ -133,13 +133,15 @@
           طباعه
           <i class="fa-solid fa-print mx-3"></i>
         </btn-primary>
-        <btn-success :element="Link" :to="route('incoming-invoice.edit', incoming_invoice.id)">
-          تعديل الفاتورة
+        <btn-success :element="Link" :to="route('returned-incoming-invoice.edit', returned_incoming_invoice.id)">
+          تعديل المرتجع
         </btn-success>
+        <DeleteModel :id="returned_incoming_invoice.id" title=" " data="المرتجع الوارد"
+          url="returned-incoming-invoice" />
       </div>
     </SectionTemplate>
     <SectionTemplate class="print:p-0 print:hidden">
-      <IncomingInvoiceTabs :id="incoming_invoice.id" />
+      <IncomingInvoiceTabs :id="returned_incoming_invoice.id" />
     </SectionTemplate>
   </AppLayout>
 </template>
@@ -154,31 +156,33 @@ import SectionTemplate from "@/Components/SectionTemplate.vue";
 import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
+import BtnDanger from "@/Components/Buttons/BtnDanger.vue";
 import IncomingInvoiceTabs from "@/Components/IncomingInvoice/IncomingInvoiceTabs.vue";
+import DeleteModel from "@/Components/Modals/DeleteModel.vue";
 
 const props = defineProps([
-  "incomingInvoice",
-  "incomingInvoiceContent",
-  "incomingInvoiceKit",
+  "returnedIncomingInvoice",
+  "returnedIncomingInvoiceContent",
+  "returnedIncomingInvoiceKit",
 ]);
 
-const incoming_invoice = props.incomingInvoice[0];
-const incoming_invoice_content = props.incomingInvoiceContent;
-const incomingInvoiceKit = props.incomingInvoiceKit;
+const returned_incoming_invoice = props.returnedIncomingInvoice[0];
+const returned_incoming_invoice_content = props.returnedIncomingInvoiceContent;
+const returned_incomingInvoiceKit = props.returnedIncomingInvoiceKit;
 
-provide("title", "الفواتير الوارده");
+provide("title", "مرتجع الوارده");
 provide(
   "breadcrumb",
   readonly([
     { index: 0, linkTitle: "الرئيسية", linkRoute: "dashboard" },
     {
       index: 1,
-      linkTitle: "الفواتير الوارده",
-      linkRoute: "incoming-invoice.index",
+      linkTitle: "مرتجع الوارده",
+      linkRoute: "returned-incoming-invoice.index",
     },
     {
       index: 2,
-      linkTitle: "فاتورة " + incoming_invoice.number,
+      linkTitle: "مرتجع " + returned_incoming_invoice.id,
       linkRoute: "#",
     },
   ])

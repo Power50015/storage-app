@@ -13,7 +13,7 @@ class StoreReturnedIncomingInvoiceRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,47 @@ class StoreReturnedIncomingInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'people_id' => 'required',
+            'warehouse_id' => 'required',
+            'pay_type' => 'required',
+            'cash_id' => 'required_if:pay_type,true',
+            'discount' => 'numeric',
+            'date' => 'required|date',
+            'content' => $this->request->all()["kit"] == [] ? 'required' : '',
+            'content.*.product_id' => $this->request->all()["kit"] == [] ? 'required|numeric' : '',
+            'content.*.price' => $this->request->all()["kit"] == [] ? 'required|numeric|min:0' : '',
+            'content.*.quantity' => $this->request->all()["kit"] == [] ? 'required|numeric|min:0' : '',
+            'kit' => $this->request->all()["content"] == [] ? 'required' : '',
+            'kit.*.kit_id' => $this->request->all()["content"] == [] ? 'required|numeric' : '',
+            'kit.*.quantity' => $this->request->all()["content"] == [] ? 'required|numeric|min:0' : '',
+            'kit.*.price' => $this->request->all()["content"] == [] ? 'required|numeric|min:0' : '',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'people_id' => 'يجب إدخال المخزن الشركه ',
+            'warehouse_id.*' => 'يجب إدخال المخزن المستقبل ',
+            'cash_id.*' => 'يجب إدخال نوع الكاش  ',
+            'discount.*' => 'يجب أن يكون الخصم رقم',
+            'date.*' => 'يجب إدخال تاريخ الفاتوره',
+            'content.*' => 'يجب إدخال محتوى الفاتورة',
+            'content.*.product_id.*' => 'يجب إدخال المنتجات للفاتورة',
+            'content.*.price.*' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
+            'content.*.quantity.*' =>  'يجب إدخال كميه المنتج فى الفاتورة',
+            'content.*.price.*' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
+            'content.*.quantity.*' => 'يجب إدخال كميه المنتج فى الفاتورة',
+            'content.*.price.*' => 'يجب إدخال أسعار المنتجات فى الفاتورة',
+            'content.*.quantity.*' => 'يجب إدخال كميه المنتج فى الفاتورة',
+            'kit.*' => 'يجب إدخال محتوى الفاتورة',
+            'kit.*.kit_id.*' => 'يجب إدخال المنتجات للفاتورة',
+            'kit.*.quantity.*' =>  'يجب إدخال كميه قطع الغيار فى الفاتورة',
+            'kit.*.price.*' =>  'يجب إدخال سعر قطع الغيار فى الفاتورة',
         ];
     }
 }

@@ -9,13 +9,12 @@ use App\Models\Debtor\DebtorPay;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,13 +61,19 @@ class People extends Model
     {
         return $this->hasMany(ReturnedIncomingInvoice::class);
     }
-
-    /**
+ /**
      * Get the ReturnedIncomingInvoiceKit for the user.
      */
     public function returned_incoming_invoice_kits()
     {
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceContent for the user.
+     */
+    public function returned_incoming_invoice_contents()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceContent::class);
     }
 
     /**

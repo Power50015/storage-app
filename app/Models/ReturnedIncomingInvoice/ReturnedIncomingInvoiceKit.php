@@ -2,7 +2,6 @@
 
 namespace App\Models\ReturnedIncomingInvoice;
 
-use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\Kit\Kit;
 use App\Models\People\People;
 use App\Models\User;
@@ -22,13 +21,6 @@ class ReturnedIncomingInvoiceKit extends Model
     }
 
     /**
-     * Get the incoming invoice for the IncomingInvoiceContent.
-     */
-    public function incoming_invoice()
-    {
-        return $this->belongsTo(IncomingInvoice::class);
-    }
-    /**
      * Get the product for the IncomingInvoiceContent.
      */
     public function kit()
@@ -41,5 +33,13 @@ class ReturnedIncomingInvoiceKit extends Model
     public function people()
     {
         return $this->belongsTo(People::class);
+    }
+
+    /**
+     * Get the ReturnedIncomingInvoice for the user.
+     */
+    public function returned_incoming_invoices()
+    {
+        return $this->hasMany(ReturnedIncomingInvoice::class);
     }
 }

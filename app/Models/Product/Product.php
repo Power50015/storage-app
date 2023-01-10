@@ -2,11 +2,12 @@
 
 namespace App\Models\Product;
 
-use App\Models\IncomingInvoice\IncomingInvoiceContent;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\Kit\Kit;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\TransferContent;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
+use App\Models\Transfer\TransferContent;
+use App\Models\User;
 use App\Models\Warehouse\WarehouseStockContent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -87,35 +88,19 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
-
     /**
-     * Get the IncomingInvoiceContent for the Product.
+     * Get the IncomingInvoiceContent for the user.
      */
     public function incoming_invoice_contents()
     {
         return $this->hasMany(IncomingInvoiceContent::class);
-    }
-
-    /**
-     * Get the ReturnedIncomingInvoice for the Product.
-     */
-    public function returned_incoming_invoices()
-    {
-        return $this->hasMany(ReturnedIncomingInvoice::class);
-    }
-    /**
-     * Get the OutgoingInvoiceContent for the Product.
-     */
-    public function outgoing_invoice_contents()
-    {
-        return $this->hasMany(OutgoingInvoiceContent::class);
     }
     /**
      * Get the ReturnedOutgoingInvoice for the user.
      */
     public function returned_outgoing_invoices()
     {
-        return $this->hasMany(ReturnedOutgoingInvoice::class);
+        return $this->hasMany(ReturnedOutgoingInvoiceContent::class);
     }
     /**
      * Get the WarehouseStockContent for the Product.
@@ -164,13 +149,20 @@ class Product extends Model
     {
         return $this->hasMany(ProductAttachment::class);
     }
+    /**
+     * Get the ReturnedIncomingInvoiceContent for the IncomingInvoice.
+     */
+    public function returned_incoming_invoice_contents()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceContent::class);
+    }
 
     /**
      * Get the totla sales Number Product.
      */
     public function getTotalSalesAttribute()
     {
-        return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
+        return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity'));
         return 0;
     }
 }

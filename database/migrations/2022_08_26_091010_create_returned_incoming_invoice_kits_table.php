@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('date')->useCurrent();
             $table->integer('quantity');
             $table->decimal('price', $precision = 11, $scale = 2);
-            $table->foreignId('incoming_invoice_id');
+            $table->foreignId('returned_incoming_invoice_id');
             $table->foreignId('kit_id');
             $table->foreignId('user_id');
             $table->foreignId('people_id');

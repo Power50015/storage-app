@@ -5,15 +5,11 @@ namespace App\Models\Warehouse;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Kit\Kit;
 use App\Models\Kit\KitOperation;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\Product\DestructibleGoods;
 use App\Models\Product\DestructibleGoodsAction;
 use App\Models\Product\Product;
@@ -181,5 +177,13 @@ class Warehouse extends Model
     public function kit_stocks()
     {
         return $this->hasMany(KitStock::class);
+    }
+
+    /**
+     * Get the ReturnedIncomingInvoice for the user.
+     */
+    public function returned_incoming_invoices()
+    {
+        return $this->hasMany(ReturnedIncomingInvoice::class);
     }
 }

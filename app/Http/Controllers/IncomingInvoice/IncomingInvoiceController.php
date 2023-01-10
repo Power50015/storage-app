@@ -3,27 +3,21 @@
 namespace App\Http\Controllers\IncomingInvoice;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceContentRequest;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Http\Requests\IncomingInvoice\StoreIncomingInvoiceRequest;
 use App\Http\Requests\IncomingInvoice\UpdateIncomingInvoiceRequest;
 use App\Models\Cash\Cash;
-use App\Models\IncomingInvoice\IncomingInvoiceAttachment;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
 use App\Models\Kit\Kit;
 use App\Models\People\People;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\Request;
-
 use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Warehouse\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class IncomingInvoiceController extends Controller
@@ -159,7 +153,6 @@ class IncomingInvoiceController extends Controller
         return Inertia::render('IncomingInvoice/Show', [
             "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
             "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
             "incomingInvoiceKit" => IncomingInvoiceKit::with(
                 'kit',
                 'kit.product',
@@ -180,7 +173,6 @@ class IncomingInvoiceController extends Controller
                 'kit.product_type',
                 'kit.product_category'
             )->where('incoming_invoice_id', $incomingInvoice)->get(),
-            "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
         ]);
     }
 

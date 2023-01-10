@@ -9,6 +9,7 @@ use App\Models\Debtor\DebtorPay;
 use App\Models\Expense\Expense;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -75,5 +76,12 @@ class Cash extends Model
     public function expenses()
     {
         return $this->hasMany(Expense::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoice for the user.
+     */
+    public function returned_incoming_invoices()
+    {
+        return $this->hasMany(ReturnedIncomingInvoice::class);
     }
 }

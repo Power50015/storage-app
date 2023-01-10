@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\ReturnedIncomingInvoice;
 
 use App\Http\Controllers\Controller;
-use App\Models\ReturnedIncomingInvoiceAttachment;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceAttachment;
 use App\Http\Requests\ReturnedIncomingInvoice\StoreReturnedIncomingInvoiceAttachmentRequest;
 use App\Http\Requests\ReturnedIncomingInvoice\UpdateReturnedIncomingInvoiceAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ReturnedIncomingInvoiceAttachmentController extends Controller
 {
@@ -16,7 +20,14 @@ class ReturnedIncomingInvoiceAttachmentController extends Controller
      */
     public function index()
     {
-        //
+        $file = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "attachment" => ReturnedIncomingInvoiceAttachment::with('user')->latest()->where('returned_incoming_invoice_id', $file)->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,14 @@ class ReturnedIncomingInvoiceAttachmentController extends Controller
      */
     public function store(StoreReturnedIncomingInvoiceAttachmentRequest $request)
     {
-        //
+        $attachment_path = $request["attachment"]->store('attachment/returned_incoming_invoice', 'public');
+        ReturnedIncomingInvoiceAttachment::create([
+            'attachment' =>  $attachment_path,
+            'returned_incoming_invoice_id' => $request->id,
+            'title' => $request->title,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +100,9 @@ class ReturnedIncomingInvoiceAttachmentController extends Controller
      */
     public function destroy(ReturnedIncomingInvoiceAttachment $returnedIncomingInvoiceAttachment)
     {
-        //
+        Storage::delete("public/" . $returnedIncomingInvoiceAttachment["attachment"]);
+        $returnedIncomingInvoiceAttachment->delete();
+
+        return Redirect::back();
     }
 }

@@ -62,8 +62,7 @@
           </li>
           <li class="mx-5">
             <Link :href="route('incoming-invoice.index')" class="py-3 px-4 block rounded-lg my-3" :class="
-              route().current('incoming-invoice.*') ||
-                route().current('returned-incoming-invoice.*')
+              route().current('incoming-invoice.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             ">
@@ -130,6 +129,16 @@
             ">
             <i class="fa-brands fa-buffer"></i>
             <span class="mx-3">قطع الغيار</span>
+            </Link>
+          </li>
+          <li class="mx-5">
+            <Link :href="route('returned-incoming-invoice.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('returned-incoming-invoice.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-file-lines"></i>
+            <span class="mx-3">مرتجع الوارده</span>
             </Link>
           </li>
           <li class="mx-5">

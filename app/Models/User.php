@@ -17,8 +17,6 @@ use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceImage;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
 use App\Models\IncomingInvoice\IncomingInvoiceNote;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Kit\Kit;
 use App\Models\Kit\KitAttachment;
 use App\Models\Kit\KitImage;
@@ -28,8 +26,6 @@ use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceImage;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\People\People;
 use App\Models\People\PeopleAttachment;
 use App\Models\People\PeopleImage;
@@ -48,6 +44,12 @@ use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductModel;
 use App\Models\Product\ProductNote;
 use App\Models\Product\ProductType;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceAttachment;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceImage;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceNote;
 use App\Models\Transfer\Transfer;
 use App\Models\Transfer\TransferAttachment;
 use App\Models\Transfer\TransferContent;
@@ -187,7 +189,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(OutgoingInvoiceAttachment::class);
     }
-     /**
+    /**
      * Get the OutgoingInvoiceImage for the user.
      */
     public function outgoing_invoice_images()
@@ -527,6 +529,35 @@ class User extends Authenticatable
     {
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
     }
+    /**
+     * Get the ReturnedIncomingInvoiceContent for the user.
+     */
+    public function returned_incoming_invoice_contents()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceContent::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceAttachment for the user.
+     */
+    public function returned_incoming_invoice_attachments()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceAttachment::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceNote for the user.
+     */
+    public function returned_incoming_invoice_notes()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceNote::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceImage for the user.
+     */
+    public function returned_incoming_invoice_images()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceImage::class);
+    }
+
     /**
      * Get the ReturnedIncomingInvoiceKit for the user.
      */
