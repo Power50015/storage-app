@@ -13,17 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('returned_incoming_invoice_contents', function (Blueprint $table) {
+        Schema::create('returned_incoming_invoice_images', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->decimal('price', $precision = 11, $scale = 2);
-            $table->integer('quantity');
+            $table->text('image');
             $table->foreignId('returned_incoming_invoice_id');
-            $table->foreignId('product_id');
             $table->foreignId('user_id');
-            $table->foreignId('people_id')->nullable();
-            $table->foreignId('warehouse_id');
-            $table->timestamp('date')->useCurrent();
         });
     }
 
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('returned_incoming_invoice_contents');
+        Schema::dropIfExists('returned_incoming_invoice_images');
     }
 };
