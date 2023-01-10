@@ -4,6 +4,7 @@ namespace App\Models\IncomingInvoice;
 
 use App\Models\Product\Product;
 use App\Models\User;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,5 +40,13 @@ class IncomingInvoiceContent extends Model
     public function people()
     {
         return $this->belongsTo(People::class);
+    }
+
+    /**
+     * Get the warehouses for the IncomingInvoice.
+     */
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
     }
 }

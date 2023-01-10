@@ -175,6 +175,8 @@ class ProductController extends Controller
                 'product_material_id' => $request->product_material_id,
                 'product_country_id' => $request->product_country_id,
                 'price' => $request->price,
+                'stock' => 0,
+                'destructible' => 0,
                 'user_id' => auth()->user()->id,
                 'image' => $request->hasFile('image') ? $request->file('image')->store('image/product', 'public') : 'no_image.png'
             ]
@@ -338,24 +340,25 @@ class ProductController extends Controller
 
         // Get Actions
         $actionData = collect([]);
+        
         //  Stock
         if ($action == "Stock" || $action == "all") {
             $WarehouseStockContent = WarehouseStockContent::with(['user', 'warehouse_stock', 'warehouse_stock.warehouse'])->where('product_id', $product)->get();
             foreach ($WarehouseStockContent as $key => $value) {
                 $WarehouseStockContent[$key]["dataType"] = "Stock";
-                $WarehouseStockContent[$key]["date"] = $WarehouseStockContent[$key]["warehouse_stock"]["date"];
                 $actionData->push($WarehouseStockContent[$key]);
             }
         }
+
         if ($action == "IncomingInvoice" || $action == "all") {
             //  Incoming Invoice
             $IncomingInvoiceContent = IncomingInvoiceContent::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('product_id', $product)->get();
             foreach ($IncomingInvoiceContent as $key => $value) {
                 $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
-                $IncomingInvoiceContent[$key]["date"] = $IncomingInvoiceContent[$key]["incoming_invoice"]["date"];
                 $actionData->push($IncomingInvoiceContent[$key]);
             }
         }
+        
         //  Returned Incoming Invoice
         if ($action == "ReturnedIncomingInvoice" || $action == "all") {
             $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('product_id', $product)->get();
@@ -369,7 +372,6 @@ class ProductController extends Controller
             $TransferContent = TransferContent::with(['user', 'transfer', 'transfer.warehouse_from', 'transfer.warehouse_to', 'transfer.driver'])->where('product_id', $product)->get();
             foreach ($TransferContent as $key => $value) {
                 $TransferContent[$key]["dataType"] = "Transfer";
-                $TransferContent[$key]["date"] = $TransferContent[$key]["transfer"]["date"];
                 $actionData->push($TransferContent[$key]);
             }
         }
@@ -379,7 +381,6 @@ class ProductController extends Controller
             $OutgoingInvoiceContent = OutgoingInvoiceContent::with('user', 'outgoing_invoice', 'outgoing_invoice.people', 'outgoing_invoice.warehouse')->where('product_id', $product)->get();
             foreach ($OutgoingInvoiceContent as $key => $value) {
                 $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
-                $OutgoingInvoiceContent[$key]["date"] = $OutgoingInvoiceContent[$key]["outgoing_invoice"]["date"];
 
                 $actionData->push($OutgoingInvoiceContent[$key]);
             }
@@ -429,17 +430,17 @@ class ProductController extends Controller
             $warehouse = $warehouses[$key]['id'];
             $quantity = 0;
             // Add Stock
-            $quantity += WarehouseStockContent::with('warehouse_stock')->where('product_id', $product)->whereRelation('warehouse_stock', 'warehouse_id', $warehouse)->sum('quantity');
+            $quantity += WarehouseStockContent::with('warehouse_stock')->where('product_id', $product)->where('warehouse_id', $warehouse)->sum('quantity');
             // Add Incoming Invoice
-            $quantity += IncomingInvoiceContent::with('incoming_invoice')->where('product_id', $product)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            $quantity += IncomingInvoiceContent::with('incoming_invoice')->where('product_id', $product)->where('warehouse_id', $warehouse)->sum('quantity');
             // subtract Returned Incoming Invoice
             $quantity -= ReturnedIncomingInvoice::with('incoming_invoice')->where('product_id', $product)->whereRelation('incoming_invoice', 'warehouse_id', $warehouse)->sum('quantity');
             // Transfer to
-            $quantity += TransferContent::with('transfer')->where('product_id', $product)->whereRelation('transfer', 'warehouse_to_id', $warehouse)->sum('quantity');
+            $quantity += TransferContent::with('transfer')->where('product_id', $product)->where('warehouse_to_id', $warehouse)->sum('quantity');
             // Transfer From
-            $quantity -= TransferContent::with('transfer')->where('product_id', $product)->whereRelation('transfer', 'warehouse_from_id', $warehouse)->sum('quantity');
+            $quantity -= TransferContent::with('transfer')->where('product_id', $product)->where('warehouse_from_id', $warehouse)->sum('quantity');
             // subtract Outgoing Invoice
-            $quantity = $quantity - OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $product)->whereRelation('outgoing_invoice', 'warehouse_id', $warehouse)->sum('quantity');
+            $quantity = $quantity - OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $product)->where('warehouse_id', $warehouse)->sum('quantity');
             //Re-add Returned Outgoing Invoice
             $quantity -= ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $product)->whereRelation('outgoing_invoice', 'warehouse_id', $warehouse)->sum('quantity');
             // DestructibleGoodsAction

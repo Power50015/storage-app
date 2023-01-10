@@ -111,11 +111,11 @@
             <span>-</span>
             <h2 class="mx-3 text-[#009ef7]">
               إجمالى المتاح بالمخازن مع الهالك :
-              {{ product.total_number_of_product }}
+              {{ product.stock }}
             </h2>
             <span>-</span>
             <h2 class="mx-3 text-[#009ef7]">
-              إجمالى الهالك : {{ product.destructible_goods }}
+              إجمالى الهالك : {{ product.destructible }}
             </h2>
           </div>
 

@@ -46,8 +46,8 @@ class CreditorController extends Controller
      */
     public function store(StoreCreditorRequest $request)
     {
-         // Save the Debtor
-         $creditor = Creditor::create([
+        // Save the Debtor
+        $creditor = Creditor::create([
             'title' => $request->title,
             'amount' => $request->amount,
             'description' => $request->description,
@@ -55,7 +55,11 @@ class CreditorController extends Controller
             'people_id' => $request->people_id,
             'user_id' => Auth::id()
         ]);
-        
+
+        $people = People::find($request->people_id);
+        $people->balance = $people->balance + $request->amount;
+        $people->save();
+
         return Redirect::route('creditor.index');
     }
 
@@ -68,7 +72,7 @@ class CreditorController extends Controller
     public function show(Creditor $creditor)
     {
         return Inertia::render('Creditor/Show', [
-            "creditor" =>  Creditor::where('id', $creditor->id)->with('user','people')->get(),
+            "creditor" =>  Creditor::where('id', $creditor->id)->with('user', 'people')->get(),
         ]);
     }
 
@@ -94,12 +98,19 @@ class CreditorController extends Controller
      */
     public function update(UpdateCreditorRequest $request, Creditor $creditor)
     {
+        $people = People::find($request->people_id);
+        $people->balance = $people->balance - $creditor->amount; // Delete the old value
+        $people->balance = $people->balance + $request->amount; // add the new value
+        $people->save();
+
         $creditor->title = $request->title;
         $creditor->amount = $request->amount;
         $creditor->description = $request->description;
         $creditor->date = Carbon::parse($request->date);
         $creditor->people_id = $request->people_id;
         $creditor->save();
+
+
         return Redirect::route('creditor.show', $creditor->id);
     }
 
@@ -130,7 +141,7 @@ class CreditorController extends Controller
     }
     public function creditorAction()
     {
-        
+
         $action = Request::input('action');
 
         // Get Actions

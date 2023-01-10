@@ -26,12 +26,15 @@ class UpdateWarehouseStockRequest extends FormRequest
         return [
             'title' => 'required',
             'warehouses' => 'required',
+            'date' => 'required|date',
             'content' => $this->request->all()["kit"] == [] ? 'required' : '',
             'content.*.product_id' => $this->request->all()["kit"] == [] ? 'required|numeric' : '',
-            'content.*.quantity' => $this->request->all()["kit"] == [] ? 'required|numeric|min:1' : '',
+            'content.*.price' => $this->request->all()["kit"] == [] ? 'required|numeric|min:0' : '',
+            'content.*.quantity' => $this->request->all()["kit"] == [] ? 'required|numeric|min:0' : '',
             'kit' => $this->request->all()["content"] == [] ? 'required' : '',
             'kit.*.kit_id' => $this->request->all()["content"] == [] ? 'required|numeric' : '',
-            'kit.*.quantity' => $this->request->all()["content"] == [] ?  'required|numeric|min:1' : '',
+            'kit.*.quantity' => $this->request->all()["content"] == [] ? 'required|numeric|min:0' : '',
+            'kit.*.price' => $this->request->all()["content"] == [] ? 'required|numeric|min:0' : '',
         ];
     }
     /**

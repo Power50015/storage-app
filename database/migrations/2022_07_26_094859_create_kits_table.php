@@ -19,8 +19,17 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->text('image');
+            $table->foreignId('product_category_id')->nullable();
+            $table->foreignId('product_type_id')->nullable();
+            $table->foreignId('product_brand_id')->nullable();
+            $table->foreignId('product_collection_id')->nullable();
+            $table->foreignId('product_model_id')->nullable();
+            $table->foreignId('product_color_id')->nullable();
+            $table->foreignId('product_material_id')->nullable();
+            $table->foreignId('product_country_id')->nullable();
             $table->foreignId('product_id')->nullable();
             $table->foreignId('user_id');
+            $table->integer('stock')->default(0);
         });
     }
 

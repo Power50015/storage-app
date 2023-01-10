@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('logo')->nullable();
             $table->text('address')->nullable();
             $table->foreignId('user_id');
+            $table->decimal('balance', $precision = 11, $scale = 2)->default(0);
         });
     }
 

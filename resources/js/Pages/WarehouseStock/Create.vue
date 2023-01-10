@@ -9,9 +9,9 @@
       :toastDescription="form.title"
     >
       <FormSelect
-        v-model="form.warehouses"
+        v-model="form.warehouse_id"
         title="المخزن"
-        :error="errors.warehouses"
+        :error="errors.warehouse_id"
         :require="true"
         :options="options"
       />
@@ -19,6 +19,13 @@
         v-model="form.title"
         title="البند"
         :error="errors.title"
+        :require="true"
+      />
+      <!-- Date -->
+      <InputDate
+        v-model="form.date"
+        title="تاريخ الفاتوره"
+        :error="errors.date"
         :require="true"
       />
       <!-- Content-->
@@ -99,6 +106,8 @@ import BtnDanger from "@/Components/Buttons/BtnDanger.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
 import SelectProduct from "@/Forms/SelectProduct.vue";
 import SelectKits from "@/Forms/SelectKits.vue";
+import InputDate from "@/Forms/InputDate.vue";
+
 
 const props = defineProps([
   "errors",
@@ -119,7 +128,7 @@ const form = reactive({
     ? "warehouse-stock.update"
     : "warehouse-stock.store",
   title: props.warehouseStock ? props.warehouseStock.title : null,
-  warehouses: props.warehouseStock ? props.warehouseStock.warehouse_id : null,
+  warehouse_id: props.warehouseStock ? props.warehouseStock.warehouse_id : null,
   content: props.warehouseStock ? props.warehouseStockContent : [],
   kit: props.warehouseStock ? props.kitStock : [],
   date: props.warehouseStock

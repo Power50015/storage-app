@@ -10,6 +10,7 @@
                 ? 'border-[#009ef7] text-[#009ef7] border-b-2 font-bold'
                 : 'hover:border-b-2 cursor-pointer hover:text-[#0095e8] hover:border-[#0095e8] transition-all'
             "
+            v-if="description != null "
           >
             <div class="px-5 py-3" @click="tabClick('des')">الوصف</div>
           </li>

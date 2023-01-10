@@ -12,7 +12,6 @@
       <SelectPeople
         v-model="form.people_id"
         :error="errors.people_id"
-        :require="true"
         title="الشركه"
       />
       <!-- Warehouse -->

@@ -48,10 +48,11 @@ class WarehouseStockController extends Controller
      */
     public function store(StoreWarehouseStockRequest $request)
     {
+        // dd(Carbon::parse($request->date));
         // Save the Incoming Invoice
         $invice = WarehouseStock::create([
             'title' => $request->title,
-            'warehouse_id' => $request->warehouses,
+            'warehouse_id' => $request->warehouse_id,
             'date' => Carbon::parse($request->date),
             'user_id' => auth()->user()->id,
         ]);
@@ -59,20 +60,34 @@ class WarehouseStockController extends Controller
 
         // Save The Content Of Incoming Invoice
         for ($i = 0; $i <  count($request["content"]); $i++) {
-            WarehouseStockContent::create(array_merge(
-                $request["content"][$i],
-                ['warehouse_stock_id' => $invice['id'], 'user_id' => auth()->user()->id]
-            ));
+            WarehouseStockContent::create([
+                'product_id' => $request["content"][$i]["product_id"],
+                'quantity' => $request["content"][$i]["quantity"],
+                'warehouse_stock_id' => $invice['id'],
+                'user_id' => auth()->user()->id,
+                'warehouse_id' => $request->warehouse_id,
+                'date' => Carbon::parse($request->date),
+            ]);
+            $product = Product::find($request["content"][$i]["product_id"]);
+            $product->stock = $product->stock + $request["content"][$i]["quantity"];
+            $product->save();
         }
 
         // Save The Kit Of Incoming Invoice
         for ($i = 0; $i <  count($request["kit"]); $i++) {
-            KitStock::create(array_merge(
-                $request["kit"][$i],
-                ['warehouse_stock_id' => $invice['id'], 'user_id' => auth()->user()->id]
-            ));
+            KitStock::create([
+                'kit_id' => $request["kit"][$i]["kit_id"],
+                'quantity' => $request["kit"][$i]["quantity"],
+                'warehouse_stock_id' => $invice['id'],
+                'user_id' => auth()->user()->id,
+                'warehouse_id' => $request->warehouse_id,
+                'date' => Carbon::parse($request->date),
+            ]);
+            $kit = Kit::find($request["kit"][$i]["kit_id"]);
+            $kit->stock = $kit->stock + $request["kit"][$i]["quantity"];
+            $kit->save();
         }
-        return redirect()->route('warehouse.show',$invice['id']);
+        return redirect()->route('warehouse-stock.show', $invice['id']);
     }
 
     /**
@@ -107,7 +122,15 @@ class WarehouseStockController extends Controller
                 'kit_stocks.kit.product.product_model',
                 'kit_stocks.kit.product.product_color',
                 'kit_stocks.kit.product.product_material',
-                'kit_stocks.kit.product.product_country'
+                'kit_stocks.kit.product.product_country',
+                'kit_stocks.kit.product_category',
+                'kit_stocks.kit.product_type',
+                'kit_stocks.kit.product_brand',
+                'kit_stocks.kit.product_collection',
+                'kit_stocks.kit.product_model',
+                'kit_stocks.kit.product_color',
+                'kit_stocks.kit.product_material',
+                'kit_stocks.kit.product_country'
             )->where('id', $warehouseStock->id)->get(),
         ]);
     }

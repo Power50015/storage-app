@@ -34,4 +34,11 @@ class ProductCountry extends Model
     {
         return $this->hasMany(ProductBrand::class);
     }
+    /**
+     * Get the Kit for the ProductType.
+     */
+    public function kits()
+    {
+        return $this->hasMany(Kit::class);
+    }
 }

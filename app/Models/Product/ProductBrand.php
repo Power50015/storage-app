@@ -18,7 +18,7 @@ class ProductBrand extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * Get the ProductCountry for the ProductBrand.
      */
@@ -43,4 +43,11 @@ class ProductBrand extends Model
         return $this->hasMany(ProductCollection::class);
     }
 
+    /**
+     * Get the Kit for the ProductType.
+     */
+    public function kits()
+    {
+        return $this->hasMany(Kit::class);
+    }
 }

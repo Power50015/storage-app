@@ -13,23 +13,17 @@
           <h2 class="px-2 print:mb-3">
             رقم الفاتورة : {{ incoming_invoice.number }}
           </h2>
-          <Link
-            :href="route('warehouse.show', incoming_invoice.people.id)"
-            class="hover:text-[#009ef7]"
-          >
-            <h2 class="px-2 print:mb-3">
-              المخزن المستلم : {{ incoming_invoice.warehouse.name }}
-            </h2>
+          <Link :href="route('warehouse.show', incoming_invoice.people.id)" class="hover:text-[#009ef7]">
+          <h2 class="px-2 print:mb-3">
+            المخزن المستلم : {{ incoming_invoice.warehouse.name }}
+          </h2>
           </Link>
         </div>
         <div class="flex justify-between my-3">
-          <Link
-            :href="route('people.show', incoming_invoice.people.id)"
-            class="hover:text-[#009ef7]"
-          >
-            <h2 class="px-2 print:mb-3">
-              المورد : {{ incoming_invoice.people.name }}
-            </h2>
+          <Link :href="route('people.show', incoming_invoice.people.id)" class="hover:text-[#009ef7]">
+          <h2 class="px-2 print:mb-3">
+            المورد : {{ incoming_invoice.people.name }}
+          </h2>
           </Link>
           <div>
             <h2 class="px-2">
@@ -44,7 +38,7 @@
           <h2 class="" v-if="incoming_invoice.pay_type == 1">
             نوع الدفع : كاش
           </h2>
-          <h2 class="" v-if="incoming_invoice.pay_type == 1">
+          <h2 class="" v-if="incoming_invoice.pay_type == 1 && incoming_invoice.cash">
             نوع الكاش : {{ incoming_invoice.cash.title }}
           </h2>
         </div>
@@ -71,16 +65,10 @@
           </thead>
           <tbody>
             <!--incomingInvoiceContent-->
-            <tr
-              v-for="product in incomingInvoiceContent"
-              :key="product.index"
-              class=""
-            >
-              <td
-                class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]"
-              >
+            <tr v-for="product in incomingInvoiceContent" :key="product.index" class="">
+              <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
                 <Link :href="route('product.show', product.product.id)">
-                  {{ ContentName(product) }}
+                {{ ContentName(product) }}
                 </Link>
               </td>
               <td class="border border-slate-700 py-3 px-3">
@@ -109,11 +97,9 @@
               </th>
             </tr>
             <tr v-for="kit in incomingInvoiceKit" :key="kit.index" class="">
-              <td
-                class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]"
-              >
+              <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
                 <Link :href="route('kit.show', kit.kit.id)">
-                  {{ KitName(kit) }}
+                {{ KitName(kit) }}
                 </Link>
               </td>
               <td class="border border-slate-700 py-3 px-3">
@@ -146,16 +132,10 @@
                 الكميه
               </th>
             </tr>
-            <tr
-              v-for="product in returnedIncomingInvoice"
-              :key="product.index"
-              class=""
-            >
-              <td
-                class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]"
-              >
+            <tr v-for="product in returnedIncomingInvoice" :key="product.index" class="">
+              <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
                 <Link :href="route('product.show', product.product.id)">
-                  {{ ContentName(product) }}
+                {{ ContentName(product) }}
                 </Link>
               </td>
               <td class="border border-slate-700 py-3 px-3">
@@ -184,11 +164,9 @@
               </th>
             </tr>
             <tr v-for="kit in returnedIncomingInvoiceKit" :key="kit.index">
-              <td
-                class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]"
-              >
+              <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
                 <Link :href="route('kit.show', kit.kit.id)">
-                  {{ KitName(kit) }}
+                {{ KitName(kit) }}
                 </Link>
               </td>
               <td class="border border-slate-700 py-3 px-3">
@@ -226,16 +204,10 @@
           طباعه
           <i class="fa-solid fa-print mx-3"></i>
         </btn-primary>
-        <btn-info
-          :element="Link"
-          :to="route('returned-incoming-invoice.edit', incoming_invoice.id)"
-        >
+        <btn-info :element="Link" :to="route('returned-incoming-invoice.edit', incoming_invoice.id)">
           أضف مرتجع
         </btn-info>
-        <btn-success
-          :element="Link"
-          :to="route('incoming-invoice.edit', incoming_invoice.id)"
-        >
+        <btn-success :element="Link" :to="route('incoming-invoice.edit', incoming_invoice.id)">
           تعديل الفاتورة
         </btn-success>
       </div>
@@ -305,51 +277,82 @@ function print() {
   window.print();
 }
 function ContentName(item) {
-  var name = "";
+  var name =  item.product.name;
   if (item.product.product_brand) {
-    name = item.product.product_brand.name + "-";
+    name = name + " - " + item.product.product_brand.name;
   }
-  return (
-    name +
-    item.product.product_category.name +
-    "-" +
-    item.product.product_type.name +
-    "-" +
-    item.product.product_collection.name +
-    "-" +
-    item.product.product_model.name +
-    "-" +
-    item.product.product_color.name +
-    "-" +
-    item.product.product_material.name +
-    "-" +
-    item.product.product_country.name +
-    "-" +
-    item.product.sku +
-    "-" +
-    item.product.name
-  );
+  if (item.product.product_category) {
+    name = name + " - " + item.product.product_category.name;
+  }
+  if (item.product.product_type) {
+    name = name + " - " + item.product.product_type.name;
+  }
+  if (item.product.product_collection) {
+    name = name + " - " + item.product.product_collection.name;
+  }
+  if (item.product.product_model) {
+    name = name + " - " + item.product.product_model.name;
+  }
+  if (item.product.product_color) {
+    name = name + " - " + item.product.product_color.name;
+  }
+  if (item.product.product_material) {
+    name = name + " - " + item.product.product_material.name;
+  }
+  if (item.product.product_country) {
+    name = name + " - " + item.product.product_country.name;
+  }
+  if (item.product.sku) {
+    name = name + " - " + item.product.sku;
+  }
+  return name;
 }
+
 function KitName(item) {
   var name = item.kit.title;
   if (item.kit.product) {
-    name = name + "-" + item.kit.product.name;
+    name = name + " - " + item.kit.product.name;
     if (item.kit.product.product_collection)
-      name = name + "-" + item.kit.product.product_collection.name;
+      name = name + " - " + item.kit.product.product_collection.name;
     if (item.kit.product.product_model)
-      name = name + "-" + item.kit.product.product_model.name;
+      name = name + " - " + item.kit.product.product_model.name;
     if (item.kit.product.product_brand)
-      name = name + "-" + item.kit.product.product_brand.name;
+      name = name + " - " + item.kit.product.product_brand.name;
     if (item.kit.product.product_category)
-      name = name + "-" + item.kit.product.product_category.name;
+      name = name + " - " + item.kit.product.product_category.name;
     if (item.kit.product.product_type)
-      name = name + "-" + item.kit.product.product_type.name;
+      name = name + " - " + item.kit.product.product_type.name;
     if (item.kit.product.product_color)
-      name = name + "-" + item.kit.product.product_color.name;
+      name = name + " - " + item.kit.product.product_color.name;
     if (item.kit.product.product_material)
-      name = name + "-" + item.kit.product.product_material.name;
+      name = name + " - " + item.kit.product.product_material.name;
     if (item.kit.product.product_country)
-      name = name + "-" + item.kit.product.product_country.name;
+      name = name + " - " + item.kit.product.product_country.name;
+  } else {
+    if (item.kit.product_brand) {
+      name = name + " - " + item.kit.product_brand.name;
+    }
+    if (item.kit.product_category) {
+      name = name + " - " + item.kit.product_category.name;
+    }
+    if (item.kit.product_type) {
+      name = name + " - " + item.kit.product_type.name;
+    }
+    if (item.kit.product_collection) {
+      name = name + " - " + item.kit.product_collection.name;
+    }
+    if (item.kit.product_model) {
+      name = name + " - " + item.kit.product_model.name;
+    }
+    if (item.kit.product_color) {
+      name = name + " - " + item.kit.product_color.name;
+    }
+    if (item.kit.product_material) {
+      name = name + " - " + item.kit.product_material.name;
+    }
+    if (item.kit.product_country) {
+      name = name + " - " + item.kit.product_country.name;
+    }
   }
   return name;
 }

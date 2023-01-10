@@ -15,7 +15,7 @@ class Product extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_number_of_product', 'total_sales', 'destructible_goods'];
+    protected $appends = ['total_sales'];
     /**
      * Get the category for the Product.
      */
@@ -166,40 +166,11 @@ class Product extends Model
     }
 
     /**
-     * Get the DestructibleGoods for the product.
-     */
-    public function destructible_goods()
-    {
-        return $this->hasMany(DestructibleGoods::class);
-    }
-    /**
-     * Get the Total Number Product.
-     */
-    public function getTotalNumberOfProductAttribute()
-    {
-        // $quantity = WarehouseStockContent::where('product_id', $this->id)->sum('quantity');
-        // $quantity += IncomingInvoiceContent::where('product_id', $this->id)->sum('quantity');
-        // $quantity -= ReturnedIncomingInvoice::where('product_id', $this->id)->sum('quantity');
-        // $quantity -= OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity');
-        // $quantity += ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity');
-        // return $quantity;
-        return 0;
-    }
-    /**
      * Get the totla sales Number Product.
      */
     public function getTotalSalesAttribute()
     {
-        // return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
-        return 0;
-    }
-
-    public function getDestructibleGoodsAttribute()
-    {
-        // $DestructibleGoodsAction = DestructibleGoodsAction::where('action', 0)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
-        // $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 2)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
-        // $DestructibleGoodsAction -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'product_id', $this->id)->count();
-        // return $DestructibleGoodsAction;
+        return (OutgoingInvoiceContent::where('product_id', $this->id)->sum('quantity') - ReturnedOutgoingInvoice::where('product_id', $this->id)->sum('quantity'));
         return 0;
     }
 }

@@ -71,6 +71,9 @@ class ExpenseController extends Controller
             'user_id' => Auth::id()
         ]);
 
+        $cash = Cash::find($request->cash_id);
+        $cash->available = $cash->available -  $request->amount;
+        $cash->save();
         return redirect()->route('expense.show', $expense['id']);
     }
 
@@ -110,6 +113,12 @@ class ExpenseController extends Controller
      */
     public function update(UpdateExpenseRequest $request, Expense $expense)
     {
+        $cash = Cash::find($request->cash_id);
+        $cash->available = $cash->available +  $expense->amount;
+        $cash->available = $cash->available -  $request->amount;
+        $cash->save();
+
+
         $expense->title = $request->title;
         $expense->amount = $request->amount;
         $expense->description = $request->description;

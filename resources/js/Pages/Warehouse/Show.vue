@@ -6,8 +6,7 @@
           <h2 class="font-bold mb-3 text-lg">
             {{ warehouse.name }}
           </h2>
-          <h2 class="font-bold mb-3 text-lg">
-            {{ warehouse.address }}
+          <h2 class="font-bold mb-3 text-sm" v-html="warehouse.address">
           </h2>
           <div class="flex print:hidden">
             <btn-info

@@ -35,5 +35,13 @@ class KitStock extends Model
     {
         return $this->belongsTo(Kit::class);
     }
+
+     /**
+    * Get the note for the warehouse.
+    */
+   public function warehouse()
+   {
+       return $this->belongsTo(Warehouse::class);
+   }
     
 }

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->foreignId('transfer_id');
             $table->foreignId('product_id');
             $table->foreignId('user_id');
+            $table->foreignId('warehouse_from_id');
+            $table->foreignId('warehouse_to_id');
+            $table->timestamp('date')->useCurrent();
         });
     }
 

@@ -24,7 +24,6 @@ class People extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['total_credit'];
 
     /**
      * Get the users for the People.
@@ -159,20 +158,5 @@ class People extends Model
     public function people_attachments()
     {
         return $this->hasMany(PeopleAttachment::class);
-    }
-    /**
-     * Get the totla Credit.
-     */
-    public function getTotalCreditAttribute()
-    {
-        $credit = 0;
-
-        $credit += OutgoingInvoice::where('pay_type', 0)->where('people_id', $this->id)->sum('total');
-        $credit += Debtor::where('people_id', $this->id)->sum('amount');
-        $credit += CreditorPay::where('people_id', $this->id)->sum('amount');
-        $credit -= DebtorPay::where('people_id', $this->id)->sum('amount');
-        $credit -= Creditor::where('people_id', $this->id)->sum('amount');
-        $credit -= IncomingInvoice::where('pay_type', 0)->where('people_id', $this->id)->sum('total');
-        return  $credit;
     }
 }

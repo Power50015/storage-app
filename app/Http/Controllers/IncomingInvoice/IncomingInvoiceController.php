@@ -84,18 +84,30 @@ class IncomingInvoiceController extends Controller
             for ($i = 0; $i <  count($request["kit"]); $i++)
                 $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
 
+        $totalPrice = $totalPrice - $request->discount;
         // Save the Incoming Invoice
         $invice = IncomingInvoice::create([
             'number' => $request->number,
             'pay_type' => $request->pay_type,
-            'cash_id' => $request->cash_type,
+            'cash_id' => $request->cash_id,
             'discount' => $request->discount,
             'date' => Carbon::parse($request->date),
             'people_id' => $request->people_id,
             'warehouse_id' => $request->warehouse_id,
-            'total' => $totalPrice - $request->discount,
+            'total' => $totalPrice,
             'user_id' => Auth::id()
         ]);
+
+        if ($request->pay_type) {
+            $cash = Cash::find($request->cash_type);
+            $cash->available = $cash->available -  $totalPrice;
+            $cash->save();
+        } else {
+            $people = People::find($request->people_id);
+            $people->balance = $people->balance +  $totalPrice;
+            $people->save();
+        }
+
 
         // Save The Content Of Incoming Invoice
         if (!is_null($request["content"]))
@@ -107,9 +119,13 @@ class IncomingInvoiceController extends Controller
                     'incoming_invoice_id' => $invice['id'],
                     'user_id' => Auth::id(),
                     'people_id' => $request->people_id,
+                    'warehouse_id' => $request->warehouse_id,
+                    'date' => Carbon::parse($request->date),
                 ]);
+                $product = Product::find($request["content"][$i]["product_id"]);
+                $product->stock = $product->stock + $request["content"][$i]["quantity"];
+                $product->save();
             }
-
 
         // Save The Kit Of Incoming Invoice
         if (!is_null($request["kit"]))
@@ -120,8 +136,13 @@ class IncomingInvoiceController extends Controller
                     'price' => $request["kit"][$i]["price"],
                     'incoming_invoice_id' => $invice['id'],
                     'people_id' => $request->people_id,
-                    'user_id' => Auth::id()
+                    'user_id' => Auth::id(),
+                    'warehouse_id' => $request->warehouse_id,
+                    'date' => Carbon::parse($request->date),
                 ]);
+                $kit = Kit::find($request["kit"][$i]["kit_id"]);
+                $kit->stock = $kit->stock + $request["kit"][$i]["quantity"];
+                $kit->save();
             }
 
         return redirect()->route('incoming-invoice.show', $invice['id']);
@@ -139,7 +160,26 @@ class IncomingInvoiceController extends Controller
             "incomingInvoice" => IncomingInvoice::where('id', $incomingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
             "incomingInvoiceContent" => IncomingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
             "returnedIncomingInvoice" => ReturnedIncomingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('incoming_invoice_id', $incomingInvoice)->where('quantity', ">", 0)->get(),
-            "incomingInvoiceKit" => IncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
+            "incomingInvoiceKit" => IncomingInvoiceKit::with(
+                'kit',
+                'kit.product',
+                'kit.product.product_country',
+                'kit.product.product_material',
+                'kit.product.product_color',
+                'kit.product.product_model',
+                'kit.product.product_collection',
+                'kit.product.product_brand',
+                'kit.product.product_type',
+                'kit.product.product_category',
+                'kit.product_country',
+                'kit.product_material',
+                'kit.product_color',
+                'kit.product_model',
+                'kit.product_collection',
+                'kit.product_brand',
+                'kit.product_type',
+                'kit.product_category'
+            )->where('incoming_invoice_id', $incomingInvoice)->get(),
             "returnedIncomingInvoiceKit" => ReturnedIncomingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('incoming_invoice_id', $incomingInvoice)->get(),
         ]);
     }
@@ -178,12 +218,52 @@ class IncomingInvoiceController extends Controller
         if (!is_null($request["kit"]))
             for ($i = 0; $i <  count($request["kit"]); $i++)
                 $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
+
+        // Undo The Blance of invoice
+        if ($incomingInvoice->pay_type) {
+            $cash = Cash::find($incomingInvoice->cash_type);
+            $cash->available = $cash->available +  $incomingInvoice->total;
+            $cash->save();
+        } else {
+            $people = People::find($incomingInvoice->people_id);
+            $people->balance = $people->balance -  $incomingInvoice->total;
+            $people->save();
+        }
+
+        $oldContent = IncomingInvoiceContent::where('incoming_invoice_id', $incomingInvoice->id)->get();
+        for ($i = 0; $i <  count($oldContent); $i++) {
+            $product = Product::find($oldContent[$i]["product_id"]);
+            $product->stock = $product->stock - $oldContent[$i]["quantity"];
+            $product->save();
+        }
+
+        $oldKit = IncomingInvoiceKit::where('incoming_invoice_id', $incomingInvoice->id)->get();
+        for ($i = 0; $i <  count($oldKit); $i++) {
+            $kit = Kit::find($oldKit[$i]["kit_id"]);
+            $kit->stock = $kit->stock - $oldKit[$i]["quantity"];
+            $kit->save();
+        }
+
+
+        $totalPrice = $totalPrice - $request->discount;
+        // Make The Blance Agane
+        if ($request->pay_type) {
+            $cash = Cash::find($request->cash_type);
+            $cash->available = $cash->available -  $totalPrice;
+            $cash->save();
+        } else {
+            $people = People::find($request->people_id);
+            $people->balance = $people->balance +  $totalPrice;
+            $people->save();
+        }
+
+
         $incomingInvoice->number = $request->number;
         $incomingInvoice->pay_type = $request->pay_type;
         $incomingInvoice->cash_id = $request->cash_id;
         $incomingInvoice->discount = $request->discount;
         $incomingInvoice->date = $request->date;
-        $incomingInvoice->total = $totalPrice - $request->discount;
+        $incomingInvoice->total = $totalPrice;
         $incomingInvoice->people_id = $request->people_id;
         $incomingInvoice->warehouse_id = $request->warehouse_id;
         $incomingInvoice->save();
@@ -200,7 +280,12 @@ class IncomingInvoiceController extends Controller
                     'incoming_invoice_id' => $incomingInvoice['id'],
                     'user_id' => Auth::id(),
                     'people_id' => $request->people_id,
+                    'warehouse_id' => $request->warehouse_id,
+                    'date' => Carbon::parse($request->date),
                 ]);
+                $product = Product::find($request["content"][$i]["product_id"]);
+                $product->stock = $product->stock + $request["content"][$i]["quantity"];
+                $product->save();
             }
 
 
@@ -213,8 +298,13 @@ class IncomingInvoiceController extends Controller
                     'price' => $request["kit"][$i]["price"],
                     'incoming_invoice_id' => $incomingInvoice['id'],
                     'people_id' => $request->people_id,
-                    'user_id' => Auth::id()
+                    'user_id' => Auth::id(),
+                    'warehouse_id' => $request->warehouse_id,
+                    'date' => Carbon::parse($request->date),
                 ]);
+                $kit = Kit::find($request["kit"][$i]["kit_id"]);
+                $kit->stock = $kit->stock + $request["kit"][$i]["quantity"];
+                $kit->save();
             }
 
         return redirect()->route('incoming-invoice.show', $incomingInvoice['id']);

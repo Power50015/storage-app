@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cashes', function (Blueprint $table) {
+        Schema::create('returned_incoming_invoice_contents', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('title');
-            $table->text('attachment')->nullable();
-            $table->foreignId('user_id');
-            $table->decimal('available', $precision = 11, $scale = 2)->nullable();
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cashes');
+        Schema::dropIfExists('returned_incoming_invoice_contents');
     }
 };

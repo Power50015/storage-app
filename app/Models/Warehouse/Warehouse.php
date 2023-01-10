@@ -18,6 +18,8 @@ use App\Models\Product\DestructibleGoods;
 use App\Models\Product\DestructibleGoodsAction;
 use App\Models\Product\Product;
 use App\Models\Transfer;
+use App\Models\Transfer\TransferContent;
+use App\Models\Transfer\TransferKit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -63,11 +65,43 @@ class Warehouse extends Model
     }
 
     /**
-     * Get the OutgoingInvoice for the Warehouse.
+     * Get the incoming Invoice for the Warehouse.
+     */
+    public function incoming_invoice_contents()
+    {
+        return $this->hasMany(IncomingInvoiceContent::class);
+    }
+
+    /**
+     * Get the Incoming Invoice Kit for the Warehouse.
+     */
+    public function incoming_invoice_kits()
+    {
+        return $this->hasMany(IncomingInvoiceKit::class);
+    }
+
+    /**
+     * Get the Outgoing Invoice for the Warehouse.
      */
     public function outgoing_invoices()
     {
         return $this->hasMany(OutgoingInvoice::class);
+    }
+
+    /**
+     * Get the Outgoing Invoice for the Warehouse.
+     */
+    public function outgoing_invoice_contents()
+    {
+        return $this->hasMany(OutgoingInvoiceContent::class);
+    }
+
+    /**
+     * Get the Outgoing Invoice Kit for the Warehouse.
+     */
+    public function outgoing_invoice_kits()
+    {
+        return $this->hasMany(OutgoingInvoiceKit::class);
     }
 
     /**
@@ -97,6 +131,37 @@ class Warehouse extends Model
     /**
      * Get the Transfer To for the user.
      */
+    public function transfer_content_tos()
+    {
+        return $this->hasMany(TransferContent::class, "warehouse_to_id");
+    }
+
+    /**
+     * Get the Transfer From for the user.
+     */
+    public function transfer_content_froms()
+    {
+        return $this->hasMany(TransferContent::class, "warehouse_from_id");
+    }
+    /**
+     * Get the Transfer To for the user.
+     */
+    public function transfer_kit_tos()
+    {
+        return $this->hasMany(TransferKit::class, "warehouse_to_id");
+    }
+
+    /**
+     * Get the Transfer From for the user.
+     */
+    public function transfer_kit_froms()
+    {
+        return $this->hasMany(TransferKit::class, "warehouse_from_id");
+    }
+
+    /**
+     * Get the Transfer To for the user.
+     */
     public function transfer_tos()
     {
         return $this->hasMany(Transfer::class, "warehouse_to_id");
@@ -108,5 +173,13 @@ class Warehouse extends Model
     public function destructible_goods()
     {
         return $this->hasMany(DestructibleGoods::class);
+    }
+
+    /**
+    * Get the WarehouseStockContent for the OutgoingInvoice.
+    */
+    public function kit_stocks()
+    {
+        return $this->hasMany(KitStock::class);
     }
 }

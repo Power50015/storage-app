@@ -60,7 +60,7 @@
     </div>
   </div>
 </template>
-  <script setup>
+<script setup>
 import FromLabel from "@/Forms/FromLabel.vue";
 import { reactive, ref } from "@vue/reactivity";
 import { onMounted, onUnmounted, onUpdated, computed } from "@vue/runtime-core";

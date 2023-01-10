@@ -206,7 +206,7 @@
                   </h3>
                 </div>
                 <p class="mt-1 text-lg font-medium">
-                  المتاح : {{ i.total_number_of_product }}
+                  المتاح : {{ i.stock }}
                 </p>
               </Link>
             </div>

@@ -7,6 +7,7 @@ use App\Models\Creditor\CreditorPay;
 use App\Http\Requests\Creditor\StoreCreditorPayRequest;
 use App\Http\Requests\Creditor\UpdateCreditorPayRequest;
 use App\Models\Cash\Cash;
+use App\Models\People\People;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -55,6 +56,11 @@ class CreditorPayController extends Controller
             'people_id' => $request->people_id,
             'user_id' => Auth::id()
         ]);
+
+        $people = People::find($request->people_id);
+        $people->balance = $people->balance - $request->amount;
+        $people->save();
+
         return Redirect::back();
     }
 
@@ -94,6 +100,13 @@ class CreditorPayController extends Controller
      */
     public function update(UpdateCreditorPayRequest $request, CreditorPay $creditorPay)
     {
+
+        $people = People::find($request->people_id);
+        $people->balance = $people->balance + $creditorPay->amount; // Delete the old value
+        $people->balance = $people->balance - $request->amount; // add the new value
+        $people->save();
+
+
         $creditorPay->title = $request->title;
         $creditorPay->amount = $request->amount;
         $creditorPay->description = $request->description;

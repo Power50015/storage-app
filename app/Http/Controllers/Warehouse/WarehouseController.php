@@ -73,7 +73,7 @@ class WarehouseController extends Controller
             'address' => $request->address,
             'user_id' => Auth::id()
         ]);
-        return Redirect::route('Warehouse.show', $warehouse->id);
+        return Redirect::route('warehouse.show', $warehouse->id);
     }
 
     /**
@@ -194,6 +194,7 @@ class WarehouseController extends Controller
 
         return $actionData->values()->all();
     }
+
     public function actionData()
     {
         $warehouse = Request::input('warehouse');
@@ -285,6 +286,7 @@ class WarehouseController extends Controller
 
         return $actionData->paginate();
     }
+
     public function destructibleGoods()
     {
         $warehouse = Request::input('warehouse');
@@ -305,6 +307,7 @@ class WarehouseController extends Controller
             )->whereIn('id',  $ids)->paginate()
         ];
     }
+
     public function warehouseActionDetails()
     {
         $warehouse = Request::input('warehouse');
@@ -647,10 +650,11 @@ class WarehouseController extends Controller
                 $actionData->push($KitOperation[$key]);
             }
         }
-        
+
         $actionData = $actionData->sortByDesc('date');
         return $actionData->paginate();
     }
+    
     public function isEmptyCount()
     {
 
@@ -660,36 +664,41 @@ class WarehouseController extends Controller
         foreach ($warehouse as $key1 => $value) {
             $isEmpty = true;
             foreach ($products as $key => $value) {
-                $quantity = 0;
-                $quantity += WarehouseStockContent::with('warehouse_stock')->where('product_id', $products[$key]['id'])->get()->where('warehouse_stock.warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
-                $quantity += IncomingInvoiceContent::with('incoming_invoice')->where('product_id', $products[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                $quantity += ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                if ($quantity > 0) {
-                    $isEmpty = false;
-                    break 1;
-                }
-                $quantity -= ReturnedIncomingInvoice::with('incoming_invoice')->where('product_id', $products[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                $quantity -= OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                $quantity -= OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                $quantity -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'warehouse_id', $warehouse[$key1]['id'])->whereRelation('destructible_goods', 'product_id', $products[$key]['id'])->count();
-                if ($quantity > 0) {
-                    $isEmpty = false;
-                    break 1;
+                if ($products[$key]['stock'] > 0) {
+                    $quantity = 0;
+                    $quantity += WarehouseStockContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += IncomingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += TransferContent::where('product_id', $products[$key]['id'])->where('warehouse_to_id', $warehouse[$key1]['id'])->sum('quantity');
+                    if ($quantity > 0) {
+                        $isEmpty = false;
+                        break 1;
+                    }
+                    $quantity -= ReturnedIncomingInvoice::with('incoming_invoice')->where('product_id', $products[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity -= OutgoingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'warehouse_id', $warehouse[$key1]['id'])->whereRelation('destructible_goods', 'product_id', $products[$key]['id'])->count();
+                    $quantity -= TransferContent::where('product_id', $products[$key]['id'])->where('warehouse_from_id', $warehouse[$key1]['id'])->sum('quantity');
+                    if ($quantity > 0) {
+                        $isEmpty = false;
+                        break 1;
+                    }
                 }
             }
             if ($isEmpty) {
                 $kits = Kit::all();
                 foreach ($kits as $key => $value) {
-                    $quantity = KitStock::with('warehouse_stock')->where('kit_id', $kits[$key]['id'])->get()->where('warehouse_stock.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                    $quantity += IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity = KitStock::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += IncomingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
                     $quantity += ReturnedOutgoingInvoiceKit::with('outgoing_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += TransferKit::where('kit_id', $kits[$key]['id'])->where('warehouse_to_id', $warehouse[$key1]['id'])->sum('quantity');
                     if ($quantity > 0) {
                         $isEmpty = false;
                         break 1;
                     }
                     $quantity -= KitOperation::where('kit_id', $kits[$key]['id'])->where('warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
                     $quantity -= ReturnedIncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                    $quantity -= OutgoingInvoiceKit::with('outgoing_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity -= OutgoingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity -= TransferKit::where('kit_id', $kits[$key]['id'])->where('warehouse_to_id', $warehouse[$key1]['id'])->sum('quantity');
                     if ($quantity > 0) {
                         $isEmpty = false;
                         break 1;

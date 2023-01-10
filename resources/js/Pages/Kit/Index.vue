@@ -96,9 +96,35 @@
                       {{ i.product.product_country.name }}
                     </template>
                   </h3>
+                  <h3 class="mt-1 text-sm text-[#009ef7]" v-else>
+                    <template v-if="i.product_collection">
+                      {{ i.product_collection.name }} |
+                    </template>
+                    <template v-if="i.product_model">
+                      {{ i.product_model.name }}
+                    </template>
+                    <template v-if="i.product_brand">
+                      {{ i.product_brand.name }} |
+                    </template>
+                    <template v-if="i.product_category">
+                      {{ i.product_category.name }} |
+                    </template>
+                    <template v-if="i.product_type">
+                      {{ i.product_type.name }} |
+                    </template>
+                    <template v-if="i.product_color">
+                      {{ i.product_color.name }} |
+                    </template>
+                    <template v-if="i.product_material">
+                      {{ i.product_material.name }} |
+                    </template>
+                    <template v-if="i.product_country">
+                      {{ i.product_country.name }}
+                    </template>
+                  </h3>
                 </div>
                 <p class="mt-1 mb-4 text-lg font-medium">
-                  المتاح : {{ i.total_number_of_kit }}
+                  المتاح : {{ i.stock }}
                 </p>
               </Link>
             </div>

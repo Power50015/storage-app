@@ -29,6 +29,8 @@ return new class extends Migration
             $table->foreignId('product_country_id');
             $table->decimal('price', $precision = 11, $scale = 2)->nullable();
             $table->foreignId('user_id');
+            $table->integer('destructible')->default(0);
+            $table->integer('stock')->default(0);
             $table->timestamps();
         });
     }

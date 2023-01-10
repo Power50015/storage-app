@@ -84,7 +84,7 @@
             <td class="py-3 px-6 text-center">
               <div class="text-md text-[#50cd89] text-center">
                 <div class="pb-2">إجمالى بعد الخصم</div>
-                {{ item.total_before_discount }}
+                {{ item.total }}
               </div>
             </td>
 

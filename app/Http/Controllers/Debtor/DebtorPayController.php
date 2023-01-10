@@ -58,6 +58,11 @@ class DebtorPayController extends Controller
             'user_id' => Auth::id()
         ]);
 
+        $people = People::find($request->people_id);
+        $people->balance = $people->balance + $request->amount;        
+        $people->save();
+
+
         return Redirect::route('debtor.index');
     }
 
@@ -97,6 +102,14 @@ class DebtorPayController extends Controller
      */
     public function update(UpdateDebtorPayRequest $request, DebtorPay $debtorPay)
     {
+
+        $people = People::find($request->people_id);
+        $people->balance = $people->balance - $debtorPay->amount; // Delete the old value
+        $people->balance = $people->balance + $request->amount; // add the new value
+        
+        $people->save();
+
+
         $debtorPay->title = $request->title;
         $debtorPay->amount = $request->amount;
         $debtorPay->description = $request->description;

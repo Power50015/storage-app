@@ -13,7 +13,7 @@
               {{ people.address }}
             </h2>
             <h2 class="title font-bold text-lg text-[#009ef7]">
-                الرصيد : {{ people.total_credit }}
+                الرصيد : ( {{ people.balance }} )
             </h2>
             <div class="flex print:hidden">
               <btn-info

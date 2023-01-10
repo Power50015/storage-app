@@ -8,12 +8,17 @@ use App\Http\Requests\Kit\StoreKitRequest;
 use App\Http\Requests\Kit\UpdateKitRequest;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
 use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
-use App\Models\Kit\KitAttachment;
-use App\Models\Kit\KitImage;
-use App\Models\Kit\KitNote;
 use App\Models\Kit\KitOperation;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
 use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\Product\ProductBrand;
+use App\Models\Product\ProductCategory;
+use App\Models\Product\ProductCollection;
+use App\Models\Product\ProductColor;
+use App\Models\Product\ProductCountry;
+use App\Models\Product\ProductMaterial;
+use App\Models\Product\ProductModel;
+use App\Models\Product\ProductType;
 use Illuminate\Support\Facades\Request;
 use App\Models\Transfer\TransferKit;
 use App\Models\Warehouse\KitStock;
@@ -33,7 +38,7 @@ class KitController extends Controller
     {
         return Inertia::render('Kit/Index', [
             "kitCount" => Kit::count(),
-            "kitCountWithNoStock" => Kit::get()->where('total_number_of_kit',  0)->count(),
+            "kitCountWithNoStock" => Kit::where('stock', "<=", 0)->count(),
             "kits" =>  Kit::with(
                 'product',
                 'product.product_country',
@@ -43,7 +48,15 @@ class KitController extends Controller
                 'product.product_collection',
                 'product.product_brand',
                 'product.product_type',
-                'product.product_category'
+                'product.product_category',
+                'product_country',
+                'product_material',
+                'product_color',
+                'product_model',
+                'product_collection',
+                'product_brand',
+                'product_type',
+                'product_category'
             )->when(Request::input('search'), function ($query, $search) {
                 $query->where('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%")
@@ -54,7 +67,15 @@ class KitController extends Controller
                     ->orWhereRelation('product.product_model', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product.product_color', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product.product_material', 'name', 'like', "%{$search}%")
-                    ->orWhereRelation('product.product_country', 'name', 'like', "%{$search}%");
+                    ->orWhereRelation('product.product_country', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_category', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_type', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_brand', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_collection', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_model', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_color', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_material', 'name', 'like', "%{$search}%")
+                    ->orWhere('product_country', 'name', 'like', "%{$search}%");
             })->paginate(12)->withQueryString(),
             'filters' => Request::only(['search'])
         ]);
@@ -67,7 +88,16 @@ class KitController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Kit/Create');
+        return Inertia::render('Kit/Create', [
+            "ProductCategory" => ProductCategory::all(),
+            "ProductType" => ProductType::all(),
+            "ProductBrand" => ProductBrand::all(),
+            "ProductCollection" => ProductCollection::all(),
+            "ProductModel" => ProductModel::all(),
+            "ProductColor" => ProductColor::all(),
+            "ProductMaterial" => ProductMaterial::all(),
+            "ProductCountry" => ProductCountry::all(),
+        ]);
     }
 
     /**
@@ -82,6 +112,14 @@ class KitController extends Controller
             [
                 'title' => $request->title,
                 'description' => $request->description,
+                'product_category_id' => $request->product_category_id,
+                'product_type_id' => $request->product_type_id,
+                'product_brand_id' => $request->product_brand_id,
+                'product_collection_id' => $request->product_collection_id,
+                'product_model_id' => $request->product_model_id,
+                'product_color_id' => $request->product_color_id,
+                'product_material_id' => $request->product_material_id,
+                'product_country_id' => $request->product_country_id,
                 'product_id' => $request->product_id,
                 'user_id' => auth()->user()->id,
                 'image' => $request->hasFile('image') ? $request->file('image')->store('image/kit', 'public') : 'no_image.png'
@@ -108,7 +146,15 @@ class KitController extends Controller
                 'product.product_collection',
                 'product.product_brand',
                 'product.product_type',
-                'product.product_category'
+                'product.product_category',
+                'product_country',
+                'product_material',
+                'product_color',
+                'product_model',
+                'product_collection',
+                'product_brand',
+                'product_type',
+                'product_category'
             ])->where('id', $kit->id)->get(),
         ]);
     }
@@ -122,17 +168,15 @@ class KitController extends Controller
     public function edit(Kit $kit)
     {
         return Inertia::render('Kit/Create', [
-            "kit" => Kit::with([
-                'product',
-                'product.product_country',
-                'product.product_material',
-                'product.product_color',
-                'product.product_model',
-                'product.product_collection',
-                'product.product_brand',
-                'product.product_type',
-                'product.product_category'
-            ])->where('id', $kit->id)->get(),
+            "kit" => Kit::where('id', $kit->id)->get(),
+            "ProductCategory" => ProductCategory::all(),
+            "ProductType" => ProductType::all(),
+            "ProductBrand" => ProductBrand::all(),
+            "ProductCollection" => ProductCollection::all(),
+            "ProductModel" => ProductModel::all(),
+            "ProductColor" => ProductColor::all(),
+            "ProductMaterial" => ProductMaterial::all(),
+            "ProductCountry" => ProductCountry::all(),
         ]);
     }
 
@@ -183,7 +227,6 @@ class KitController extends Controller
             $KitStock = KitStock::with(['user', 'warehouse_stock', 'warehouse_stock.warehouse'])->where('kit_id', $kit)->get();
             foreach ($KitStock as $key => $value) {
                 $KitStock[$key]["dataType"] = "Stock";
-                $KitStock[$key]["date"] = $KitStock[$key]["warehouse_stock"]["date"];
                 $actionData->push($KitStock[$key]);
             }
         }
@@ -192,7 +235,6 @@ class KitController extends Controller
             $IncomingInvoiceKit = IncomingInvoiceKit::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('kit_id', $kit)->get();
             foreach ($IncomingInvoiceKit as $key => $value) {
                 $IncomingInvoiceKit[$key]["dataType"] = "IncomingInvoice";
-                $IncomingInvoiceKit[$key]["date"] = $IncomingInvoiceKit[$key]["incoming_invoice"]["date"];
                 $actionData->push($IncomingInvoiceKit[$key]);
             }
         }
@@ -209,7 +251,6 @@ class KitController extends Controller
             $TransferKit = TransferKit::with(['user', 'transfer', 'transfer.warehouse_from', 'transfer.warehouse_to', 'transfer.driver'])->where('kit_id', $kit)->get();
             foreach ($TransferKit as $key => $value) {
                 $TransferKit[$key]["dataType"] = "Transfer";
-                $TransferKit[$key]["date"] = $TransferKit[$key]["transfer"]["date"];
                 $actionData->push($TransferKit[$key]);
             }
         }
@@ -219,7 +260,6 @@ class KitController extends Controller
             $OutgoingInvoiceKit = OutgoingInvoiceKit::with('user', 'outgoing_invoice', 'outgoing_invoice.people', 'outgoing_invoice.warehouse')->where('kit_id', $kit)->get();
             foreach ($OutgoingInvoiceKit as $key => $value) {
                 $OutgoingInvoiceKit[$key]["dataType"] = "OutgoingInvoice";
-                $OutgoingInvoiceKit[$key]["date"] = $OutgoingInvoiceKit[$key]["outgoing_invoice"]["date"];
 
                 $actionData->push($OutgoingInvoiceKit[$key]);
             }
@@ -305,7 +345,15 @@ class KitController extends Controller
                     'product.product_collection',
                     'product.product_brand',
                     'product.product_type',
-                    'product.product_category'
+                    'product.product_category',
+                    'product_country',
+                    'product_material',
+                    'product_color',
+                    'product_model',
+                    'product_collection',
+                    'product_brand',
+                    'product_type',
+                    'product_category'
                 ]
             )->where('id', Request::input('id'))->get();
         }
@@ -319,7 +367,15 @@ class KitController extends Controller
                 'product.product_collection',
                 'product.product_brand',
                 'product.product_type',
-                'product.product_category'
+                'product.product_category',
+                'product_country',
+                'product_material',
+                'product_color',
+                'product_model',
+                'product_collection',
+                'product_brand',
+                'product_type',
+                'product_category'
             ]
         )->when(Request::input('search'), function ($query, $search) {
             $query->where('title', 'like', "%{$search}%");

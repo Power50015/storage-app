@@ -7,75 +7,77 @@
             {{ kit.title }}
           </h2>
           <template v-if="kit.product">
-            <Link
-              :href="route('product.show', kit.product.id)"
-              class="font-bold hover:text-[#009ef7] mb-3 text-sm"
-              ><template v-if="kit.product.product_brand"
-                >{{ kit.product.product_brand.name }} |</template
-              >
-              <template v-if="kit.product.product_category">
-                {{ kit.product.product_category.name }}</template
-              >
-              <template v-if="kit.product.product_type">
-                |{{ kit.product.product_type.name }}
-              </template>
-              <template v-if="kit.product.product_collection">
-                |{{ kit.product.product_collection.name }}
-              </template>
-              <template v-if="kit.product.product_model">
-                |{{ kit.product.product_model.name }}
-              </template>
-              <template v-if="kit.product.product_color">
-                |{{ kit.product.product_color.name }}
-              </template>
-              <template v-if="kit.product.product_material">
-                |{{ kit.product.product_material.name }}
-              </template>
-              <template v-if="kit.product.product_country">
-                | {{ kit.product.product_country.name }}</template
-              >
-              | {{ kit.product.name }}
+            <Link :href="route('product.show', kit.product.id)" class="font-bold hover:text-[#009ef7] mb-3 text-sm">
+            <template v-if="kit.product.product_brand">{{ kit.product.product_brand.name }} |</template>
+            <template v-if="kit.product.product_category">
+              {{ kit.product.product_category.name }}</template>
+            <template v-if="kit.product.product_type">
+              |{{ kit.product.product_type.name }}
+            </template>
+            <template v-if="kit.product.product_collection">
+              |{{ kit.product.product_collection.name }}
+            </template>
+            <template v-if="kit.product.product_model">
+              |{{ kit.product.product_model.name }}
+            </template>
+            <template v-if="kit.product.product_color">
+              |{{ kit.product.product_color.name }}
+            </template>
+            <template v-if="kit.product.product_material">
+              |{{ kit.product.product_material.name }}
+            </template>
+            <template v-if="kit.product.product_country">
+              | {{ kit.product.product_country.name }}</template>
+            | {{ kit.product.name }}
             </Link>
-            <h2 v-if="kit.product.sku">
-              SKU :
-              {{ kit.product.sku }}
-            </h2>
+
           </template>
-          <div v-html="kit.description"></div>
+          <template v-else>
+            <template v-if="kit.product_brand">{{ kit.product_brand.name }} |</template>
+            <template v-if="kit.product_category">
+              {{ kit.product_category.name }}</template>
+            <template v-if="kit.product_type">
+              - {{ kit.product_type.name }}
+            </template>
+            <template v-if="kit.product_collection">
+              - {{ kit.product_collection.name }}
+            </template>
+            <template v-if="kit.product_model">
+              - {{ kit.product_model.name }}
+            </template>
+            <template v-if="kit.product_color">
+              - {{ kit.product_color.name }}
+            </template>
+            <template v-if="kit.product_material">
+              - {{ kit.product_material.name }}
+            </template>
+            <template v-if="kit.product_country">
+              - {{ kit.product_country.name }}</template>
+          </template>
           <h2 class="title font-bold text-lg text-[#009ef7]">
-            إجمالى المتاح بالمخازن : {{ kit.total_number_of_kit }}
+            إجمالى المتاح بالمخازن : {{ kit.stock }}
           </h2>
           <div class="flex print:hidden">
-            <btn-info
-              :element="Link"
-              :to="route('kit.edit', kit.id)"
-              class="mt-4"
-            >
-            تعديل بيانات
+            <btn-info :element="Link" :to="route('kit.edit', kit.id)" class="mt-4">
+              تعديل بيانات
             </btn-info>
           </div>
         </div>
         <div>
           <a :href="`/storage/${kit.image}`" target="_blank">
-            <img
-              :src="`/storage/${kit.image}`"
-              :alt="kit.title"
-              class="
+            <img :src="`/storage/${kit.image}`" :alt="kit.title" class="
                 w-full
                 h-[270px]
                 object-center object-cover
                 group-hover:opacity-75
                 shadow-xl
                 rounded-md
-              "
-              height="270"
-              width="270"
-          /></a>
+              " height="270" width="270" /></a>
         </div>
       </div>
     </SectionTemplate>
     <SectionTemplate class="print:p-0">
-      <KitTabs :id="kit.id" />
+      <KitTabs :id="kit.id" :description="kit.description" />
     </SectionTemplate>
   </AppLayout>
 </template>

@@ -34,4 +34,12 @@ class ProductCategory extends Model
     {
         return $this->hasMany(ProductType::class);
     }
+
+    /**
+     * Get the Kit for the ProductType.
+     */
+    public function kits()
+    {
+        return $this->hasMany(Kit::class);
+    }
 }

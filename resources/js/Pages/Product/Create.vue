@@ -285,7 +285,7 @@ import InputTextArea from "@/Forms/InputTextArea.vue";
 import InputNumber from "@/Forms/InputNumber.vue";
 import InputImage from "@/Forms/InputImage.vue";
 import Modal from "@/Components/Modals/Modal.vue";
-import SelectBrand from "../../Forms/SelectBrand.vue";
+import SelectBrand from "@/Forms/SelectBrand.vue";
 
 const props = defineProps([
   "errors",
