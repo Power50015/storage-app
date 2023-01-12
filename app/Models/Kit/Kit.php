@@ -13,7 +13,7 @@ use App\Models\Product\ProductCountry;
 use App\Models\Product\ProductMaterial;
 use App\Models\Product\ProductModel;
 use App\Models\Product\ProductType;
-use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Transfer\TransferKit;
 use App\Models\User;
@@ -106,15 +106,9 @@ class Kit extends Model
     {
         return $this->hasMany(ReturnedIncomingInvoiceKit::class);
     }
+    
     /**
-     * Get the ReturnedIncomingInvoiceContent for the user.
-     */
-    public function returned_incoming_invoice_contents()
-    {
-        return $this->hasMany(ReturnedIncomingInvoiceContent::class);
-    }
-    /**
-     * Get the ReturnedIncomingInvoiceKit for the user.
+     * Get the ReturnedOutgoingInvoiceKit for the user.
      */
     public function returned_outgoing_invoice_kits()
     {

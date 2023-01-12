@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\ReturnedOutgoingInvoice;
 
 use App\Http\Controllers\Controller;
-use App\Models\ReturnedOutgoingInvoiceNote;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceNote;
 use App\Http\Requests\ReturnedOutgoingInvoice\StoreReturnedOutgoingInvoiceNoteRequest;
 use App\Http\Requests\ReturnedOutgoingInvoice\UpdateReturnedOutgoingInvoiceNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class ReturnedOutgoingInvoiceNoteController extends Controller
 {
@@ -16,7 +19,15 @@ class ReturnedOutgoingInvoiceNoteController extends Controller
      */
     public function index()
     {
-        //
+        $note = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => ReturnedOutgoingInvoiceNote::with('user')->latest()->where('returned_outgoing_invoice_id', $note)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,13 @@ class ReturnedOutgoingInvoiceNoteController extends Controller
      */
     public function store(StoreReturnedOutgoingInvoiceNoteRequest $request)
     {
-        //
+        ReturnedOutgoingInvoiceNote::create([
+            'note' => $request->note,
+            'returned_outgoing_invoice_id' => $request->id,
+            'tag' => $request->tag,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +99,8 @@ class ReturnedOutgoingInvoiceNoteController extends Controller
      */
     public function destroy(ReturnedOutgoingInvoiceNote $returnedOutgoingInvoiceNote)
     {
-        //
+        $returnedOutgoingInvoiceNote->delete();
+
+        return Redirect::back();
     }
 }

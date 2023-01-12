@@ -50,6 +50,13 @@ use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceImage;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceNote;
+
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceAttachment;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceImage;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceNote;
 use App\Models\Transfer\Transfer;
 use App\Models\Transfer\TransferAttachment;
 use App\Models\Transfer\TransferContent;
@@ -169,13 +176,6 @@ class User extends Authenticatable
         return $this->hasMany(IncomingInvoiceContent::class);
     }
     /**
-     * Get the ReturnedIncomingInvoice for the user.
-     */
-    public function returned_incoming_invoices()
-    {
-        return $this->hasMany(ReturnedIncomingInvoice::class);
-    }
-    /**
      * Get the OutgoingInvoice for the user.
      */
     public function outgoing_invoices()
@@ -209,13 +209,6 @@ class User extends Authenticatable
     public function outgoing_invoice_contents()
     {
         return $this->hasMany(OutgoingInvoiceContent::class);
-    }
-    /**
-     * Get the ReturnedOutgoingInvoice for the user.
-     */
-    public function returned_outgoing_invoices()
-    {
-        return $this->hasMany(ReturnedOutgoingInvoice::class);
     }
     /**
      * Get the People for the user.
@@ -523,11 +516,11 @@ class User extends Authenticatable
         return $this->hasMany(IncomingInvoiceKit::class);
     }
     /**
-     * Get the ReturnedIncomingInvoiceKit for the user.
+     * Get the ReturnedIncomingInvoice for the user.
      */
-    public function returned_incoming_invoice_kits()
+    public function returned_incoming_invoices()
     {
-        return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+        return $this->hasMany(ReturnedIncomingInvoice::class);
     }
     /**
      * Get the ReturnedIncomingInvoiceContent for the user.
@@ -536,6 +529,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(ReturnedIncomingInvoiceContent::class);
     }
+    /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_incoming_invoice_kits()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+    
     /**
      * Get the ReturnedIncomingInvoiceAttachment for the user.
      */
@@ -558,12 +559,47 @@ class User extends Authenticatable
         return $this->hasMany(ReturnedIncomingInvoiceImage::class);
     }
 
+     /**
+     * Get the ReturnedOutgoingInvoice for the user.
+     */
+    public function returned_outgoing_invoices()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoice::class);
+    }
     /**
-     * Get the ReturnedIncomingInvoiceKit for the user.
+     * Get the ReturnedOutgoingInvoiceContent for the user.
+     */
+    public function returned_outgoing_invoice_contents()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceContent::class);
+    }
+    /**
+     * Get the ReturnedOutgoingInvoiceKit for the user.
      */
     public function returned_outgoing_invoice_kits()
     {
         return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
+    }
+    /**
+     * Get the ReturnedOutgoingInvoiceAttachment for the user.
+     */
+    public function returned_outgoing_invoice_attachments()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceAttachment::class);
+    }
+    /**
+     * Get the ReturnedOutgoingInvoiceNote for the user.
+     */
+    public function returned_outgoing_invoice_notes()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceNote::class);
+    }
+    /**
+     * Get the ReturnedOutgoingInvoiceImage for the user.
+     */
+    public function returned_outgoing_invoice_images()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceImage::class);
     }
     /**
      * Get the DestructibleGoods for the user.

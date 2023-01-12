@@ -3,6 +3,7 @@
 namespace App\Models\ReturnedOutgoingInvoice;
 
 use App\Models\Kit\Kit;
+use App\Models\People\People;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

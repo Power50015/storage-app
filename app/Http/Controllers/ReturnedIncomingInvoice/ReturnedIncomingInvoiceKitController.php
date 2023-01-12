@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ReturnedIncomingInvoice;
 
 use App\Http\Controllers\Controller;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Http\Requests\ReturnedIncomingInvoice\StoreReturnedIncomingInvoiceKitRequest;
 use App\Http\Requests\ReturnedIncomingInvoice\UpdateReturnedIncomingInvoiceKitRequest;
 

@@ -5,14 +5,15 @@ namespace App\Models\Warehouse;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
-use App\Models\Kit\Kit;
 use App\Models\Kit\KitOperation;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
 use App\Models\Product\DestructibleGoods;
-use App\Models\Product\DestructibleGoodsAction;
-use App\Models\Product\Product;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\Transfer;
 use App\Models\Transfer\TransferContent;
 use App\Models\Transfer\TransferKit;
@@ -172,8 +173,8 @@ class Warehouse extends Model
     }
 
     /**
-    * Get the WarehouseStockContent for the OutgoingInvoice.
-    */
+     * Get the WarehouseStockContent for the OutgoingInvoice.
+     */
     public function kit_stocks()
     {
         return $this->hasMany(KitStock::class);
@@ -185,5 +186,41 @@ class Warehouse extends Model
     public function returned_incoming_invoices()
     {
         return $this->hasMany(ReturnedIncomingInvoice::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceContent for the user.
+     */
+    public function returned_incoming_invoice_contents()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceContent::class);
+    }
+    /**
+     * Get the ReturnedIncomingInvoiceKit for the user.
+     */
+    public function returned_incoming_invoice_kits()
+    {
+        return $this->hasMany(ReturnedIncomingInvoiceKit::class);
+    }
+
+    /**
+     * Get the ReturnedOutgoingInvoice for the user.
+     */
+    public function returned_outgoing_invoices()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoice::class);
+    }
+    /**
+     * Get the ReturnedOutgoingInvoiceContent for the user.
+     */
+    public function returned_outgoing_invoice_contents()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceContent::class);
+    }
+    /**
+     * Get the ReturnedOutgoingInvoiceKit for the user.
+     */
+    public function returned_outgoing_invoice_kits()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
     }
 }

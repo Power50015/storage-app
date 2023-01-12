@@ -15,6 +15,11 @@ use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceImage;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceNote;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -61,7 +66,7 @@ class People extends Model
     {
         return $this->hasMany(ReturnedIncomingInvoice::class);
     }
- /**
+    /**
      * Get the ReturnedIncomingInvoiceKit for the user.
      */
     public function returned_incoming_invoice_kits()
@@ -97,7 +102,6 @@ class People extends Model
     {
         return $this->hasMany(OutgoingInvoiceKit::class);
     }
-
     /**
      * Get the ReturnedOutgoingInvoice for the user.
      */
@@ -105,7 +109,13 @@ class People extends Model
     {
         return $this->hasMany(ReturnedOutgoingInvoice::class);
     }
-
+    /**
+     * Get the ReturnedOutgoingInvoiceContent for the user.
+     */
+    public function returned_outgoing_invoice_contents()
+    {
+        return $this->hasMany(ReturnedOutgoingInvoiceContent::class);
+    }
     /**
      * Get the ReturnedOutgoingInvoiceKit for the user.
      */
@@ -113,7 +123,6 @@ class People extends Model
     {
         return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
     }
-
     /**
      * Get the Debtor for the DebtorAttachment.
      */
