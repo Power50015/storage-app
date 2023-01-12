@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cashes', function (Blueprint $table) {
+        Schema::create('cash_pay_images', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('title');
+            $table->text('image');
+            $table->foreignId('cash_pay_id');
             $table->foreignId('user_id');
-            $table->decimal('available', $precision = 11, $scale = 2)->nullable();
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cashes');
+        Schema::dropIfExists('cash_pay_images');
     }
 };

@@ -142,6 +142,16 @@
             </Link>
           </li>
           <li class="mx-5">
+            <Link :href="route('returned-outgoing-invoice.index')" class="py-3 px-4 block rounded-lg my-3" :class="
+              route().current('returned-outgoing-invoice.*')
+                ? 'bg-[#009ef7]'
+                : 'hover:text-[#009ef7]'
+            ">
+            <i class="fa-solid fa-file-lines"></i>
+            <span class="mx-3">مرتجع الصادره</span>
+            </Link>
+          </li>
+          <li class="mx-5">
             <Link :href="route('people.index')" class="py-3 px-4 block rounded-lg my-3" :class="
               route().current('people.*')
                 ? 'bg-[#009ef7]'

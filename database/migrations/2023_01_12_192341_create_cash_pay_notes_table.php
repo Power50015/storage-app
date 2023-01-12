@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cashes', function (Blueprint $table) {
+        Schema::create('cash_pay_notes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('title');
+            $table->text('tag')->nullable();
+            $table->text('note');
             $table->foreignId('user_id');
-            $table->decimal('available', $precision = 11, $scale = 2)->nullable();
+            $table->foreignId('cash_pay_id');
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cashes');
+        Schema::dropIfExists('cash_pay_notes');
     }
 };

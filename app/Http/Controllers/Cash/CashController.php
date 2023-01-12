@@ -25,7 +25,8 @@ class CashController extends Controller
             "cash" =>  Cash::query()->with('user')->when(Request::input('search'), function ($query, $search) {
                 $query->where('title', 'like', "%{$search}%");
             })->paginate()->withQueryString(),
-            "totalCashes" => Cash::count(),
+            "totalCashesWay" => Cash::count(),
+            "totalCashes" => Cash::sum('available'),
             'filters' => Request::only(['search'])
         ]);
     }
@@ -48,16 +49,13 @@ class CashController extends Controller
      */
     public function store(StoreCashRequest $request)
     {
-        $attachment_path = null;
-        if ($request->hasFile('attachment')) {
-            $attachment_path = $request->file('attachment')->store('attachment/cash', 'public');
-        }
         Cash::create([
             'title' => $request->title,
             'user_id' => Auth::id(),
             'available' => 0
         ]);
-        return Redirect::back();
+        
+        return Redirect::route('cash.index');
     }
 
     /**
