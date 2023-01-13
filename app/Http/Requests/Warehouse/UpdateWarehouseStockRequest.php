@@ -29,7 +29,6 @@ class UpdateWarehouseStockRequest extends FormRequest
             'date' => 'required|date',
             'content' => $this->request->all()["kit"] == [] ? 'required' : '',
             'content.*.product_id' => $this->request->all()["kit"] == [] ? 'required|numeric' : '',
-            'content.*.price' => $this->request->all()["kit"] == [] ? 'required|numeric|min:0' : '',
             'content.*.quantity' => $this->request->all()["kit"] == [] ? 'required|numeric|min:0' : '',
             'kit' => $this->request->all()["content"] == [] ? 'required' : '',
             'kit.*.kit_id' => $this->request->all()["content"] == [] ? 'required|numeric' : '',

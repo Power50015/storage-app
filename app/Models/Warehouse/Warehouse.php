@@ -223,4 +223,12 @@ class Warehouse extends Model
     {
         return $this->hasMany(ReturnedOutgoingInvoiceKit::class);
     }
+
+    /**
+     * Get the WarehouseStockContent for the Warehouse.
+     */
+    public function warehouse_stock_content()
+    {
+        return $this->belongsTo(WarehouseStockContent::class);
+    }
 }

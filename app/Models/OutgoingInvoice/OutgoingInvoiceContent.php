@@ -2,6 +2,7 @@
 
 namespace App\Models\OutgoingInvoice;
 
+use App\Models\People\People;
 use App\Models\Product\Product;
 use App\Models\User;
 use App\Models\Warehouse\Warehouse;
@@ -49,4 +50,5 @@ class OutgoingInvoiceContent extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
+
 }

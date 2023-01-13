@@ -22,8 +22,8 @@ return new class extends Migration
             $table->foreignId('returned_incoming_invoice_id');
             $table->foreignId('kit_id');
             $table->foreignId('user_id');
-            $table->foreignId('people_id');
-
+            $table->foreignId('people_id')->nullable();
+            $table->foreignId('warehouse_id');
         });
     }
 

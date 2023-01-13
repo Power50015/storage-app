@@ -19,10 +19,11 @@ return new class extends Migration
             $table->timestamp('date')->useCurrent();
             $table->decimal('price', $precision = 11, $scale = 2);
             $table->integer('quantity');
-            $table->foreignId('outgoing_invoice_id');
+            $table->foreignId('returned_outgoing_invoice_id');
             $table->foreignId('kit_id');
             $table->foreignId('user_id');
-            $table->foreignId('people_id');
+            $table->foreignId('people_id')->nullable();
+            $table->foreignId('warehouse_id');
         });
     }
 

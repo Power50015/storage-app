@@ -9,19 +9,13 @@ use App\Http\Requests\OutgoingInvoice\UpdateOutgoingInvoiceRequest;
 use Illuminate\Support\Facades\Request;
 use App\Models\Cash\Cash;
 use App\Models\Kit\Kit;
-use App\Models\OutgoingInvoice\OutgoingInvoiceAttachment;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
 use App\Models\People\People;
 use App\Models\Product\Product;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\Warehouse\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class OutgoingInvoiceController extends Controller
@@ -158,8 +152,6 @@ class OutgoingInvoiceController extends Controller
             "outgoingInvoice" => OutgoingInvoice::where('id', $outgoingInvoice)->with('user', 'people', 'warehouse', 'cash')->get(),
             "outgoingInvoiceContent" => OutgoingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('outgoing_invoice_id', $outgoingInvoice)->get(),
 
-            "returnedOutgoingInvoice" => ReturnedOutgoingInvoice::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('outgoing_invoice_id', $outgoingInvoice)->get(),
-
             "outgoingInvoiceKit" => OutgoingInvoiceKit::with(
                 'kit',
                 'kit.product',
@@ -181,7 +173,6 @@ class OutgoingInvoiceController extends Controller
                 'kit.product_category'
             )->where('outgoing_invoice_id', $outgoingInvoice)->get(),
 
-            "returnedOutgoingInvoiceKit" => ReturnedOutgoingInvoiceKit::with('kit', 'kit.product', 'kit.product.product_country', 'kit.product.product_material', 'kit.product.product_color', 'kit.product.product_model', 'kit.product.product_collection', 'kit.product.product_brand', 'kit.product.product_type', 'kit.product.product_category')->where('outgoing_invoice_id', $outgoingInvoice)->get(),
         ]);
     }
 

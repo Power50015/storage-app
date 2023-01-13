@@ -156,7 +156,7 @@ class ReturnedOutgoingInvoiceController extends Controller
     public function show(ReturnedOutgoingInvoice $returnedOutgoingInvoice)
     {
         return Inertia::render('ReturnedOutgoingInvoice/Show', [
-            "ReturnedOutgoingInvoice" => ReturnedOutgoingInvoice::where('id', $returnedOutgoingInvoice->id)->with('user', 'people', 'warehouse', 'cash')->get(),
+            "returnedOutgoingInvoice" => ReturnedOutgoingInvoice::where('id', $returnedOutgoingInvoice->id)->with('user', 'people', 'warehouse', 'cash')->get(),
 
             "returnedOutgoingInvoiceContent" => ReturnedOutgoingInvoiceContent::with('product', 'product.product_country', 'product.product_material', 'product.product_color', 'product.product_model', 'product.product_collection', 'product.product_brand', 'product.product_type', 'product.product_category')->where('returned_outgoing_invoice_id',  $returnedOutgoingInvoice->id)->get(),
 

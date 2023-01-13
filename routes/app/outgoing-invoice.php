@@ -4,7 +4,7 @@ use App\Http\Controllers\OutgoingInvoice\OutgoingInvoiceAttachmentController;
 use App\Http\Controllers\OutgoingInvoice\OutgoingInvoiceController;
 use App\Http\Controllers\OutgoingInvoice\OutgoingInvoiceImageController;
 use App\Http\Controllers\OutgoingInvoice\OutgoingInvoiceNoteController;
-use App\Http\Controllers\OutgoingInvoice\ReturnedOutgoingInvoiceController;
+use App\Http\Controllers\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceController;
 use App\Http\Controllers\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceAttachmentController;
 use App\Http\Controllers\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceImageController;
 use App\Http\Controllers\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceNoteController;

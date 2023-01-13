@@ -50,7 +50,7 @@
             </Link>
           </div>
           <Modal v-model="form.modelToggle">
-            <template #btn> تعديل القسم </template>
+            <template #btn> تعديل الماركه </template>
             <template #default>
               <FormSection
                 title="حفظ الماركه"

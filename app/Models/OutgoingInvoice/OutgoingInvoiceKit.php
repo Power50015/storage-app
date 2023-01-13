@@ -3,6 +3,7 @@
 namespace App\Models\OutgoingInvoice;
 
 use App\Models\Kit\Kit;
+use App\Models\People\People;
 use App\Models\User;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

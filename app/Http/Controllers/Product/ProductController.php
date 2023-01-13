@@ -53,6 +53,8 @@ class ProductController extends Controller
             "product_color" => ProductColor::all(),
             "product_material" => ProductMaterial::all(),
             "product_country" => ProductCountry::all(),
+            "product_stock_count" => Product::where('stock', ">", 0)->count(),
+            "destructible" => Product::where('destructible', ">", 0)->count(),
             "products" => Product::query()->with(
                 [
                     'product_category',
@@ -98,23 +100,13 @@ class ProductController extends Controller
                     ->orWhereRelation('product_material', 'name', 'like', "%{$search}%")
                     ->orWhereRelation('product_country', 'name', 'like', "%{$search}%");
             })->when(Request::input('product_stock'), function ($query, $product_stock) {
-                $ids = [];
-                $sql = Product::get('id')->where('total_number_of_product', '<=', 0);
-                foreach ($sql as $key => $value) {
-                    $ids[] = ($sql[$key]['id']);
-                }
                 $product_stock == "1" ?
-                    $query->whereIn('id', $ids) :
-                    $query->whereNotIn('id', $ids);
+                    $query->where('stock', '<=', 0) :
+                    $query->where('stock', '>', 0);
             })->when(Request::input('destructible_goods'), function ($query, $destructible_goods) {
-                $ids = [];
-                $sql = Product::get('id')->where('destructible_goods', '<=', 0);
-                foreach ($sql as $key => $value) {
-                    $ids[] = ($sql[$key]['id']);
-                }
                 $destructible_goods == "1" ?
-                    $query->whereIn('id', $ids) :
-                    $query->whereNotIn('id', $ids);
+                    $query->where('destructible', '<=', 0) :
+                    $query->where('destructible', '>', 0);
             })->paginate(12)->withQueryString(),
             'filters' => Request::only([
                 'search',
@@ -340,7 +332,7 @@ class ProductController extends Controller
 
         // Get Actions
         $actionData = collect([]);
-        
+
         //  Stock
         if ($action == "Stock" || $action == "all") {
             $WarehouseStockContent = WarehouseStockContent::with(['user', 'warehouse_stock', 'warehouse_stock.warehouse'])->where('product_id', $product)->get();
@@ -358,7 +350,7 @@ class ProductController extends Controller
                 $actionData->push($IncomingInvoiceContent[$key]);
             }
         }
-        
+
         //  Returned Incoming Invoice
         if ($action == "ReturnedIncomingInvoice" || $action == "all") {
             $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with(['user', 'incoming_invoice', 'incoming_invoice.people', 'incoming_invoice.warehouse'])->where('product_id', $product)->get();

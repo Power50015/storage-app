@@ -8,17 +8,19 @@ use App\Http\Requests\Warehouse\UpdateWarehouseRequest;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\Kit\Kit;
 use App\Models\Kit\KitOperation;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\Product\DestructibleGoodsAction;
 use App\Models\Product\Product;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
 use App\Models\Transfer\Transfer;
 use App\Models\Transfer\TransferContent;
 use App\Models\Transfer\TransferKit;
@@ -145,17 +147,29 @@ class WarehouseController extends Controller
                 'product_country',
                 'product_brand.product_country'
             )->get();
-
             foreach ($products as $key => $value) {
                 $quantity = 0;
-                $quantity += WarehouseStockContent::with('warehouse_stock')->where('product_id', $products[$key]['id'])->get()->where('warehouse_stock.warehouse_id', $warehouse)->sum('quantity');
-                $quantity += IncomingInvoiceContent::with('incoming_invoice')->where('product_id', $products[$key]['id'])->get()->where('incoming_invoice.warehouse_id', $warehouse)->sum('quantity');
-                $quantity += ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity += WarehouseStockContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity += IncomingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity += ReturnedOutgoingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity += TransferContent::where('product_id', $products[$key]['id'])->where('warehouse_to_id', $warehouse)->sum('quantity');
+
                 if ($quantity == 0) continue;
-                $quantity -= ReturnedIncomingInvoice::with('incoming_invoice')->where('product_id', $products[$key]['id'])->get()->where('incoming_invoice.warehouse_id', $warehouse)->sum('quantity');
-                $quantity -= OutgoingInvoiceContent::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity -= ReturnedIncomingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity -= OutgoingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity -= TransferContent::where('product_id', $products[$key]['id'])->where('warehouse_from_id', $warehouse)->sum('quantity');
+
                 $quantity -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'product_id', $products[$key]['id'])->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->count();
+
                 if ($quantity == 0) continue;
+
                 $products[$key]["quantity"] = $quantity;
                 $products[$key]["dataType"] = "Product";
                 $actionData->push($products[$key]);
@@ -171,28 +185,64 @@ class WarehouseController extends Controller
                 'product.product_collection',
                 'product.product_brand',
                 'product.product_type',
-                'product.product_category'
+                'product.product_category',
+                'product_country',
+                'product_material',
+                'product_color',
+                'product_model',
+                'product_collection',
+                'product_brand',
+                'product_type',
+                'product_category'
             )->get();
 
             foreach ($kits as $key => $value) {
+
                 $quantity = 0;
-                $quantity += KitStock::with('warehouse_stock')->where('kit_id', $kits[$key]['id'])->get()->where('warehouse_stock.warehouse_id', $warehouse)->sum('quantity');
-                $quantity += IncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('incoming_invoice.warehouse_id', $warehouse)->sum('quantity');
-                $quantity += ReturnedOutgoingInvoiceKit::with('outgoing_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('outgoing_invoice.warehouse_id', $warehouse)->sum('quantity');
+                $quantity += KitStock::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+                $quantity += IncomingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+                $quantity += ReturnedOutgoingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+                $quantity += TransferKit::where('kit_id', $kits[$key]['id'])->where('warehouse_to_id', $warehouse)->sum('quantity');
+
                 if ($quantity == 0) continue;
-                $quantity -= KitOperation::where('kit_id', $kits[$key]['id'])->sum('quantity');
-                $quantity -= ReturnedIncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('incoming_invoice.warehouse_id', $warehouse)->sum('quantity');
-                $quantity -= OutgoingInvoiceKit::with('outgoing_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('outgoing_invoice.warehouse_id', $warehouse)->sum('quantity');
+
+                $quantity -= KitOperation::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+                $quantity -= OutgoingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+                $quantity -= ReturnedIncomingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse)->sum('quantity');
+                $quantity -= TransferKit::where('kit_id', $kits[$key]['id'])->where('warehouse_from_id', $warehouse)->sum('quantity');
+
                 if ($quantity == 0) continue;
+
                 $kits[$key]["quantity"] = $quantity;
                 $kits[$key]["dataType"] = "Kit";
                 $actionData->push($kits[$key]);
             }
         }
 
-        $actionData = $actionData->sortByDesc('quantity');
+        $actionData = $actionData->sortByDesc('dataType')->sortByDesc('quantity');
 
         return $actionData->values()->all();
+    }
+
+    public function destructibleGoods()
+    {
+        $warehouse = Request::input('warehouse');
+        $ids = [];
+        $data = DestructibleGoodsAction::where('action', '==', 0)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->get();
+        foreach ($data as $key => $value) {
+            if (DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->count() == 1) {
+                $row = DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->get('id');
+                $ids[] = $row[0]['id'];
+            }
+        }
+        return [
+            "DestructibleGoodsAction" => DestructibleGoodsAction::with(
+                'destructible_goods',
+                'user',
+                'destructible_goods.product',
+                'destructible_goods.warehouse'
+            )->whereIn('id',  $ids)->paginate()
+        ];
     }
 
     public function actionData()
@@ -219,11 +269,27 @@ class WarehouseController extends Controller
             }
         }
 
+        if ($action == "ReturnedIncomingInvoice" || $action == null) {
+            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with('user', 'people', 'cash')->where('warehouse_id', $warehouse)->get();
+            foreach ($ReturnedIncomingInvoice as $key => $value) {
+                $ReturnedIncomingInvoice[$key]["dataType"] = "ReturnedIncomingInvoice";
+                $actionData->push($ReturnedIncomingInvoice[$key]);
+            }
+        }
+
         if ($action == "OutgoingInvoice" || $action == null) {
             $OutgoingInvoiceContent = OutgoingInvoice::with('user', 'people', 'cash')->where('warehouse_id', $warehouse)->get();
             foreach ($OutgoingInvoiceContent as $key => $value) {
                 $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
                 $actionData->push($OutgoingInvoiceContent[$key]);
+            }
+        }
+
+        if ($action == "ReturnedOutgoingInvoice" || $action == null) {
+            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with('user', 'people', 'cash')->where('warehouse_id', $warehouse)->get();
+            foreach ($ReturnedOutgoingInvoice as $key => $value) {
+                $ReturnedOutgoingInvoice[$key]["dataType"] = "ReturnedOutgoingInvoice";
+                $actionData->push($ReturnedOutgoingInvoice[$key]);
             }
         }
 
@@ -287,27 +353,6 @@ class WarehouseController extends Controller
         return $actionData->paginate();
     }
 
-    public function destructibleGoods()
-    {
-        $warehouse = Request::input('warehouse');
-        $ids = [];
-        $data = DestructibleGoodsAction::where('action', '==', 0)->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->get();
-        foreach ($data as $key => $value) {
-            if (DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->count() == 1) {
-                $row = DestructibleGoodsAction::where('destructible_goods_id', $data[$key]['destructible_goods_id'])->get('id');
-                $ids[] = $row[0]['id'];
-            }
-        }
-        return [
-            "DestructibleGoodsAction" => DestructibleGoodsAction::with(
-                'destructible_goods',
-                'user',
-                'destructible_goods.product',
-                'destructible_goods.warehouse'
-            )->whereIn('id',  $ids)->paginate()
-        ];
-    }
-
     public function warehouseActionDetails()
     {
         $warehouse = Request::input('warehouse');
@@ -319,7 +364,6 @@ class WarehouseController extends Controller
         if ($action == "Stock" || $action == null) {
             $WarehouseStockContent = WarehouseStockContent::with(
                 'user',
-                'warehouse_stock',
                 'product',
                 'product.product_category',
                 'product.product_type',
@@ -329,7 +373,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('warehouse_stock.warehouse_id', $warehouse);
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($WarehouseStockContent as $key => $value) {
                 $WarehouseStockContent[$key]["dataType"] = "Stock";
                 $WarehouseStockContent[$key]["date"] = $WarehouseStockContent[$key]["warehouse_stock"]["date"];
@@ -349,20 +393,28 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('warehouse_stock.warehouse_id', $warehouse);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($WarehouseStockContent as $key => $value) {
                 $WarehouseStockContent[$key]["dataType"] = "StockKit";
                 $WarehouseStockContent[$key]["date"] = $WarehouseStockContent[$key]["warehouse_stock"]["date"];
                 $actionData->push($WarehouseStockContent[$key]);
             }
         }
+
         if ($action == "IncomingInvoice" || $action == null) {
             $IncomingInvoiceContent = IncomingInvoiceContent::with(
                 'user',
                 'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
+                'people',
                 'incoming_invoice.cash',
                 'product',
                 'product.product_category',
@@ -373,7 +425,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('incoming_invoice.warehouse_id', $warehouse);
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($IncomingInvoiceContent as $key => $value) {
                 $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
                 $IncomingInvoiceContent[$key]["date"] = $IncomingInvoiceContent[$key]["incoming_invoice"]["date"];
@@ -384,10 +436,8 @@ class WarehouseController extends Controller
             $IncomingInvoiceKit = IncomingInvoiceKit::with(
                 'user',
                 'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
+                'people',
                 'incoming_invoice.cash',
-                'incoming_invoice.incoming_invoice_kits',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -397,20 +447,27 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('incoming_invoice.warehouse_id', $warehouse);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->get()->where('warehouse_id', $warehouse);
             foreach ($IncomingInvoiceKit as $key => $value) {
                 $IncomingInvoiceKit[$key]["dataType"] = "IncomingInvoiceKit";
                 $actionData->push($IncomingInvoiceKit[$key]);
             }
         }
+
         if ($action == "ReturnedIncomingInvoice" || $action == null) {
-            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with([
+            $ReturnedIncomingInvoice = ReturnedIncomingInvoiceContent::with([
                 'user',
-                'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
-                'incoming_invoice.cash',
+                'people',
+                'returned_incoming_invoice.cash',
                 'product',
                 'product.product_category',
                 'product.product_type',
@@ -420,7 +477,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            ])->get()->where('incoming_invoice.warehouse_id', $warehouse);
+            ])->where('warehouse_id', $warehouse)->get();
             foreach ($ReturnedIncomingInvoice as $key => $value) {
                 $ReturnedIncomingInvoice[$key]["dataType"] = "ReturnedIncomingInvoice";
                 $actionData->push($ReturnedIncomingInvoice[$key]);
@@ -429,11 +486,8 @@ class WarehouseController extends Controller
         if ($action == "ReturnedIncomingInvoice" || $action == null) {
             $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::with(
                 'user',
-                'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
-                'incoming_invoice.cash',
-                'incoming_invoice.incoming_invoice_kits',
+                'people',
+                'returned_incoming_invoice.cash',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -443,18 +497,26 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('incoming_invoice.warehouse_id', $warehouse);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($ReturnedIncomingInvoiceKit as $key => $value) {
                 $ReturnedIncomingInvoiceKit[$key]["dataType"] = "ReturnedIncomingInvoiceKit";
                 $actionData->push($ReturnedIncomingInvoiceKit[$key]);
             }
         }
+
         if ($action == "OutgoingInvoice" || $action == null) {
             $OutgoingInvoiceContent = OutgoingInvoiceContent::with(
                 'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
+                'people',
                 'outgoing_invoice.cash',
                 'product',
                 'product.product_category',
@@ -465,7 +527,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('outgoing_invoice.warehouse_id', $warehouse);
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($OutgoingInvoiceContent as $key => $value) {
                 $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
                 $OutgoingInvoiceContent[$key]["date"] = $OutgoingInvoiceContent[$key]["outgoing_invoice"]["date"];
@@ -475,11 +537,8 @@ class WarehouseController extends Controller
         if ($action == "OutgoingInvoice" || $action == null) {
             $OutgoingInvoiceKit = OutgoingInvoiceKit::with(
                 'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
+                'people',
                 'outgoing_invoice.cash',
-                'outgoing_invoice.outgoing_invoice_kits',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -489,20 +548,27 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('outgoing_invoice.warehouse_id', $warehouse);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($OutgoingInvoiceKit as $key => $value) {
                 $OutgoingInvoiceKit[$key]["dataType"] = "OutgoingInvoiceKit";
                 $actionData->push($OutgoingInvoiceKit[$key]);
             }
         }
+
         if ($action == "ReturnedOutgoingInvoice" || $action == null) {
-            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with(
+            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoiceContent::with(
                 'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
-                'outgoing_invoice.cash',
+                'people',
+                'returned_outgoing_invoice.cash',
                 'product',
                 'product.product_category',
                 'product.product_type',
@@ -512,7 +578,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('outgoing_invoice.warehouse_id', $warehouse);
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($ReturnedOutgoingInvoice as $key => $value) {
                 $ReturnedOutgoingInvoice[$key]["dataType"] = "ReturnedOutgoingInvoice";
                 $actionData->push($ReturnedOutgoingInvoice[$key]);
@@ -521,11 +587,8 @@ class WarehouseController extends Controller
         if ($action == "ReturnedOutgoingInvoiceKit" || $action == null) {
             $ReturnedOutgoingInvoiceKit = ReturnedOutgoingInvoiceKit::with(
                 'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
-                'outgoing_invoice.cash',
-                'outgoing_invoice.outgoing_invoice_kits',
+                'people',
+                'returned_outgoing_invoice.cash',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -535,19 +598,27 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('outgoing_invoice.warehouse_id', $warehouse);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('warehouse_id', $warehouse)->get();
             foreach ($ReturnedOutgoingInvoiceKit as $key => $value) {
                 $ReturnedOutgoingInvoiceKit[$key]["dataType"] = "ReturnedOutgoingInvoiceKit";
                 $actionData->push($ReturnedOutgoingInvoiceKit[$key]);
             }
         }
+
         if ($action == "TransferFrom" || $action == null) {
             $TransferContent = TransferContent::with(
                 'user',
                 'transfer',
-                'transfer.warehouse_from',
-                'transfer.warehouse_to',
+                'warehouse_to',
                 'transfer.driver',
                 'product',
                 'product.product_category',
@@ -558,7 +629,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('transfer.warehouse_from_id', $warehouse);
+            )->where('warehouse_from_id', $warehouse)->get();
             foreach ($TransferContent as $key => $value) {
                 $TransferContent[$key]["dataType"] = "TransferFrom";
                 $TransferContent[$key]["date"] = $TransferContent[$key]["transfer"]["date"];
@@ -569,8 +640,7 @@ class WarehouseController extends Controller
             $TransferContent = TransferKit::with(
                 'user',
                 'transfer',
-                'transfer.warehouse_from',
-                'transfer.warehouse_to',
+                'warehouse_to',
                 'transfer.driver',
                 'kit',
                 'kit.product',
@@ -581,20 +651,28 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('transfer.warehouse_from_id', $warehouse);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('warehouse_from_id', $warehouse)->get();
             foreach ($TransferContent as $key => $value) {
                 $TransferContent[$key]["dataType"] = "TransferFromKit";
                 $TransferContent[$key]["date"] = $TransferContent[$key]["transfer"]["date"];
                 $actionData->push($TransferContent[$key]);
             }
         }
+
         if ($action == "TransferTo" || $action == null) {
             $TransferContent = TransferContent::with(
                 'user',
                 'transfer',
-                'transfer.warehouse_from',
-                'transfer.warehouse_to',
+                'warehouse_from',
                 'transfer.driver',
                 'product',
                 'product.product_category',
@@ -605,7 +683,7 @@ class WarehouseController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('transfer.warehouse_to_id', $warehouse);
+            )->get()->where('warehouse_to_id', $warehouse);
             foreach ($TransferContent as $key => $value) {
                 $TransferContent[$key]["dataType"] = "TransferTo";
                 $TransferContent[$key]["date"] = $TransferContent[$key]["transfer"]["date"];
@@ -616,8 +694,7 @@ class WarehouseController extends Controller
             $TransferContent = TransferKit::with(
                 'user',
                 'transfer',
-                'transfer.warehouse_from',
-                'transfer.warehouse_to',
+                'warehouse_from',
                 'transfer.driver',
                 'kit',
                 'kit.product',
@@ -628,14 +705,24 @@ class WarehouseController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('transfer.warehouse_to_id', $warehouse);
+                'kit.product.product_country',
+
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->get()->where('warehouse_to_id', $warehouse);
             foreach ($TransferContent as $key => $value) {
                 $TransferContent[$key]["dataType"] = "TransferToKit";
                 $TransferContent[$key]["date"] = $TransferContent[$key]["transfer"]["date"];
                 $actionData->push($TransferContent[$key]);
             }
         }
+
         if ($action == "DestructibleGoods" || $action == null) {
             $DestructibleGoodsAction = DestructibleGoodsAction::with('user', 'destructible_goods',  'destructible_goods.warehouse')->whereRelation('destructible_goods', 'warehouse_id', $warehouse)->get();
             foreach ($DestructibleGoodsAction as $key => $value) {
@@ -654,7 +741,7 @@ class WarehouseController extends Controller
         $actionData = $actionData->sortByDesc('date');
         return $actionData->paginate();
     }
-    
+
     public function isEmptyCount()
     {
 
@@ -668,13 +755,13 @@ class WarehouseController extends Controller
                     $quantity = 0;
                     $quantity += WarehouseStockContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
                     $quantity += IncomingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
-                    $quantity += ReturnedOutgoingInvoice::with('outgoing_invoice')->where('product_id', $products[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += ReturnedOutgoingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
                     $quantity += TransferContent::where('product_id', $products[$key]['id'])->where('warehouse_to_id', $warehouse[$key1]['id'])->sum('quantity');
                     if ($quantity > 0) {
                         $isEmpty = false;
                         break 1;
                     }
-                    $quantity -= ReturnedIncomingInvoice::with('incoming_invoice')->where('product_id', $products[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity -= ReturnedIncomingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
                     $quantity -= OutgoingInvoiceContent::where('product_id', $products[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
                     $quantity -= DestructibleGoodsAction::where('action', 1)->whereRelation('destructible_goods', 'warehouse_id', $warehouse[$key1]['id'])->whereRelation('destructible_goods', 'product_id', $products[$key]['id'])->count();
                     $quantity -= TransferContent::where('product_id', $products[$key]['id'])->where('warehouse_from_id', $warehouse[$key1]['id'])->sum('quantity');
@@ -689,14 +776,14 @@ class WarehouseController extends Controller
                 foreach ($kits as $key => $value) {
                     $quantity = KitStock::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
                     $quantity += IncomingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
-                    $quantity += ReturnedOutgoingInvoiceKit::with('outgoing_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('outgoing_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity += ReturnedOutgoingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
                     $quantity += TransferKit::where('kit_id', $kits[$key]['id'])->where('warehouse_to_id', $warehouse[$key1]['id'])->sum('quantity');
                     if ($quantity > 0) {
                         $isEmpty = false;
                         break 1;
                     }
                     $quantity -= KitOperation::where('kit_id', $kits[$key]['id'])->where('warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
-                    $quantity -= ReturnedIncomingInvoiceKit::with('incoming_invoice')->where('kit_id', $kits[$key]['id'])->get()->where('incoming_invoice.warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
+                    $quantity -= ReturnedIncomingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id',  $warehouse[$key1]['id'])->sum('quantity');
                     $quantity -= OutgoingInvoiceKit::where('kit_id', $kits[$key]['id'])->where('warehouse_id', $warehouse[$key1]['id'])->sum('quantity');
                     $quantity -= TransferKit::where('kit_id', $kits[$key]['id'])->where('warehouse_to_id', $warehouse[$key1]['id'])->sum('quantity');
                     if ($quantity > 0) {

@@ -23,9 +23,9 @@ class ReturnedOutgoingInvoiceContent extends Model
     /**
      * Get the ReturnedIncomingInvoice for the user.
      */
-    public function returned_outgoing_invoices()
+    public function returned_outgoing_invoice()
     {
-        return $this->hasMany(ReturnedOutgoingInvoice::class);
+        return $this->belongsTo(ReturnedOutgoingInvoice::class);
     }
 
      /**

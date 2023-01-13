@@ -73,8 +73,7 @@
           </li>
           <li class="mx-5">
             <Link :href="route('outgoing-invoice.index')" class="py-3 px-4 block rounded-lg my-3" :class="
-              route().current('outgoing-invoice.*') ||
-                route().current('returned-outgoing-invoice.*')
+              route().current('outgoing-invoice.*')
                 ? 'bg-[#009ef7]'
                 : 'hover:text-[#009ef7]'
             ">

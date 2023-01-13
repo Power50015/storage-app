@@ -6,14 +6,8 @@
       </div>
     </template>
     <template #default>
-      <FormSection
-        title="تعديل النوع"
-        btnTitle="تعديل النوع"
-        :formData="form"
-        formRoute="product-type.update"
-        toastMsg="تم تعديل النوع"
-        :toastDescription="`تم تعديل النوع : ${form.name}`"
-      >
+      <FormSection title="تعديل النوع" btnTitle="تعديل النوع" :formData="form" formRoute="product-type.update"
+        toastMsg="تم تعديل النوع" :toastDescription="`تم تعديل النوع : ${form.name}`">
         <InputText v-model="form.name" title="أسم النوع" :require="true" />
       </FormSection>
     </template>
@@ -23,17 +17,17 @@
       <img class="w-6 h-6 rounded-full" :src="item.user.profile_photo_url" />
     </div>
     <Link :href="route('warehouse.show', item.id)" class="hover:text-[#009ef7]">
-      <h6 class="mx-2">{{ item.user.name }}</h6>
-      <h6 class="mx-2">
-        {{
-          new Date(item.created_at).toLocaleDateString("ar-EG-u-nu-latn", {
-            weekday: "long",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
-        }}
-      </h6>
+    <h6 class="mx-2">{{ item.user.name }}</h6>
+    <h6 class="mx-2">
+      {{
+  new Date(item.created_at).toLocaleDateString("ar-EG-u-nu-latn", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
+      }}
+    </h6>
     </Link>
   </div>
 </template>
@@ -43,6 +37,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 import { reactive } from "@vue/reactivity";
 import FormSection from "@/Forms/FormSection.vue";
 import InputText from "@/Forms/InputText.vue";
+import { computed, onUpdated } from "@vue/runtime-core";
 
 
 const props = defineProps(["item"]);

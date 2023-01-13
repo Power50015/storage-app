@@ -115,88 +115,19 @@
           </tbody>
         </table>
       </div>
-      <div class="my-3 returned" v-if="returnedOutgoingInvoice.length > 0">
-        <hr />
-        <h2 class="font-bold text-xl my-2">مرتجع الفاتورة</h2>
-        <table class="border border-slate-700 w-full text-right mt-5" id="xyz">
-          <tbody>
-            <!--returnedOutgoingInvoice-->
-            <tr>
-              <th class="border border-slate-700 py-3 px-3 font-bold s-border">
-                مرتجع المنتجات
-              </th>
-              <th class="border border-slate-700 py-3 px-3 font-bold s-border">
-                التاريخ
-              </th>
-              <th class="border border-slate-700 py-3 px-3 font-bold s-border">
-                الكميه
-              </th>
-            </tr>
-            <tr v-for="product in returnedOutgoingInvoice" :key="product.index" class="">
-              <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
-                <Link :href="route('product.show', product.product.id)">
-                {{ ContentName(product) }}
-                </Link>
-              </td>
-              <td class="border border-slate-700 py-3 px-3">
-                {{
-                  new Date(product.date).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                }}
-              </td>
-              <td class="border border-slate-700 py-3 px-3">
-                {{ product.quantity }}
-              </td>
-            </tr>
-            <!--returnedOutgoingInvoiceKit-->
-            <tr v-if="returnedOutgoingInvoiceKit.length > 0">
-              <th class="border border-slate-700 py-3 px-3 font-bold s-border">
-                مرتجع قطع غيار
-              </th>
-              <th class="border border-slate-700 py-3 px-3 font-bold s-border">
-                التاريخ
-              </th>
-              <th class="border border-slate-700 py-3 px-3 font-bold s-border">
-                الكميه
-              </th>
-            </tr>
-            <tr v-for="kit in returnedOutgoingInvoiceKit" :key="kit.index">
-              <td class="border border-slate-700 py-3 px-3 hover:text-[#0095e8]">
-                <Link :href="route('kit.show', kit.kit.id)">
-                {{ KitName(kit) }}
-                </Link>
-              </td>
-              <td class="border border-slate-700 py-3 px-3">
-                {{
-                  new Date(kit.date).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                }}
-              </td>
-              <td class="border border-slate-700 py-3 px-3">
-                {{ kit.quantity }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
       <div class="footer my-3">
         <hr />
         <div class="flex justify-between">
           <h2 class="p-2 print:w-full print:mb-3">
             الإجمالى قبل الخصم :
-            {{ outgoing_invoice.total_before_discount }}
+            {{ ((outgoing_invoice.total * 1) + (outgoing_invoice.discount * 1)).toFixed(2)}}
           </h2>
           <h2 class="p-2">الخصم : {{ outgoing_invoice.discount }}</h2>
         </div>
         <h2 class="p-2 font-bold">
           المطلوب :
-          {{ outgoing_invoice.total_after_discount }}
+          {{ outgoing_invoice.total }}
         </h2>
       </div>
       <div class="btns flex justify-around print:hidden">
@@ -204,9 +135,6 @@
           طباعه
           <i class="fa-solid fa-print mx-3"></i>
         </btn-primary>
-        <btn-info :element="Link" :to="route('returned-outgoing-invoice.edit', outgoing_invoice.id)">
-          أضف مرتجع
-        </btn-info>
         <btn-success :element="Link" :to="route('outgoing-invoice.edit', outgoing_invoice.id)">
           تعديل الفاتورة
         </btn-success>
@@ -233,16 +161,12 @@ import OutgoingInvoiceTabs from "@/Components/OutgoingInvoice/OutgoingInvoiceTab
 const props = defineProps([
   "outgoingInvoice",
   "outgoingInvoiceContent",
-  "returnedOutgoingInvoice",
   "outgoingInvoiceKit",
-  "returnedOutgoingInvoiceKit",
 ]);
 
 const outgoing_invoice = props.outgoingInvoice[0];
 const outgoing_invoice_content = props.outgoingInvoiceContent;
-const returnedOutgoingInvoice = props.returnedOutgoingInvoice;
 const outgoingInvoiceKit = props.outgoingInvoiceKit;
-const returnedOutgoingInvoiceKit = props.returnedOutgoingInvoiceKit;
 
 provide("title", "الفواتير الصادره");
 provide(
@@ -278,7 +202,7 @@ function print() {
 }
 
 function ContentName(item) {
-  var name =  item.product.name;
+  var name = item.product.name;
   if (item.product.product_brand) {
     name = name + " - " + item.product.product_brand.name;
   }

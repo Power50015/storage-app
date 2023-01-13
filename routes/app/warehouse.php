@@ -11,7 +11,9 @@ use App\Http\Controllers\Warehouse\WarehouseStockNoteController;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('/warehouse', WarehouseController::class);
+
 Route::get('/warehouse-empty-total', [WarehouseController::class, 'isEmptyCount']);
+
 Route::resource('/warehouse-attachment', WarehouseAttachmentController::class)->only([
     'index', 'store', 'destroy'
 ]);

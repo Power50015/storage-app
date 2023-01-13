@@ -21,6 +21,14 @@ class ReturnedOutgoingInvoiceKit extends Model
     }
 
     /**
+     * Get the ReturnedIncomingInvoice for the user.
+     */
+    public function returned_outgoing_invoice()
+    {
+        return $this->belongsTo(ReturnedOutgoingInvoice::class);
+    }
+
+    /**
      * Get the incoming invoice for the IncomingInvoiceContent.
      */
     public function outgoing_invoice()

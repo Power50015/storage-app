@@ -31,13 +31,13 @@
         <card-info>
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد المنتجات بدون المخزون</h4>
-            <h4 class="text-xl font-bold">{{ product_no_stock_count }}</h4>
+            <h4 class="text-xl font-bold">{{ product_count - product_stock_count }}</h4>
           </div>
         </card-info>
         <card-danger>
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد الهالك</h4>
-            <h4 class="text-xl font-bold">{{ destructible_goods_count }}</h4>
+            <h4 class="text-xl font-bold">{{ destructible }}</h4>
           </div>
         </card-danger>
       </div>
@@ -271,6 +271,8 @@ const props = defineProps([
   "product_color",
   "product_country",
   "product_material",
+  "product_stock_count",
+  "destructible",
   "product_count",
   "products",
   "filters",
@@ -376,9 +378,7 @@ watch(form, (value) => {
     }
   );
 });
-const product_no_stock_count = ref();
-const product_stock_count = ref();
-const destructible_goods_count = ref();
+
 const filter = ref(false);
 
 function categoryChange() {
@@ -390,16 +390,7 @@ function brandChange() {
 function collectionChange() {
   form.product_model_id = null;
 }
-onMounted(() => {
-  axios.get("/product-no-stock-count").then(function (response) {
-    product_no_stock_count.value = response.data;
-    product_stock_count.value =
-      props.product_count - product_no_stock_count.value;
-  });
-  axios.get("/destructible-goods-count").then(function (response) {
-    destructible_goods_count.value = response.data;
-  });
-});
+
 </script>
 <style scoped>
 </style>

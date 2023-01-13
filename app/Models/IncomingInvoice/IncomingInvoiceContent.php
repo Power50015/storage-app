@@ -2,6 +2,7 @@
 
 namespace App\Models\IncomingInvoice;
 
+use App\Models\People\People;
 use App\Models\Product\Product;
 use App\Models\User;
 use App\Models\Warehouse\Warehouse;

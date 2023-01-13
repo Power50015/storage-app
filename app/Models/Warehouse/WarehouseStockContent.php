@@ -34,6 +34,12 @@ class WarehouseStockContent extends Model
     {
         return $this->belongsTo(Product::class);
     }
-
+/**
+     * Get the warehouses for the ReturnedIncomingInvoiceContent.
+     */
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
  
 }
