@@ -3,6 +3,13 @@
 namespace App\Models;
 
 use App\Models\Cash\Cash;
+use App\Models\Cash\CashAttachment;
+use App\Models\Cash\CashImage;
+use App\Models\Cash\CashNote;
+use App\Models\Cash\CashPay;
+use App\Models\Cash\CashPayAttachment;
+use App\Models\Cash\CashPayImage;
+use App\Models\Cash\CashPayNote;
 use App\Models\Debtor\Debtor;
 use App\Models\Debtor\DebtorAttachment;
 use App\Models\Debtor\DebtorPay;
@@ -132,6 +139,55 @@ class User extends Authenticatable
     public function cashs()
     {
         return $this->hasMany(Cash::class);
+    }
+     /**
+     * Get the CashAttachment for the user.
+     */
+    public function cash_attachments()
+    {
+        return $this->hasMany(CashAttachment::class);
+    }
+    /**
+     * Get the CashImage for the user.
+     */
+    public function cash_images()
+    {
+        return $this->hasMany(CashImage::class);
+    }
+    /**
+     * Get the CashNote for the user.
+     */
+    public function cash_Notes()
+    {
+        return $this->hasMany(CashNote::class);
+    }
+     /**
+     * Get the CashPay for the user.
+     */
+    public function cash_pays()
+    {
+        return $this->hasMany(CashPay::class);
+    }
+     /**
+     * Get the CashPayAttachment for the user.
+     */
+    public function cash_pay_attachments()
+    {
+        return $this->hasMany(CashPayAttachment::class);
+    }
+    /**
+     * Get the CashPayImage for the user.
+     */
+    public function cash_pay_images()
+    {
+        return $this->hasMany(CashPayImage::class);
+    }
+    /**
+     * Get the CashPayNote for the user.
+     */
+    public function cash_pay_Notes()
+    {
+        return $this->hasMany(CashPayNote::class);
     }
     /**
      * Get the expense for the user.

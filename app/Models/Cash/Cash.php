@@ -86,11 +86,40 @@ class Cash extends Model
         return $this->hasMany(ReturnedIncomingInvoice::class);
     }
 
-         /**
+    /**
      * Get the ReturnedOutgoingInvoice for the user.
      */
     public function returned_outgoing_invoices()
     {
         return $this->hasMany(ReturnedOutgoingInvoice::class);
+    }
+
+    /**
+     * Get the CashAttachment for the Cash.
+     */
+    public function cash_attachments()
+    {
+        return $this->hasMany(CashAttachment::class);
+    }
+    /**
+     * Get the CashImage for the Cash.
+     */
+    public function cash_images()
+    {
+        return $this->hasMany(CashImage::class);
+    }
+    /**
+     * Get the CashNote for the Cash.
+     */
+    public function cash_notes()
+    {
+        return $this->hasMany(CashNote::class);
+    }
+    /**
+     * Get the CashPay for the Cash.
+     */
+    public function cash_pays()
+    {
+        return $this->hasMany(CashPay::class);
     }
 }

@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Cash\CashAttachment;
 use App\Http\Requests\Cash\StoreCashAttachmentRequest;
 use App\Http\Requests\Cash\UpdateCashAttachmentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CashAttachmentController extends Controller
 {
@@ -16,7 +20,14 @@ class CashAttachmentController extends Controller
      */
     public function index()
     {
-        //
+        $file = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "attachment" => CashAttachment::with('user')->latest()->where('cash_id', $file)->when(Request::input('search'), function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,14 @@ class CashAttachmentController extends Controller
      */
     public function store(StoreCashAttachmentRequest $request)
     {
-        //
+        $attachment_path = $request["attachment"]->store('attachment/cash', 'public');
+        CashAttachment::create([
+            'attachment' =>  $attachment_path,
+            'cash_id' => $request->id,
+            'title' => $request->title,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +100,9 @@ class CashAttachmentController extends Controller
      */
     public function destroy(CashAttachment $cashAttachment)
     {
-        //
+        Storage::delete("public/" . $cashAttachment["attachment"]);
+        $cashAttachment->delete();
+
+        return Redirect::back();
     }
 }

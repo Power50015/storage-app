@@ -11,6 +11,8 @@ use App\Models\Cash\CashPay;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('/cash', CashController::class);
+Route::get('/cash-data', [CashController::class, 'data']);
+
 Route::resource('/cash-note', CashNoteController::class)->only([
     'index', 'store', 'destroy'
 ]);

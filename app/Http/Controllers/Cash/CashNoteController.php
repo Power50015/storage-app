@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Cash;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cash\CashNote;
-use App\Http\Requests\CashStoreCashNoteRequest;
-use App\Http\Requests\CashUpdateCashNoteRequest;
+use App\Http\Requests\Cash\StoreCashNoteRequest;
+use App\Http\Requests\Cash\UpdateCashNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class CashNoteController extends Controller
 {
@@ -16,7 +19,16 @@ class CashNoteController extends Controller
      */
     public function index()
     {
-        //
+        
+        $note = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => CashNote::with('user')->latest()->where('cash_id', $note)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +49,13 @@ class CashNoteController extends Controller
      */
     public function store(StoreCashNoteRequest $request)
     {
-        //
+        CashNote::create([
+            'note' => $request->note,
+            'cash_id' => $request->id,
+            'tag' => $request->tag,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +100,8 @@ class CashNoteController extends Controller
      */
     public function destroy(CashNote $cashNote)
     {
-        //
+        $cashNote->delete();
+
+        return Redirect::back();
     }
 }

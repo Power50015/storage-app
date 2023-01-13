@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Cash\CashImage;
 use App\Http\Requests\Cash\StoreCashImageRequest;
 use App\Http\Requests\Cash\UpdateCashImageRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CashImageController extends Controller
 {
@@ -16,7 +20,10 @@ class CashImageController extends Controller
      */
     public function index()
     {
-        //
+        $image = Request::input('id');
+        return [
+            "image" => CashImage::where('cash_id', $image)->with('user')->latest()->paginate()
+        ];
     }
 
     /**
@@ -37,7 +44,12 @@ class CashImageController extends Controller
      */
     public function store(StoreCashImageRequest $request)
     {
-        //
+        CashImage::create([
+            'image' =>  $request["image"]->store('image/cash', 'public'),
+            'cash_id' => $request->id,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +94,9 @@ class CashImageController extends Controller
      */
     public function destroy(CashImage $cashImage)
     {
-        //
+        Storage::delete("public/" . $cashImage["image"]);
+        $cashImage->delete();
+
+        return Redirect::back();
     }
 }

@@ -29,8 +29,9 @@
         'right-[-300px]': !asideOpenStateMobile,
       }">
       <UserCard />
-      <perfect-scrollbar>
-        <ul class="text-white h-full">
+
+      <ul class="text-white list-of-items">
+        <perfect-scrollbar>
           <li class="
               pt-5
               text-center text-xs
@@ -191,8 +192,9 @@
             <span class="mx-3">المخازن</span>
             </Link>
           </li>
-        </ul>
-      </perfect-scrollbar>
+        </perfect-scrollbar>
+      </ul>
+
     </aside>
     <div class="aside-overlay xl:hidden" :class="{
       block: asideOpenStateMobile,
@@ -229,5 +231,10 @@ aside {
 
 .ps {
   height: 100%;
+}
+
+.list-of-items {
+  height: 81vh;
+  overflow: auto;
 }
 </style>

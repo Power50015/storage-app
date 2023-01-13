@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCashPayAttachmentRequest extends FormRequest
 {
-    /**
+     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,21 @@ class StoreCashPayAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'attachment' => 'required|file|mimes:csv,txt,jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls'
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.*' => 'يجب إدخال عنوان ',
+            'attachment.*' => 'يجب إدخال الملف ',
         ];
     }
 }

@@ -34,7 +34,7 @@
     >
       <Link :href="route('dashboard')">
         <img
-          src="https://preview.keenthemes.com/metronic8/demo8/assets/media/logos/default-dark.svg"
+          src="../../image/logo.svg"
           alt="logo"
           class="h-[25px] block"
         />

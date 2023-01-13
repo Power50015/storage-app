@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Cash\CashPayNote;
 use App\Http\Requests\Cash\StoreCashPayNoteRequest;
 use App\Http\Requests\Cash\UpdateCashPayNoteRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class CashPayNoteController extends Controller
 {
@@ -16,7 +19,15 @@ class CashPayNoteController extends Controller
      */
     public function index()
     {
-        //
+        $note = Request::input('id');
+        $search = Request::input('search');
+        return [
+            "note" => CashPayNote::with('user')->latest()->where('cash_pay_id', $note)->when(Request::input('search'), function ($query, $search) {
+                $query->where('tag', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
+            "filters" => $search
+        ];
     }
 
     /**
@@ -37,7 +48,13 @@ class CashPayNoteController extends Controller
      */
     public function store(StoreCashPayNoteRequest $request)
     {
-        //
+        CashPayNote::create([
+            'note' => $request->note,
+            'cash_pay_id' => $request->id,
+            'tag' => $request->tag,
+            'user_id' => Auth::id()
+        ]);
+        return Redirect::back();
     }
 
     /**
@@ -82,6 +99,8 @@ class CashPayNoteController extends Controller
      */
     public function destroy(CashPayNote $cashPayNote)
     {
-        //
+        $cashPayNote->delete();
+
+        return cashPayNote::back();
     }
 }

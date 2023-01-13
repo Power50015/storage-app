@@ -95,7 +95,6 @@ import InputTextArea from "@/Forms/InputTextArea.vue";
 import BtnPrimary from "@/Components/Buttons/BtnPrimary.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
-import CashTable from "@/Components/Cash/CashTable.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import Modal from "@/Components/Modals/Modal.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";

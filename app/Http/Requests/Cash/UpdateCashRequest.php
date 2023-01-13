@@ -34,4 +34,17 @@ class UpdateCashRequest extends FormRequest
             'title' => 'required|unique:cashes,title',
         ];
     }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+
+        return [
+            'title.required' => 'يجب إدخال بند الكاش',
+            'title.unique' => 'يجب أن يكون بند الكاش فريد',
+        ];
+    }
 }
