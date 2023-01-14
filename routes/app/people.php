@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 Route::resource('/people', PeopleController::class);
 
-Route::get('/people-data', [PeopleController::class, 'data']);
+Route::get('/people-data', [PeopleController::class, 'data']); // For Dropdown Select
 
 Route::get('/people-action', [PeopleController::class, 'action']);
 

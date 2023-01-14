@@ -11,6 +11,8 @@ use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
 use App\Models\Product\DestructibleGoods;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
 use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;

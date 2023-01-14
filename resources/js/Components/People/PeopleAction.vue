@@ -34,10 +34,10 @@
           <h2>رقم الفاتوره : {{ item.id }}</h2>
         </div>
         <div class="w-full flex justify-center">
-          <BadgeSuccess>فاتورة صادره</BadgeSuccess>
+          <BadgePrimary>فاتورة صادره</BadgePrimary>
         </div>
         <div class="w-full">
-          المبلغ : {{ item.total_after_discount.toFixed(2) }}
+          المبلغ : {{ item.total }}
         </div>
         <div class="w-full">
           <h2>
@@ -239,7 +239,7 @@
           <BadgeSuccess>فاتورة وارده</BadgeSuccess>
         </div>
         <div class="w-full">
-          المبلغ : {{ item.total_after_discount.toFixed(2) }}
+          المبلغ : {{ item.total }}
         </div>
         <div class="w-full">
           <h2>
@@ -414,6 +414,108 @@
         </div>
       </Link>
     </div>
+    <div v-if="item.dataType == 'ReturnedIncomingInvoice'">
+      <Link
+        :href="route('returned-incoming-invoice.show', item.id)"
+        class="
+          w-full
+          flex
+          justify-between
+          items-center
+          cursor-pointer
+          hover:text-[#0095e8]
+          transition-all
+          my-2
+          py-4
+          px-2
+          text-right
+          font-bold
+          lg:flex-row
+          flex-col
+        "
+      >
+        <div class="w-full">
+          <h2>رقم البيان : {{ item.id }}</h2>
+        </div>
+        <div class="w-full flex justify-center">
+          <BadgeSuccess>مرتجع وارد</BadgeSuccess>
+        </div>
+        <div class="w-full">
+          المبلغ : {{ item.total }}
+        </div>
+        <div class="w-full">
+          <h2>
+            {{
+              new Date(item.date).toLocaleDateString("ar-EG-u-nu-latn", {
+                weekday: "long",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            }}
+          </h2>
+          <div class="flex mt-3">
+            <img
+              :src="item.user.profile_photo_url"
+              :alt="item.user.name"
+              class="w-[25px] h-[25px] rounded-full"
+            />
+            <h6 class="mx-2">{{ item.user.name }}</h6>
+          </div>
+        </div>
+      </Link>
+    </div>
+    <div v-if="item.dataType == 'ReturnedOutgoingInvoice'">
+      <Link
+        :href="route('returned-outgoing-invoice.show', item.id)"
+        class="
+          w-full
+          flex
+          justify-between
+          items-center
+          cursor-pointer
+          hover:text-[#0095e8]
+          transition-all
+          my-2
+          py-4
+          px-2
+          text-right
+          font-bold
+          lg:flex-row
+          flex-col
+        "
+      >
+        <div class="w-full">
+          <h2>رقم البيان : {{ item.id }}</h2>
+        </div>
+        <div class="w-full flex justify-center">
+          <BadgePrimary>مرتجع صادره</BadgePrimary>
+        </div>
+        <div class="w-full">
+          المبلغ : {{ item.total }}
+        </div>
+        <div class="w-full">
+          <h2>
+            {{
+              new Date(item.date).toLocaleDateString("ar-EG-u-nu-latn", {
+                weekday: "long",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            }}
+          </h2>
+          <div class="flex mt-3">
+            <img
+              :src="item.user.profile_photo_url"
+              :alt="item.user.name"
+              class="w-[25px] h-[25px] rounded-full"
+            />
+            <h6 class="mx-2">{{ item.user.name }}</h6>
+          </div>
+        </div>
+      </Link>
+    </div>
   </div>
   <div v-if="(rowData[0] && rowData[0].next_page_url) || rowData.length == 0">
     <DotsSpinner />
@@ -448,10 +550,12 @@ const action = ref();
 
 const actionOptions = [
   { label: "فواتير صادره", index: "OutgoingInvoice" },
+  { label: "مرتجع صادره", index: "ReturnedOutgoingInvoice" },
   { label: "دين مدين", index: "Debtor" },
   { label: "دفعه وارده", index: "DebtorPay" },
   { label: "دين مدين معدم", index: "DebtorKilled" },
   { label: "فواتير وارده", index: "IncomingInvoice" },
+  { label: "مرتجع وارده", index: "ReturnedIncomingInvoice" },
   { label: "دين دائن", index: "Creditor" },
   { label: "دفعه صادره", index: "CreditorPay" },
   { label: "دين دائن معدم", index: "CreditorKilled" },

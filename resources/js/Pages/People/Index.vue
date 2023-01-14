@@ -11,13 +11,13 @@
         <CardInfo>
           <h4 class="mb-3">عدد الدائنون</h4>
           <h4 class="text-xl font-bold">
-            {{ creditor_count }}
+            {{ peopleCreditor }}
           </h4>
         </CardInfo>
         <CardSuccess>
           <h4 class="mb-3">عدد المدينون</h4>
           <h4 class="text-xl font-bold">
-            {{ debtor_count }}
+            {{ peopleCount - peopleCreditor }}
           </h4>
         </CardSuccess>
       </div>
@@ -109,9 +109,8 @@ provide(
   ])
 );
 
-const props = defineProps(["people", "peopleCount", "filters"]);
+const props = defineProps(["people", "peopleCount", "filters","peopleCreditor"]);
 
-const people = computed(() => props.people);
 
 const search = ref(props.filters.search);
 
@@ -129,15 +128,4 @@ watch(search, (value) => {
   );
 });
 
-const creditor_count = ref();
-const debtor_count = ref();
-
-onMounted(() => {
-  axios.get("/creditor-count").then(function (response) {
-    creditor_count.value = response.data;
-  });
-  axios.get("/debtor-count").then(function (response) {
-    debtor_count.value = response.data;
-  });
-});
 </script>

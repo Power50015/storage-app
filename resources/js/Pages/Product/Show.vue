@@ -164,7 +164,7 @@ import ProductTabs from "@/Components/Product/ProductTabs.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 
-const props = defineProps(["product"]);
+const props = defineProps(["product","total_sales"]);
 const product = computed(() => props.product[0]);
 
 provide("title", "المنتج");

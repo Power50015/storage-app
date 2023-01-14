@@ -26,9 +26,6 @@ Route::resource('/debtor-image', DebtorImageController::class)->only([
     'index', 'store', 'destroy'
 ]);
 
-Route::get('/debtor-count', function () {
-    return People::get()->where('total_credit', '>', 0)->count();
-});
 Route::get('/debtor-total', function () {
     return People::get()->where('total_credit', '>', 0)->sum('total_credit');
 });

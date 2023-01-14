@@ -24,8 +24,11 @@ Route::resource('/product-model', ProductModelController::class);
 Route::resource('/product-color', ProductColorController::class);
 Route::resource('/product-material', ProductMaterialController::class);
 Route::resource('/product-country', ProductCountryController::class);
+Route::resource('/product-brand', ProductBrandController::class);
+Route::get('/product-brand-data', [ProductBrandController::class, 'data']);
 
-
+Route::get('/product-data', [ProductController::class, 'data']); // For Dropdown Select
+Route::resource('/product', ProductController::class);
 Route::resource('/product-note', ProductNoteController::class)->only([
     'index', 'store', 'destroy'
 ]);
@@ -38,15 +41,9 @@ Route::resource('/product-image', ProductImageController::class)->only([
     'index', 'store', 'destroy'
 ]);
 
-Route::resource('/product', ProductController::class);
-Route::get('/product-data', [ProductController::class, 'data']);
-Route::get('/product-action', [ProductController::class, 'actionData']);
 Route::get('/product-stock', [ProductController::class, 'stockData']);
+Route::get('/product-action', [ProductController::class, 'actionData']);
 Route::get('/product-kits', [ProductController::class, 'kits']);
 
 Route::resource('/destructible-goods', DestructibleGoodsController::class);
 Route::resource('/destructible-goods-action', DestructibleGoodsActionController::class);
-
-Route::resource('/product-brand', ProductBrandController::class);
-Route::get('/product-brand-data', [ProductBrandController::class, 'data']);
-

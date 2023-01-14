@@ -12,14 +12,16 @@ use App\Models\Debtor\DebtorPay;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\IncomingInvoice\IncomingInvoiceContent;
 use App\Models\IncomingInvoice\IncomingInvoiceKit;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoice;
-use App\Models\IncomingInvoice\ReturnedIncomingInvoiceKit;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\OutgoingInvoice\OutgoingInvoiceContent;
 use App\Models\OutgoingInvoice\OutgoingInvoiceKit;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoice;
-use App\Models\OutgoingInvoice\ReturnedOutgoingInvoiceKit;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceKit;
 use App\Models\People\People;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -40,6 +42,7 @@ class PeopleController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })->with('user')->paginate(40)->withQueryString(),
             'peopleCount' => People::count(),
+            'peopleCreditor' => People::where("balance", ">", 0)->count(),
             'filters' => Request::only(['search'])
         ]);
     }
@@ -145,6 +148,7 @@ class PeopleController extends Controller
                 ->orWhere('address', 'like', "%{$search}%");
         })->paginate(10)->withQueryString();
     }
+
     public function action()
     {
         $people = Request::input('people');
@@ -160,6 +164,24 @@ class PeopleController extends Controller
                 $actionData->push($IncomingInvoiceContent[$key]);
             }
         }
+
+        if ($action == "ReturnedIncomingInvoice" || $action == null) {
+            $IncomingInvoiceContent = ReturnedIncomingInvoice::with('user', 'people', 'warehouse', 'cash')->where('people_id', $people)->get();
+            foreach ($IncomingInvoiceContent as $key => $value) {
+                $IncomingInvoiceContent[$key]["dataType"] = "ReturnedIncomingInvoice";
+                $actionData->push($IncomingInvoiceContent[$key]);
+            }
+        }
+
+        if ($action == "ReturnedOutgoingInvoice" || $action == null) {
+            $IncomingInvoiceContent = ReturnedOutgoingInvoice::with('user', 'people', 'warehouse', 'cash')->where('people_id', $people)->get();
+            foreach ($IncomingInvoiceContent as $key => $value) {
+                $IncomingInvoiceContent[$key]["dataType"] = "ReturnedOutgoingInvoice";
+                $actionData->push($IncomingInvoiceContent[$key]);
+            }
+        }
+
+
         if ($action == "OutgoingInvoice" || $action == null) {
             $OutgoingInvoiceContent = OutgoingInvoice::with('user', 'people', 'warehouse', 'cash')->where('people_id', $people)->get();
             foreach ($OutgoingInvoiceContent as $key => $value) {
@@ -225,8 +247,8 @@ class PeopleController extends Controller
             $IncomingInvoiceContent = IncomingInvoiceContent::with(
                 'user',
                 'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
+                'people',
+                'warehouse',
                 'incoming_invoice.cash',
                 'product',
                 'product.product_category',
@@ -237,21 +259,21 @@ class PeopleController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('incoming_invoice.people_id', $people);
+            )->where('people_id', $people)->get();
             foreach ($IncomingInvoiceContent as $key => $value) {
                 $IncomingInvoiceContent[$key]["dataType"] = "IncomingInvoice";
                 $IncomingInvoiceContent[$key]["date"] = $IncomingInvoiceContent[$key]["incoming_invoice"]["date"];
                 $actionData->push($IncomingInvoiceContent[$key]);
             }
         }
+
         if ($action == "IncomingInvoiceKit" || $action == null) {
             $IncomingInvoiceKit = IncomingInvoiceKit::with(
                 'user',
                 'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
+                'people',
+                'warehouse',
                 'incoming_invoice.cash',
-                'incoming_invoice.incoming_invoice_kits',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -261,21 +283,29 @@ class PeopleController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('incoming_invoice.people_id', $people);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('people_id', $people)->get();
             foreach ($IncomingInvoiceKit as $key => $value) {
                 $IncomingInvoiceKit[$key]["dataType"] = "IncomingInvoiceKit";
                 $actionData->push($IncomingInvoiceKit[$key]);
             }
         }
+
         if ($action == "ReturnedIncomingInvoice" || $action == null) {
-            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with([
+            $ReturnedIncomingInvoice = ReturnedIncomingInvoiceContent::with([
                 'user',
-                'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
-                'incoming_invoice.cash',
-                'incoming_invoice.incoming_invoice_contents',
+                'returned_incoming_invoice',
+                'people',
+                'warehouse',
+                'returned_incoming_invoice.cash',
                 'product',
                 'product.product_category',
                 'product.product_type',
@@ -285,20 +315,20 @@ class PeopleController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            ])->get()->where('incoming_invoice.people_id', $people);
+            ])->where('people_id', $people)->get();
             foreach ($ReturnedIncomingInvoice as $key => $value) {
                 $ReturnedIncomingInvoice[$key]["dataType"] = "ReturnedIncomingInvoice";
                 $actionData->push($ReturnedIncomingInvoice[$key]);
             }
         }
+
         if ($action == "ReturnedIncomingInvoiceKit" || $action == null) {
             $ReturnedIncomingInvoiceKit = ReturnedIncomingInvoiceKit::with(
                 'user',
-                'incoming_invoice',
-                'incoming_invoice.people',
-                'incoming_invoice.warehouse',
-                'incoming_invoice.cash',
-                'incoming_invoice.incoming_invoice_kits',
+                'returned_incoming_invoice',
+                'people',
+                'warehouse',
+                'returned_incoming_invoice.cash',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -308,19 +338,28 @@ class PeopleController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('incoming_invoice.people_id', $people);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('people_id', $people)->get();
             foreach ($ReturnedIncomingInvoiceKit as $key => $value) {
                 $ReturnedIncomingInvoiceKit[$key]["dataType"] = "ReturnedIncomingInvoiceKit";
                 $actionData->push($ReturnedIncomingInvoiceKit[$key]);
             }
         }
+
         if ($action == "OutgoingInvoice" || $action == null) {
             $OutgoingInvoiceContent = OutgoingInvoiceContent::with(
                 'user',
                 'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
+                'people',
+                'warehouse',
                 'outgoing_invoice.cash',
                 'product',
                 'product.product_category',
@@ -331,21 +370,21 @@ class PeopleController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->where('people_id', $people)->get()->where('outgoing_invoice.people_id', $people);
+            )->where('people_id', $people)->where('people_id', $people)->get();
             foreach ($OutgoingInvoiceContent as $key => $value) {
                 $OutgoingInvoiceContent[$key]["dataType"] = "OutgoingInvoice";
                 $OutgoingInvoiceContent[$key]["date"] = $OutgoingInvoiceContent[$key]["outgoing_invoice"]["date"];
                 $actionData->push($OutgoingInvoiceContent[$key]);
             }
         }
+
         if ($action == "ReturnedOutgoingInvoice" || $action == null) {
-            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with(
+            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoiceContent::with(
                 'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
-                'outgoing_invoice.cash',
-                'outgoing_invoice.outgoing_invoice_contents',
+                'returned_outgoing_invoice',
+                'people',
+                'warehouse',
+                'returned_outgoing_invoice.cash',
                 'product',
                 'product.product_category',
                 'product.product_type',
@@ -355,44 +394,20 @@ class PeopleController extends Controller
                 'product.product_color',
                 'product.product_material',
                 'product.product_country'
-            )->get()->where('outgoing_invoice.people_id', $people);
+            )->where('people_id', $people)->get();
             foreach ($ReturnedOutgoingInvoice as $key => $value) {
                 $ReturnedOutgoingInvoice[$key]["dataType"] = "ReturnedOutgoingInvoice";
                 $actionData->push($ReturnedOutgoingInvoice[$key]);
             }
         }
-        if ($action == "OutgoingInvoiceKit" || $action == null) {
-            $OutgoingInvoiceKit = OutgoingInvoiceKit::with(
-                'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
-                'outgoing_invoice.cash',
-                'outgoing_invoice.outgoing_invoice_kits',
-                'kit',
-                'kit.product',
-                'kit.product.product_category',
-                'kit.product.product_type',
-                'kit.product.product_brand',
-                'kit.product.product_collection',
-                'kit.product.product_model',
-                'kit.product.product_color',
-                'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('outgoing_invoice.people_id', $people);
-            foreach ($OutgoingInvoiceKit as $key => $value) {
-                $OutgoingInvoiceKit[$key]["dataType"] = "OutgoingInvoiceKit";
-                $actionData->push($OutgoingInvoiceKit[$key]);
-            }
-        }
+
         if ($action == "ReturnedOutgoingInvoiceKit" || $action == null) {
             $ReturnedOutgoingInvoiceKit = ReturnedOutgoingInvoiceKit::with(
                 'user',
-                'outgoing_invoice',
-                'outgoing_invoice.people',
-                'outgoing_invoice.warehouse',
-                'outgoing_invoice.cash',
-                'outgoing_invoice.outgoing_invoice_kits',
+                'returned_outgoing_invoice',
+                'people',
+                'warehouse',
+                'returned_outgoing_invoice.cash',
                 'kit',
                 'kit.product',
                 'kit.product.product_category',
@@ -402,13 +417,54 @@ class PeopleController extends Controller
                 'kit.product.product_model',
                 'kit.product.product_color',
                 'kit.product.product_material',
-                'kit.product.product_country'
-            )->get()->where('outgoing_invoice.people_id', $people);
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('people_id', $people)->get();
             foreach ($ReturnedOutgoingInvoiceKit as $key => $value) {
                 $ReturnedOutgoingInvoiceKit[$key]["dataType"] = "ReturnedOutgoingInvoiceKit";
                 $actionData->push($ReturnedOutgoingInvoiceKit[$key]);
             }
         }
+
+        if ($action == "OutgoingInvoiceKit" || $action == null) {
+            $OutgoingInvoiceKit = OutgoingInvoiceKit::with(
+                'user',
+                'outgoing_invoice',
+                'people',
+                'warehouse',
+                'outgoing_invoice.cash',
+                'kit',
+                'kit.product',
+                'kit.product.product_category',
+                'kit.product.product_type',
+                'kit.product.product_brand',
+                'kit.product.product_collection',
+                'kit.product.product_model',
+                'kit.product.product_color',
+                'kit.product.product_material',
+                'kit.product.product_country',
+                'kit.product_category',
+                'kit.product_type',
+                'kit.product_brand',
+                'kit.product_collection',
+                'kit.product_model',
+                'kit.product_color',
+                'kit.product_material',
+                'kit.product_country'
+            )->where('people_id', $people)->get();
+            foreach ($OutgoingInvoiceKit as $key => $value) {
+                $OutgoingInvoiceKit[$key]["dataType"] = "OutgoingInvoiceKit";
+                $actionData->push($OutgoingInvoiceKit[$key]);
+            }
+        }
+
         if ($action == "Debtor" || $action == null) {
             $Debtor = Debtor::with('user', 'people')->where('people_id', $people)->get();
             foreach ($Debtor as $key => $value) {
@@ -417,6 +473,7 @@ class PeopleController extends Controller
                 $actionData->push($Debtor[$key]);
             }
         }
+
         if ($action == "DebtorPay" || $action == null) {
             $DebtorPay = DebtorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 1)->get();
             foreach ($DebtorPay as $key => $value) {
@@ -425,6 +482,7 @@ class PeopleController extends Controller
                 $actionData->push($DebtorPay[$key]);
             }
         }
+
         if ($action == "DebtorKilled" || $action == null) {
             $DebtorPay = DebtorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 0)->get();
             foreach ($DebtorPay as $key => $value) {
@@ -433,6 +491,7 @@ class PeopleController extends Controller
                 $actionData->push($DebtorPay[$key]);
             }
         }
+
         if ($action == "Creditor" || $action == null) {
             $Creditor = Creditor::with('user', 'people')->where('people_id', $people)->get();
             foreach ($Creditor as $key => $value) {
@@ -441,6 +500,7 @@ class PeopleController extends Controller
                 $actionData->push($Creditor[$key]);
             }
         }
+
         if ($action == "CreditorPay" || $action == null) {
             $CreditorPay = CreditorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 1)->get();
             foreach ($CreditorPay as $key => $value) {
@@ -449,6 +509,7 @@ class PeopleController extends Controller
                 $actionData->push($CreditorPay[$key]);
             }
         }
+
         if ($action == "CreditorKilled" || $action == null) {
             $CreditorPay = CreditorPay::with('user', 'people', 'cash')->where('people_id', $people)->where('pay_type', 0)->get();
             foreach ($CreditorPay as $key => $value) {

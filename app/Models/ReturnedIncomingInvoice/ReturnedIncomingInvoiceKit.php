@@ -5,6 +5,7 @@ namespace App\Models\ReturnedIncomingInvoice;
 use App\Models\Kit\Kit;
 use App\Models\People\People;
 use App\Models\User;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,5 +42,13 @@ class ReturnedIncomingInvoiceKit extends Model
     public function returned_incoming_invoice()
     {
         return $this->belongsTo(ReturnedIncomingInvoice::class);
+    }
+
+    /**
+     * Get the users for the IncomingInvoiceContent.
+     */
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
     }
 }

@@ -17,9 +17,6 @@ use Illuminate\Support\Facades\Route;
  Route::get('/creditor-people', [CreditorController::class, 'creditorPeople']);
 Route::get('/creditor-action', [CreditorController::class, 'creditorAction']);
 
-Route::get('/creditor-count', function () {
-    return People::get()->where('total_credit', '<', 0)->count();
-});
 Route::get('/creditor-total', function () {
     return People::get()->where('total_credit', '<', 0)->sum('total_credit');
 });
