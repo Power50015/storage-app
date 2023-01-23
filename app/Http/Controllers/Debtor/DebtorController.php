@@ -62,7 +62,7 @@ class DebtorController extends Controller
         ]);
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance + $request->amount; // add the new value
+        $people->balance = $people->balance - $request->amount; // add the new value
         $people->save();
 
         return Redirect::route('debtor.index');
@@ -164,7 +164,7 @@ class DebtorController extends Controller
             }
         }
         if ($action == "Debtor" || $action == "all") {
-            $Debtor = Debtor::with('user', 'people', 'cash')->get();
+            $Debtor = Debtor::with('user', 'people')->get();
             foreach ($Debtor as $key => $value) {
                 $Debtor[$key]["dataType"] = "Debtor";
                 $actionData->push($Debtor[$key]);

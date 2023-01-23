@@ -10,6 +10,7 @@ use App\Models\Cash\Cash;
 use App\Models\Creditor\CreditorPay;
 use App\Models\IncomingInvoice\IncomingInvoice;
 use App\Models\People\People;
+use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -25,7 +26,10 @@ class CreditorController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Creditor/Index');
+        return Inertia::render('Creditor/Index', [
+            "creditor_count" =>  People::get()->where('balance', '<', 0)->count(),
+            "creditor_total" =>  People::get()->where('balance', '<', 0)->sum('balance'),
+        ]);
     }
 
     /**
@@ -60,7 +64,7 @@ class CreditorController extends Controller
         $people->balance = $people->balance + $request->amount;
         $people->save();
 
-        return Redirect::route('creditor.index');
+        return Redirect::route('creditor.show', $creditor->id);
     }
 
     /**
@@ -126,16 +130,10 @@ class CreditorController extends Controller
     }
     public function creditorPeople()
     {
-        $sql2 = "";
-        if (Request::input('search')) {
-            $search = Request::input('search');
-            $sql2 = People::where('name', 'like', "%{$search}%")->get()->where('total_credit', '<', 0)->sortBy('total_credit');
-        } else {
-            $sql2 = People::get()->where('total_credit', '<', 0)->sortBy('total_credit');
-        }
-
         return [
-            "people" => $sql2->paginate()->withQueryString(),
+            "people" => People::query()->where('balance', '<', 0)->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
             'filters' => Request::only(['search'])
         ];
     }
@@ -155,9 +153,17 @@ class CreditorController extends Controller
                 $actionData->push($IncomingInvoiceContent[$key]);
             }
         }
+        //  Returned Incoming Invoice Content
+        if ($action == "ReturnedOutgoingInvoice" || $action == "all") {
+            $ReturnedOutgoingInvoiceContent = ReturnedOutgoingInvoice::with('user', 'people')->where('pay_type', 0)->get();
+            foreach ($ReturnedOutgoingInvoiceContent as $key => $value) {
+                $ReturnedOutgoingInvoiceContent[$key]["dataType"] = "ReturnedOutgoingInvoice";
+                $actionData->push($ReturnedOutgoingInvoiceContent[$key]);
+            }
+        }
 
         if ($action == "Creditor" || $action == "all") {
-            $Creditor = Creditor::with('user', 'people', 'cash')->get();
+            $Creditor = Creditor::with('user', 'people')->get();
             foreach ($Creditor as $key => $value) {
                 $Creditor[$key]["dataType"] = "Creditor";
                 $actionData->push($Creditor[$key]);
@@ -165,7 +171,7 @@ class CreditorController extends Controller
         }
 
         if ($action == "CreditorKilled" || $action == "all") {
-            $Creditor = CreditorPay::with('user', 'people')->where('pay_type', 0)->get();
+            $Creditor = CreditorPay::with('user', 'people', 'cash')->where('pay_type', 0)->get();
             foreach ($Creditor as $key => $value) {
                 $Creditor[$key]["dataType"] = "CreditorKilled";
                 $actionData->push($Creditor[$key]);

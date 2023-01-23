@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 class CreditorPay extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+    
     /**
      * Get the users for the Debtor.
      */

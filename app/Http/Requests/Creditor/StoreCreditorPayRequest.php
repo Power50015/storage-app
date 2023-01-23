@@ -27,7 +27,7 @@ class StoreCreditorPayRequest extends FormRequest
             'title' => 'required',
             'people_id' => 'required',
             'pay_type' => 'required',
-            'cash_type' => 'required_if:pay_type,true',
+            'cash_id' => 'required_if:pay_type,true',
             'amount' => 'required|numeric',
         ];
     }
@@ -39,11 +39,11 @@ class StoreCreditorPayRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'يجب إدخال بند الدين',
-            'people_id.required' => 'يجب إدخال الشركه',
+            'title.*' => 'يجب إدخال بند الدين',
+            'people_id.*' => 'يجب إدخال الشركه',
             'amount.*' => 'يجب إدخال المبلغ',
-            'cash_type.required_if' => 'يجب إدخال نوع الكاش',
-            'pay_type.required' => 'يجب إدخال نوع الدفع',
+            'cash_id.*' => 'يجب إدخال نوع الكاش',
+            'pay_type.*' => 'يجب إدخال نوع الدفع',
         ];
     }
 }

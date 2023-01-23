@@ -45,7 +45,69 @@
           <BadgeSuccess>فاتورة وارده</BadgeSuccess>
         </div>
         <div class="w-full">
-          المبلغ : {{ item.total_after_discount.toFixed(2) }}
+          المبلغ : {{ item.total }}
+        </div>
+        <div class="w-full">
+          <h2>
+            {{
+              new Date(item.date).toLocaleDateString(
+                "ar-EG-u-nu-latn",
+                {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }
+              )
+            }}
+          </h2>
+          <div class="flex mt-3">
+            <img
+              :src="item.user.profile_photo_url"
+              :alt="item.user.name"
+              class="w-[25px] h-[25px] rounded-full"
+            />
+            <h6 class="mx-2">{{ item.user.name }}</h6>
+          </div>
+        </div>
+      </Link>
+    </div>
+    <div v-if="item.dataType == 'ReturnedOutgoingInvoice'">
+      <Link
+        :href="route('returned-incoming-invoice.show', item.id)"
+        class="
+          w-full
+          flex
+          justify-between
+          items-center
+          cursor-pointer
+          hover:text-[#0095e8]
+          transition-all
+          my-2
+          py-4
+          px-2
+          text-right
+          font-bold
+          lg:flex-row
+          flex-col
+        "
+      >
+        <div class="w-full">
+          <h2>رقم البيان : {{ item.id }}</h2>
+          <div class="flex mt-3">
+            <img
+              :src="`/storage/${item.people.logo}`"
+              :alt="item.people.name"
+              class="w-[35px] h-[35px] rounded-full"
+            />
+            <h6 class="mx-2">{{ item.people.name }}</h6>
+          </div>
+        </div>
+        <div class="w-full flex justify-center">
+          <BadgeSuccess>مرتجع صادر</BadgeSuccess>
+        </div>
+        <div class="w-full">
+          المبلغ : {{ item.total }}
         </div>
         <div class="w-full">
           <h2>
@@ -282,6 +344,7 @@ const action = ref("all");
 const actionOptions = [
   { label: "الكل", index: "all" },
   { label: "فواتير وارده", index: "IncomingInvoice" },
+  { label: "مرتجع صادر", index: "ReturnedOutgoingInvoice" },
   { label: "ديون", index: "Creditor" },
   { label: "دفع", index: "CreditorPay" },
   { label: "دين معدم", index: "CreditorKilled" },

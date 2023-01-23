@@ -51,17 +51,23 @@ class CreditorPayController extends Controller
             'amount' => $request->amount,
             'description' => $request->description,
             'pay_type' => $request->pay_type,
-            'cash_id' => $request->cash_type,
+            'cash_id' => $request->cash_id,
             'date' => Carbon::parse($request->date),
             'people_id' => $request->people_id,
             'user_id' => Auth::id()
         ]);
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance - $request->amount;
+        $people->balance = $people->balance + $request->amount;
         $people->save();
 
-        return Redirect::back();
+        if ($request->cash_id) {
+            $cash = Cash::find($request->cash_id);
+            $cash->available = $cash->available - $request->amount;
+            $cash->save();
+        }
+
+        return Redirect::route('creditor-pay.show', $creditorPay->id);
     }
 
     /**
@@ -102,11 +108,16 @@ class CreditorPayController extends Controller
     {
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance + $creditorPay->amount; // Delete the old value
-        $people->balance = $people->balance - $request->amount; // add the new value
+        $people->balance = $people->balance - $creditorPay->amount; // Delete the old value
+        $people->balance = $people->balance + $request->amount; // add the new value
         $people->save();
 
-
+        if ($request->cash_id) {
+            $cash = Cash::find($request->cash_id);
+            $cash->available = $cash->available + $creditorPay->amount;
+            $cash->available = $cash->available - $creditorPay->amount;
+            $cash->save();
+        }
         $creditorPay->title = $request->title;
         $creditorPay->amount = $request->amount;
         $creditorPay->description = $request->description;
