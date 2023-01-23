@@ -71,7 +71,7 @@ import NoteBoard from "../Board/NoteBoard.vue";
 import KitStock from "./KitStock.vue";
 import FileBoard from "../Board/FileBoard.vue";
 import ImageBoard from "../Board/ImageBoard.vue";
-const tab = ref("stock");
+const tab = ref("actionData");
 
 const props = defineProps(["id", "description"]);
 

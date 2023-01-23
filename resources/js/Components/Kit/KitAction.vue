@@ -68,7 +68,7 @@
     </div>
     <div v-if="item.dataType == 'IncomingInvoice'">
       <Link
-        :href="route('incoming-invoice.show', item.incoming_invoice.id)"
+        :href="route('incoming-invoice.show', item.incoming_invoice_id)"
         class="
           w-full
           flex
@@ -87,7 +87,7 @@
         "
       >
         <h2 class="w-full">
-          المخزن : {{ item.incoming_invoice.warehouse.name }}
+          المخزن : {{ item.warehouse.name }}
         </h2>
         <div class="w-full">
           <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
@@ -101,18 +101,18 @@
           <h2>رقم الفاتوره : {{ item.incoming_invoice.number }}</h2>
           <div class="flex mt-3">
             <img
-              :src="`/storage/${item.incoming_invoice.people.logo}`"
-              :alt="item.incoming_invoice.people.name"
+              :src="`/storage/${item.people.logo}`"
+              :alt="item.people.name"
               class="w-[35px] h-[35px] rounded-full"
             />
-            <h6 class="mx-2">{{ item.incoming_invoice.people.name }}</h6>
+            <h6 class="mx-2">{{ item.people.name }}</h6>
           </div>
         </div>
 
         <div class="w-full">
           <h2>
             {{
-              new Date(item.incoming_invoice.date).toLocaleDateString(
+              new Date(item.date).toLocaleDateString(
                 "ar-EG-u-nu-latn",
                 {
                   weekday: "long",
@@ -136,7 +136,7 @@
     </div>
     <div v-if="item.dataType == 'ReturnedIncomingInvoice'">
       <Link
-        :href="route('incoming-invoice.show', item.incoming_invoice.id)"
+        :href="route('returned-incoming-invoice.show', item.id)"
         class="
           w-full
           flex
@@ -155,21 +155,21 @@
         "
       >
         <h2 class="w-full">
-          المخزن : {{ item.incoming_invoice.warehouse.name }}
+          المخزن : {{ item.warehouse.name }}
         </h2>
         <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
         <div class="w-full">
-          <BadgeDanger>مرتجع فاتورة وارده</BadgeDanger>
+          <BadgePrimary>مرتجع وارد</BadgePrimary>
         </div>
         <div class="w-full">
-          <h2>رقم الفاتوره : {{ item.incoming_invoice.number }}</h2>
+          <h2>رقم بيان المرتجع : {{ item.id }}</h2>
           <div class="flex mt-3">
             <img
-              :src="`/storage/${item.incoming_invoice.people.logo}`"
-              :alt="item.incoming_invoice.people.name"
+              :src="`/storage/${item.people.logo}`"
+              :alt="item.people.name"
               class="w-[35px] h-[35px] rounded-full"
             />
-            <h6 class="mx-2">{{ item.incoming_invoice.people.name }}</h6>
+            <h6 class="mx-2">{{ item.people.name }}</h6>
           </div>
         </div>
         <div class="w-full">
@@ -196,7 +196,7 @@
     </div>
     <div v-if="item.dataType == 'OutgoingInvoice'">
       <Link
-        :href="route('outgoing-invoice.show', item.outgoing_invoice.id)"
+        :href="route('outgoing-invoice.show', item.outgoing_invoice_id)"
         class="
           w-full
           flex
@@ -215,7 +215,7 @@
         "
       >
         <h2 class="w-full">
-          المخزن : {{ item.outgoing_invoice.warehouse.name }}
+          المخزن : {{ item.warehouse.name }}
         </h2>
         <div class="w-full">
           <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
@@ -225,21 +225,21 @@
           <BadgeSuccess>فاتورة صادره</BadgeSuccess>
         </div>
         <div class="w-full">
-          <h2>رقم الفاتوره : {{ item.outgoing_invoice.id }}</h2>
+          <h2>رقم الفاتوره : {{ item.outgoing_invoice_id }}</h2>
           <div class="flex mt-3">
             <img
-              :src="`/storage/${item.outgoing_invoice.people.logo}`"
-              :alt="item.outgoing_invoice.people.name"
+              :src="`/storage/${item.people.logo}`"
+              :alt="item.people.name"
               class="w-[35px] h-[35px] rounded-full"
             />
-            <h6 class="mx-2">{{ item.outgoing_invoice.people.name }}</h6>
+            <h6 class="mx-2">{{ item.people.name }}</h6>
           </div>
         </div>
 
         <div class="w-full">
           <h2>
             {{
-              new Date(item.outgoing_invoice.date).toLocaleDateString(
+              new Date(item.date).toLocaleDateString(
                 "ar-EG-u-nu-latn",
                 {
                   weekday: "long",
@@ -263,7 +263,7 @@
     </div>
     <div v-if="item.dataType == 'ReturnedOutgoingInvoice'">
       <Link
-        :href="route('outgoing-invoice.show', item.outgoing_invoice.id)"
+        :href="route('returned-outgoing-invoice.show', item.id)"
         class="
           w-full
           flex
@@ -282,21 +282,21 @@
         "
       >
         <h2 class="w-full">
-          المخزن : {{ item.outgoing_invoice.warehouse.name }}
+          المخزن : {{ item.warehouse.name }}
         </h2>
         <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
         <div class="w-full">
-          <BadgeWarning>مرتجع فاتورة صادره</BadgeWarning>
+          <BadgeSuccess>مرتجع فاتورة صادره</BadgeSuccess>
         </div>
         <div class="w-full">
-          <h2>رقم الفاتوره : {{ item.outgoing_invoice.id }}</h2>
+          <h2>رقم بيان المرتجع : {{ item.id }}</h2>
           <div class="flex mt-3">
             <img
-              :src="`/storage/${item.outgoing_invoice.people.logo}`"
-              :alt="item.outgoing_invoice.people.name"
+              :src="`/storage/${item.people.logo}`"
+              :alt="item.people.name"
               class="w-[35px] h-[35px] rounded-full"
             />
-            <h6 class="mx-2">{{ item.outgoing_invoice.people.name }}</h6>
+            <h6 class="mx-2">{{ item.people.name }}</h6>
           </div>
         </div>
         <div class="w-full">
@@ -323,7 +323,7 @@
     </div>
     <div v-if="item.dataType == 'Transfer'">
       <Link
-        :href="route('transfer.show', item.transfer.id)"
+        :href="route('transfer.show', item.transfer_id)"
         class="
           w-full
           flex
@@ -341,13 +341,13 @@
           flex-col
         "
       >
-        <h2 class="w-full">المخزن : {{ item.transfer.warehouse_from.name }}</h2>
+        <h2 class="w-full">المخزن : {{ item.warehouse_from.name }}</h2>
         <h2 class="w-full">الكميه : {{ item.quantity }}</h2>
         <div class="w-full">
           <BadgeSecondary>نقله</BadgeSecondary>
         </div>
         <div class="w-full">
-          <h2>المخزن المستقبل : {{ item.transfer.warehouse_to.name }}</h2>
+          <h2>المخزن المستقبل : {{ item.warehouse_to.name }}</h2>
           <h6 class="mx-2" v-if="item.transfer.driver">
             السائق : {{ item.transfer.driver.name }}
           </h6>
@@ -355,7 +355,7 @@
         <div class="w-full">
           <h2>
             {{
-              new Date(item.transfer.date).toLocaleDateString(
+              new Date(item.date).toLocaleDateString(
                 "ar-EG-u-nu-latn",
                 {
                   weekday: "long",

@@ -102,7 +102,7 @@
         >
           روابط سريعه :-
         </h5>
-        <!-- <Link
+        <Link
           :href="route('outgoing-invoice.create')"
           class="px-3 dark:text-[#565674] dark:hover:text-[#009ef7]"
           title="فاتوره صادره جديدة"
@@ -122,7 +122,7 @@
           title="مصاريف"
         >
           <i class="fa-solid fa-coins"></i>
-        </Link> -->
+        </Link>
         <button
           class="px-3 text-slate-600 dark:text-slate-100"
           title="الوضع المظلم"
