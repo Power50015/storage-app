@@ -39,10 +39,9 @@ class StoreDebtorPayRequest extends FormRequest
     {
         return [
             'people_id.*' => 'يجب إدخال الشركه',
-            'amount.required' => 'يجب إدخال المخزن المبلغ',
-            'amount.numeric' => 'يجب أن يكون المبلغ رقم',
-            'cash_type.required_if' => 'يجب إدخال نوع الكاش',
-            'pay_type.required' => 'يجب إدخال نوع الدفع',
+            'amount.*' => 'يجب إدخال المبلغ',
+            'cash_type.*' => 'يجب إدخال نوع الكاش',
+            'pay_type.*' => 'يجب إدخال نوع الدفع',
         ];
     }
 }

@@ -59,9 +59,12 @@ class DebtorPayController extends Controller
         ]);
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance + $request->amount;        
+        $people->balance = $people->balance - $request->amount;
         $people->save();
 
+        $cash = Cash::find($request->cash_id);
+        $cash->available = $cash->available - $request->amount;
+        $cash->save();
 
         return Redirect::route('debtor.index');
     }
@@ -106,7 +109,7 @@ class DebtorPayController extends Controller
         $people = People::find($request->people_id);
         $people->balance = $people->balance - $debtorPay->amount; // Delete the old value
         $people->balance = $people->balance + $request->amount; // add the new value
-        
+
         $people->save();
 
 

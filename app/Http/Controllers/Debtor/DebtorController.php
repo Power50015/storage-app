@@ -11,6 +11,7 @@ use App\Models\Debtor\DebtorAttachment;
 use App\Models\Debtor\DebtorPay;
 use App\Models\OutgoingInvoice\OutgoingInvoice;
 use App\Models\People\People;
+use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoice;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -26,7 +27,10 @@ class DebtorController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Debtor/Index');
+        return Inertia::render('Debtor/Index', [
+            "debtor_count" =>  People::get()->where('balance', '>', 0)->count(),
+            "debtor_total" =>  People::get()->where('balance', '>', 0)->sum('balance'),
+        ]);
     }
 
     /**
@@ -58,7 +62,7 @@ class DebtorController extends Controller
         ]);
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance - $request->amount; // add the new value
+        $people->balance = $people->balance + $request->amount; // add the new value
         $people->save();
 
         return Redirect::route('debtor.index');
@@ -73,7 +77,7 @@ class DebtorController extends Controller
     public function show(Debtor $debtor)
     {
         return Inertia::render('Debtor/Show', [
-            "debtor" =>  Debtor::where('id', $debtor->id)->with('user','people')->get(),
+            "debtor" =>  Debtor::where('id', $debtor->id)->with('user', 'people')->get(),
         ]);
     }
 
@@ -103,7 +107,7 @@ class DebtorController extends Controller
         $people = People::find($request->people_id);
         $people->balance = $people->balance + $debtor->amount; // Delete the old value
         $people->balance = $people->balance - $request->amount; // add the new value
-        
+
         $people->save();
 
 
@@ -129,16 +133,10 @@ class DebtorController extends Controller
 
     public function debtorPeople()
     {
-        $sql2 = "";
-        if (Request::input('search')) {
-            $search = Request::input('search');
-            $sql2 = People::where('name', 'like', "%{$search}%")->get()->where('total_credit', '>', 0)->sortByDesc('total_credit');
-        } else {
-            $sql2 = People::get()->where('total_credit', '>', 0)->sortByDesc('total_credit');
-        }
-
         return [
-            "people" => $sql2->paginate()->withQueryString(),
+            "people" => People::query()->where('balance', '>', 0)->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->paginate()->withQueryString(),
             'filters' => Request::only(['search'])
         ];
     }
@@ -157,7 +155,14 @@ class DebtorController extends Controller
                 $actionData->push($OutgoingInvoiceContent[$key]);
             }
         }
-
+        //  Returned Incoming Invoice Content
+        if ($action == "ReturnedIncomingInvoice" || $action == "all") {
+            $ReturnedIncomingInvoiceContent = ReturnedIncomingInvoice::with('user', 'people')->where('pay_type', 0)->get();
+            foreach ($ReturnedIncomingInvoiceContent as $key => $value) {
+                $ReturnedIncomingInvoiceContent[$key]["dataType"] = "ReturnedIncomingInvoice";
+                $actionData->push($ReturnedIncomingInvoiceContent[$key]);
+            }
+        }
         if ($action == "Debtor" || $action == "all") {
             $Debtor = Debtor::with('user', 'people', 'cash')->get();
             foreach ($Debtor as $key => $value) {

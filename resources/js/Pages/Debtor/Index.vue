@@ -6,13 +6,13 @@
         <CardPrimary>
           <h4 class="mb-3">إجمالى الديون</h4>
           <h4 class="text-xl font-bold">
-            {{ debtor_total }}
+            {{ props.debtor_total.toFixed(2)}}
           </h4>
         </CardPrimary>
         <CardInfo>
           <h4 class="mb-3">عدد المدينون</h4>
           <h4 class="text-xl font-bold">
-            {{ debtor_count }}
+            {{ props.debtor_count }}
           </h4>
         </CardInfo>
         <btn-success :element="Link" :to="route('debtor.create')"
@@ -49,15 +49,6 @@ provide(
     { index: 1, linkTitle: "المدينون", linkRoute: "#" },
   ])
 );
-const debtor_count = ref();
-const debtor_total = ref();
 
-onMounted(() => {
-  axios.get("/debtor-count").then(function (response) {
-    debtor_count.value = response.data;
-  });
-  axios.get("/debtor-total").then(function (response) {
-    debtor_total.value = Number(response.data).toFixed(2);
-  });
-});
+const props = defineProps(["debtor_count","debtor_total"]);
 </script>

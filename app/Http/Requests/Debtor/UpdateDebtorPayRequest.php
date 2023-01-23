@@ -40,8 +40,8 @@ class UpdateDebtorPayRequest extends FormRequest
         return [
             'people_id.*' => 'يجب إدخال الشركه',
             'amount.*' => 'يجب إدخال المبلغ',
-            'cash_type.required_if' => 'يجب إدخال نوع الكاش',
-            'pay_type.required' => 'يجب إدخال نوع الدفع',
+            'cash_type.*' => 'يجب إدخال نوع الكاش',
+            'pay_type.*' => 'يجب إدخال نوع الدفع',
         ];
     }
 }

@@ -25,7 +25,7 @@ class StoreDebtorRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'required' => 'required',
+            'people_id' => 'required',
             'amount' => 'required|numeric',
         ];
     }
@@ -37,10 +37,9 @@ class StoreDebtorRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'يجب إدخال بند الدين',
+            'title.*' => 'يجب إدخال بند الدين',
             'people_id.*' => 'يجب إدخال الشركه',
-            'amount.required' => 'يجب إدخال المخزن المبلغ ',
-            'amount.numeric' => 'يجب أن يكون المبلغ رقم',
+            'amount.*' => 'يجب إدخال المبلغ ',
         ];
     }
 }

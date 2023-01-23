@@ -37,7 +37,7 @@ class UpdateDebtorRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'يجب إدخال بند الدين',
+            'title.*' => 'يجب إدخال بند الدين',
             'people_id.*' => 'يجب إدخال الشركه',
             'amount.*' => 'يجب إدخال المبلغ ',
         ];

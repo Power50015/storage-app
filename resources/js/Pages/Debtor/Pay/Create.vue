@@ -120,9 +120,9 @@ const form = reactive({
 });
 
 const formText = reactive({
-  title: props.debtor ? "تعديل بيانات الدين" : "إضافه دين",
-  btnTitle: props.debtor ? "تعديل البيانات" : "إضافه دين",
-  formText: props.debtor ? "تم تعديل الدين" : "تم أضافه دين",
+  title: props.debtor ? "تعديل بيانات الدين" : "إضافه دفعه",
+  btnTitle: props.debtor ? "تعديل البيانات" : "إضافه دفعه",
+  formText: props.debtor ? "تم تعديل الدين" : "تم أضافه دفعه",
 });
 
 const pay = computed(() => {
