@@ -95,8 +95,8 @@ class ReturnedOutgoingInvoiceController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        if ($request->pay_type) {
-            $cash = Cash::find($request->cash_type);
+        if ($request->cash_id) {
+            $cash = Cash::find($request->cash_id);
             $cash->available = $cash->available -  $totalPrice;
             $cash->save();
         } else {
@@ -190,7 +190,7 @@ class ReturnedOutgoingInvoiceController extends Controller
      * @param  \App\Models\ReturnedOutgoingInvoice  $returnedOutgoingInvoice
      * @return \Illuminate\Http\Response
      */
-    public function edit($returnedOutgoingInvoice)
+    public function edit(ReturnedOutgoingInvoice $returnedOutgoingInvoice)
     {
         return Inertia::render('ReturnedOutgoingInvoice/Create', [
             "returnedOutgoingInvoice" => ReturnedOutgoingInvoice::where('id', $returnedOutgoingInvoice->id)->get(),
@@ -209,7 +209,7 @@ class ReturnedOutgoingInvoiceController extends Controller
      * @param  \App\Models\ReturnedOutgoingInvoice  $returnedOutgoingInvoice
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateReturnedOutgoingInvoiceRequest $request, $returnedOutgoingInvoice)
+    public function update(UpdateReturnedOutgoingInvoiceRequest $request,ReturnedOutgoingInvoice $returnedOutgoingInvoice)
     {
         $totalPrice = 0;
         if (!is_null($request["content"]))
@@ -220,8 +220,8 @@ class ReturnedOutgoingInvoiceController extends Controller
                 $totalPrice = $totalPrice - ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
 
         // Undo The Blance of invoice
-        if ($returnedOutgoingInvoice->pay_type) {
-            $cash = Cash::find($returnedOutgoingInvoice->cash_type);
+        if ($returnedOutgoingInvoice->cash_id) {
+            $cash = Cash::find($returnedOutgoingInvoice->cash_id);
             $cash->available = $cash->available +  $returnedOutgoingInvoice->total;
             $cash->save();
         } else {
@@ -247,8 +247,8 @@ class ReturnedOutgoingInvoiceController extends Controller
 
         $totalPrice = $totalPrice + $request->discount;
         // Make The Blance Agane
-        if ($request->pay_type) {
-            $cash = Cash::find($request->cash_type);
+        if ($request->cash_id) {
+            $cash = Cash::find($request->cash_id);
             $cash->available = $cash->available +  $totalPrice;
             $cash->save();
         } else {
@@ -317,8 +317,8 @@ class ReturnedOutgoingInvoiceController extends Controller
     public function destroy(ReturnedOutgoingInvoice $returnedOutgoingInvoice)
     {
         // Undo The Blance of invoice
-        if ($returnedOutgoingInvoice->pay_type) {
-            $cash = Cash::find($returnedOutgoingInvoice->cash_type);
+        if ($returnedOutgoingInvoice->cash_id) {
+            $cash = Cash::find($returnedOutgoingInvoice->cash_id);
             $cash->available = $cash->available -  $returnedOutgoingInvoice->total;
             $cash->save();
         } else {

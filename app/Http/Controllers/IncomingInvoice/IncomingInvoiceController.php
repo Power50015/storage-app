@@ -92,8 +92,9 @@ class IncomingInvoiceController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        if ($request->pay_type) {
-            $cash = Cash::find($request->cash_type);
+        
+        if ($request->cash_id) {
+            $cash = Cash::find($request->cash_id);
             $cash->available = $cash->available -  $totalPrice;
             $cash->save();
         } else {
@@ -101,7 +102,6 @@ class IncomingInvoiceController extends Controller
             $people->balance = $people->balance +  $totalPrice;
             $people->save();
         }
-
 
         // Save The Content Of Incoming Invoice
         if (!is_null($request["content"]))
@@ -212,7 +212,7 @@ class IncomingInvoiceController extends Controller
                 $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
 
         // Undo The Blance of invoice
-        if ($incomingInvoice->pay_type) {
+        if ($incomingInvoice->cash_id) {
             $cash = Cash::find($incomingInvoice->cash_type);
             $cash->available = $cash->available +  $incomingInvoice->total;
             $cash->save();
@@ -239,8 +239,8 @@ class IncomingInvoiceController extends Controller
 
         $totalPrice = $totalPrice - $request->discount;
         // Make The Blance Agane
-        if ($request->pay_type) {
-            $cash = Cash::find($request->cash_type);
+        if ($request->cash_id) {
+            $cash = Cash::find($request->cash_id);
             $cash->available = $cash->available -  $totalPrice;
             $cash->save();
         } else {

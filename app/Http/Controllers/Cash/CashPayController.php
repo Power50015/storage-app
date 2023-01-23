@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Cash\CashPay;
 use App\Http\Requests\Cash\StoreCashPayRequest;
 use App\Http\Requests\Cash\UpdateCashPayRequest;
+use App\Models\Cash\Cash;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class CashPayController extends Controller
 {
@@ -26,7 +31,9 @@ class CashPayController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Cash/Pay/Create', [
+            "cash" => Cash::all()
+        ]);
     }
 
     /**
@@ -37,7 +44,21 @@ class CashPayController extends Controller
      */
     public function store(StoreCashPayRequest $request)
     {
-        //
+        // Save the CashPay
+        $cashPay = CashPay::create([
+            'title' => $request->title,
+            'amount' => $request->amount,
+            'cash_id' => $request->cash_id,
+            'date' => Carbon::parse($request->date),
+            'user_id' => Auth::id()
+        ]);
+
+        $cash = Cash::find($request->cash_id);
+        $cash->available = $cash->available + $request->amount;
+        $cash->save();
+
+
+        return Redirect::route('cash-pay.show', $cashPay->id);
     }
 
     /**
@@ -48,7 +69,9 @@ class CashPayController extends Controller
      */
     public function show(CashPay $cashPay)
     {
-        //
+        return Inertia::render('Cash/Pay/Show', [
+            "cashPay" =>  CashPay::where('id', $cashPay->id)->with('user', 'cash')->get(),
+        ]);
     }
 
     /**
@@ -59,7 +82,10 @@ class CashPayController extends Controller
      */
     public function edit(CashPay $cashPay)
     {
-        //
+        return Inertia::render('Cash/Pay/Create', [
+            "cash" => Cash::all(),
+            "cashPay" =>  $cashPay,
+        ]);
     }
 
     /**
@@ -71,7 +97,19 @@ class CashPayController extends Controller
      */
     public function update(UpdateCashPayRequest $request, CashPay $cashPay)
     {
-        //
+
+        $cash = Cash::find($request->cash_id);
+        $cash->available = $cash->available - $cashPay->amount;
+        $cash->available = $cash->available + $cashPay->amount;
+        $cash->save();
+
+        $cashPay->title = $request->title;
+        $cashPay->amount = $request->amount;
+        $cashPay->cash_id = $request->cash_id;
+        $cashPay->date = Carbon::parse($request->date);
+        $cashPay->save();
+
+        return Redirect::route('cash-pay.show', $cashPay->id);
     }
 
     /**

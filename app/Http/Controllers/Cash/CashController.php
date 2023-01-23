@@ -136,7 +136,7 @@ class CashController extends Controller
         }
         //  Creditor Pay
         if ($action == "CreditorPay" || $action == "all") {
-            $CreditorPay = CreditorPay::with('user', 'pepole')->where('cash_id', $cash)->get();
+            $CreditorPay = CreditorPay::with('user', 'people')->where('cash_id', $cash)->get();
             foreach ($CreditorPay as $key => $value) {
                 $CreditorPay[$key]["dataType"] = "CreditorPay";
                 $actionData->push($CreditorPay[$key]);
@@ -144,7 +144,7 @@ class CashController extends Controller
         }
         //  Debtor Pay
         if ($action == "DebtorPay" || $action == "all") {
-            $DebtorPay = DebtorPay::with('user', 'pepole')->where('cash_id', $cash)->get();
+            $DebtorPay = DebtorPay::with('user', 'people')->where('cash_id', $cash)->get();
             foreach ($DebtorPay as $key => $value) {
                 $DebtorPay[$key]["dataType"] = "DebtorPay";
                 $actionData->push($DebtorPay[$key]);
@@ -152,7 +152,7 @@ class CashController extends Controller
         }
         //  Incoming Invoice
         if ($action == "IncomingInvoice" || $action == "all") {
-            $IncomingInvoice = IncomingInvoice::with('user', 'pepole', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
+            $IncomingInvoice = IncomingInvoice::with('user', 'people', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
             foreach ($IncomingInvoice as $key => $value) {
                 $IncomingInvoice[$key]["dataType"] = "IncomingInvoice";
                 $actionData->push($IncomingInvoice[$key]);
@@ -160,7 +160,7 @@ class CashController extends Controller
         }
         //  Returned Incoming Invoice
         if ($action == "ReturnedIncomingInvoice" || $action == "all") {
-            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with('user', 'pepole', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
+            $ReturnedIncomingInvoice = ReturnedIncomingInvoice::with('user', 'people', 'warehouse')->where('cash_id', $cash)->get();
             foreach ($ReturnedIncomingInvoice as $key => $value) {
                 $ReturnedIncomingInvoice[$key]["dataType"] = "ReturnedIncomingInvoice";
                 $actionData->push($ReturnedIncomingInvoice[$key]);
@@ -168,7 +168,7 @@ class CashController extends Controller
         }
         //  Outgoing Invoice
         if ($action == "OutgoingInvoice" || $action == "all") {
-            $OutgoingInvoice = OutgoingInvoice::with('user', 'pepole', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
+            $OutgoingInvoice = OutgoingInvoice::with('user', 'people', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
             foreach ($OutgoingInvoice as $key => $value) {
                 $OutgoingInvoice[$key]["dataType"] = "OutgoingInvoice";
                 $actionData->push($OutgoingInvoice[$key]);
@@ -176,7 +176,7 @@ class CashController extends Controller
         }
         //  Returned Outgoing Invoice
         if ($action == "ReturnedOutgoingInvoice" || $action == "all") {
-            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with('user', 'pepole', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
+            $ReturnedOutgoingInvoice = ReturnedOutgoingInvoice::with('user', 'people', 'warehouse')->where('cash_id', $cash)->where('pay_type', 1)->get();
             foreach ($ReturnedOutgoingInvoice as $key => $value) {
                 $ReturnedOutgoingInvoice[$key]["dataType"] = "ReturnedOutgoingInvoice";
                 $actionData->push($ReturnedOutgoingInvoice[$key]);

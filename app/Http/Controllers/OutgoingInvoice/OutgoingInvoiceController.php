@@ -90,7 +90,7 @@ class OutgoingInvoiceController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        if ($request->pay_type) {
+        if ($request->cash_id) {
             $cash = Cash::find($request->cash_id);
             $cash->available = $cash->available +  $totalPrice;
             $cash->save();
@@ -212,7 +212,7 @@ class OutgoingInvoiceController extends Controller
                 $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
 
 
-        if ($outgoingInvoice->pay_type) {
+        if ($outgoingInvoice->cash_id) {
             $cash = Cash::find($outgoingInvoice->cash_type);
             $cash->available = $cash->available -  $outgoingInvoice->total;
             $cash->save();
@@ -225,7 +225,7 @@ class OutgoingInvoiceController extends Controller
         $totalPrice = $totalPrice - $request->discount;
 
         // Make The Blance Agane
-        if ($request->pay_type) {
+        if ($request->cash_id) {
             $cash = Cash::find($request->cash_id);
             $cash->available = $cash->available +  $totalPrice;
             $cash->save();

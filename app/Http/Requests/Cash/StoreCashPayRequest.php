@@ -13,7 +13,7 @@ class StoreCashPayRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,22 @@ class StoreCashPayRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'cash_id' => 'required',
+            'amount' => 'required|numeric',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'title.*' => 'يجب إدخال بند الدين',
+            'amount.*' => 'يجب إدخال المبلغ',
+            'cash_id.*' => 'يجب إدخال نوع الكاش',
         ];
     }
 }

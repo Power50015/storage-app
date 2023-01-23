@@ -7,7 +7,7 @@
           <btn-info :element="Link" :to="route('cash.create')" class="mb-3">
             أضف كاش
           </btn-info>
-          <btn-success :element="Link" :to="route('cash.create')" >
+          <btn-success :element="Link" :to="route('cash-pay.create')" >
             أضف مبلغ للكاش
           </btn-success>
         </div>

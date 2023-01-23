@@ -20,6 +20,14 @@ class CashPay extends Model
     }
 
     /**
+     * Get the users for the DebtorAttachment.
+     */
+    public function cash()
+    {
+        return $this->belongsTo(Cash::class);
+    }
+
+    /**
      * Get the CashPayAttachment for the Cash.
      */
     public function cash_pay_attachments()

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('cash_id');
             $table->foreignId('user_id');
             $table->decimal('amount', $precision = 11, $scale = 2)->nullable();
+            $table->timestamp('date')->useCurrent();
         });
     }
 

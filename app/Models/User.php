@@ -57,7 +57,6 @@ use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceContent;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceImage;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceKit;
 use App\Models\ReturnedIncomingInvoice\ReturnedIncomingInvoiceNote;
-
 use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoice;
 use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceAttachment;
 use App\Models\ReturnedOutgoingInvoice\ReturnedOutgoingInvoiceContent;
@@ -102,6 +101,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'dark_mode'
     ];
 
     /**
