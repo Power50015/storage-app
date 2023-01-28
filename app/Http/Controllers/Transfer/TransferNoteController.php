@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Transfer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transfer\TransferNote;
-use App\Http\Requests\StoreTransferNoteRequest;
-use App\Http\Requests\UpdateTransferNoteRequest;
+use App\Http\Requests\Transfer\StoreTransferNoteRequest;
+use App\Http\Requests\Transfer\UpdateTransferNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;

@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="قطع الغيار">
+    <AppLayout title="الشركات">
       <SectionTemplate class="print:p-0">
         <div class="flex justify-between md:flex-row	flex-col-reverse">
           <div class="flex justify-around flex-col w-full">
@@ -9,8 +9,7 @@
             <h2 class="font-bold mb-3 text-lg">
               {{ people.phone }}
             </h2>
-            <h2 class="font-bold mb-3 text-lg">
-              {{ people.address }}
+            <h2 class="mb-3" v-html="people.address">
             </h2>
             <h2 class="title font-bold text-lg text-[#009ef7]">
                 الرصيد : ( {{ people.balance }} )
@@ -69,7 +68,7 @@
   
   const props = defineProps(["people"]);
   
-  provide("title", "قطع الغيار");
+  provide("title", "الشركات");
   provide(
     "breadcrumb",
     readonly([

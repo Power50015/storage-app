@@ -29,7 +29,7 @@
         "
       >
         <h2 class="">{{ item.name }}</h2>
-        <h2 class="">{{ item.balance * -1 }}</h2>
+        <h2 class="">{{ item.balance }}</h2>
       </Link>
     </div>
   </div>

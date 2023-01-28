@@ -53,7 +53,7 @@
       </div>
     </SectionTemplate>
     <SectionTemplate class="print:p-0">
-      <CreditorShowTabs :id="cashPay.id" url="creditor-pay" />
+      <CashTabs :id="cashPay.id"/>
     </SectionTemplate>
   </AppLayout>
 </template>
@@ -66,7 +66,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import BtnInfo from "@/Components/Buttons/BtnInfo.vue";
 import BtnSuccess from "@/Components/Buttons/BtnSuccess.vue";
-import CreditorShowTabs from "@/Components/Creditor/CreditorShowTabs.vue";
+import CashTabs from "@/Components/Cash/Pay/CashTabs.vue";
 
 const props = defineProps(["cashPay"]);
 

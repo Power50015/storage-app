@@ -17,7 +17,7 @@
         <CardSuccess>
           <h4 class="mb-3">عدد المدينون</h4>
           <h4 class="text-xl font-bold">
-            {{ peopleCount - peopleCreditor }}
+            {{ peopleDebtor }}
           </h4>
         </CardSuccess>
       </div>
@@ -109,7 +109,7 @@ provide(
   ])
 );
 
-const props = defineProps(["people", "peopleCount", "filters","peopleCreditor"]);
+const props = defineProps(["people", "peopleCount", "filters","peopleCreditor","peopleDebtor"]);
 
 
 const search = ref(props.filters.search);

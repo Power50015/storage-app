@@ -58,7 +58,7 @@ class CreditorPayController extends Controller
         ]);
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance + $request->amount;
+        $people->balance = $people->balance - $request->amount;
         $people->save();
 
         if ($request->cash_id) {
@@ -108,8 +108,8 @@ class CreditorPayController extends Controller
     {
 
         $people = People::find($request->people_id);
-        $people->balance = $people->balance - $creditorPay->amount; // Delete the old value
-        $people->balance = $people->balance + $request->amount; // add the new value
+        $people->balance = $people->balance + $creditorPay->amount; // Delete the old value
+        $people->balance = $people->balance - $request->amount; // add the new value
         $people->save();
 
         if ($request->cash_id) {

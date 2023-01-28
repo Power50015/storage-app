@@ -20,8 +20,7 @@
             <h2 class="font-bold text-sm">
               {{ warehouseStock.warehouse.name }}
             </h2>
-            <h2 class="font-bold text-sm">
-              {{ warehouseStock.warehouse.address }}
+            <h2 class="font-bold text-sm" v-html="warehouseStock.warehouse.address">
             </h2>
           </div>
           <div class="flex justify-between w-full">

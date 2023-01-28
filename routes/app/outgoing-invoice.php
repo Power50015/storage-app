@@ -30,12 +30,12 @@ Route::resource('/outgoing-invoice-image', OutgoingInvoiceImageController::class
 
 // returned outgoing invoice
 Route::resource('/returned-outgoing-invoice', ReturnedOutgoingInvoiceController::class);
-Route::resource('/returned-outgoing-invoice-note', ReturnedOutgoingInvoiceNoteController::class)->only([
+Route::resource('/returned-outgoing-note', ReturnedOutgoingInvoiceNoteController::class)->only([
     'index', 'store', 'destroy'
 ]);
-Route::resource('/returned-outgoing-invoice-attachment', ReturnedOutgoingInvoiceAttachmentController::class)->only([
+Route::resource('/returned-outgoing-attachment', ReturnedOutgoingInvoiceAttachmentController::class)->only([
     'index', 'store', 'destroy'
 ]);
-Route::resource('/returned-outgoing-invoice-image', ReturnedOutgoingInvoiceImageController::class)->only([
+Route::resource('/returned-outgoing-image', ReturnedOutgoingInvoiceImageController::class)->only([
     'index', 'store', 'destroy'
 ]);

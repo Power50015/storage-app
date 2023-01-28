@@ -100,7 +100,7 @@ class CashPayController extends Controller
 
         $cash = Cash::find($request->cash_id);
         $cash->available = $cash->available - $cashPay->amount;
-        $cash->available = $cash->available + $cashPay->amount;
+        $cash->available = $cash->available + $request->amount;
         $cash->save();
 
         $cashPay->title = $request->title;

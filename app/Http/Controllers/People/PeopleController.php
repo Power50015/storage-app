@@ -43,6 +43,7 @@ class PeopleController extends Controller
             })->with('user')->paginate(40)->withQueryString(),
             'peopleCount' => People::count(),
             'peopleCreditor' => People::where("balance", ">", 0)->count(),
+            'peopleDebtor' => People::where("balance", "<", 0)->count(),
             'filters' => Request::only(['search'])
         ]);
     }

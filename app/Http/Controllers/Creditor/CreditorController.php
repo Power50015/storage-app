@@ -27,8 +27,8 @@ class CreditorController extends Controller
     public function index()
     {
         return Inertia::render('Creditor/Index', [
-            "creditor_count" =>  People::get()->where('balance', '<', 0)->count(),
-            "creditor_total" =>  People::get()->where('balance', '<', 0)->sum('balance'),
+            "creditor_count" =>  People::get()->where('balance', '>', 0)->count(),
+            "creditor_total" =>  People::get()->where('balance', '>', 0)->sum('balance'),
         ]);
     }
 
@@ -131,7 +131,7 @@ class CreditorController extends Controller
     public function creditorPeople()
     {
         return [
-            "people" => People::query()->where('balance', '<', 0)->when(Request::input('search'), function ($query, $search) {
+            "people" => People::query()->where('balance', '>', 0)->when(Request::input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })->paginate()->withQueryString(),
             'filters' => Request::only(['search'])

@@ -160,8 +160,24 @@ class WarehouseStockController extends Controller
      */
     public function update(UpdateWarehouseStockRequest $request, WarehouseStock $warehouseStock)
     {
+
+        $oldContent = WarehouseStockContent::where('warehouse_stock_id',  $warehouseStock['id'])->get();
+        for ($i = 0; $i <  count($oldContent); $i++) {
+            $product = Product::find($oldContent[$i]["product_id"]);
+            $product->stock = $product->stock - $oldContent[$i]["quantity"];
+            $product->save();
+        }
+        $oldKit = KitStock::where('warehouse_stock_id', $warehouseStock['id'])->get();
+        for ($i = 0; $i <  count($oldKit); $i++) {
+            $kit = Kit::find($oldKit[$i]["kit_id"]);
+            $kit->stock = $kit->stock - $oldKit[$i]["quantity"];
+            $kit->save();
+        }
+
         $warehouseStock->title = $request->title;
-        $warehouseStock->warehouse_id = $request->warehouses;
+        $warehouseStock->warehouse_id = $request->warehouse_id;
+        $warehouseStock->save();
+
         WarehouseStockContent::where('warehouse_stock_id', $warehouseStock['id'])->delete();
         // Save The Content Of Incoming Invoice
         for ($i = 0; $i <  count($request["content"]); $i++) {
@@ -169,6 +185,9 @@ class WarehouseStockController extends Controller
                 $request["content"][$i],
                 ['warehouse_stock_id' => $warehouseStock['id'], 'user_id' => auth()->user()->id]
             ));
+            $product = Product::find($request["content"][$i]["product_id"]);
+            $product->stock = $product->stock + $request["content"][$i]["quantity"];
+            $product->save();
         }
         KitStock::where('warehouse_stock_id', $warehouseStock['id'])->delete();
         // Save The Kit Of Incoming Invoice
@@ -177,9 +196,13 @@ class WarehouseStockController extends Controller
                 $request["kit"][$i],
                 ['warehouse_stock_id' => $warehouseStock['id'], 'user_id' => auth()->user()->id]
             ));
+            $kit = Kit::find($request["kit"][$i]["kit_id"]);
+            $kit->stock = $kit->stock + $request["kit"][$i]["quantity"];
+            $kit->save();
         }
-        $warehouseStock->save();
-        return Redirect::back();
+        
+        return redirect()->route('warehouse-stock.show', $warehouseStock['id']);
+
     }
 
     /**

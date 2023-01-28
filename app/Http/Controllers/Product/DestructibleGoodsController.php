@@ -7,6 +7,7 @@ use App\Models\Product\DestructibleGoods;
 use App\Http\Requests\Product\StoreDestructibleGoodsRequest;
 use App\Http\Requests\Product\UpdateDestructibleGoodsRequest;
 use App\Models\Product\DestructibleGoodsAction;
+use App\Models\Product\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 
@@ -44,7 +45,10 @@ class DestructibleGoodsController extends Controller
             'warehouse_id' => $request->warehouse_id,
             'user_id' => auth()->user()->id,
         ]);
+        $product = Product::find($request->product_id);
+        $product->destructible =  $product->destructible + 1;
 
+        $product->save();
         DestructibleGoodsAction::create([
             'title' => $request->title,
             'description' => $request->description,

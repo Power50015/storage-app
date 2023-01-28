@@ -26,6 +26,7 @@ class StoreOutgoingInvoiceRequest extends FormRequest
         return [
             'warehouse_id' => 'required',
             'pay_type' => 'required',
+            'people_id' => 'required',
             'cash_id' => 'required_if:pay_type,true',
             'discount' => 'numeric',
             'date' => 'required|date',
@@ -49,6 +50,7 @@ class StoreOutgoingInvoiceRequest extends FormRequest
         return [
             'warehouse_id.*' => 'يجب إدخال المخزن المستقبل ',
             'cash_id.*' => 'يجب إدخال نوع الكاش  ',
+            'people_id.*' => 'يجب إدخال  الشركه  ',
             'discount.*' => 'يجب أن يكون الخصم رقم',
             'date.*' => 'يجب إدخال تاريخ الفاتوره',
             'content.*' => 'يجب إدخال محتوى الفاتورة',

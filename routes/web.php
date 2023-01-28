@@ -72,4 +72,16 @@ Route::middleware([
         $user->save();
         return Redirect::back();
     })->name('dark-mode');
+
+    Route::get('/profile/{id?}', function ($id = null) {
+        if ($id) {
+            return Inertia::render('Profile', [
+                "user" => User::find($id),
+            ]);
+        } else {
+            return Inertia::render('Profile', [
+                "user" => User::find(Auth::id()),
+            ]);
+        }
+    })->name('myProfile');
 });

@@ -38,13 +38,13 @@
     </div>
   </div>
   <div>
-    <note-board v-if="tab == 'note'" :id="props.id" url="returned-incoming-invoice-note" />
+    <note-board v-if="tab == 'note'" :id="props.id" url="returned-incoming-note" />
     <file-board
       v-if="tab == 'attachment'"
       :id="props.id"
-      url="returned-incoming-invoice-attachment"
+      url="returned-incoming-attachment"
     />
-    <image-board v-if="tab == 'image'" :id="props.id" url="returned-incoming-invoice-image" />
+    <image-board v-if="tab == 'image'" :id="props.id" url="returned-incoming-image" />
   </div>
 </template>
   <script setup>

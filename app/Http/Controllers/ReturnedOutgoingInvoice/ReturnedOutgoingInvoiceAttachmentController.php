@@ -23,7 +23,7 @@ class ReturnedOutgoingInvoiceAttachmentController extends Controller
         $file = Request::input('id');
         $search = Request::input('search');
         return [
-            "attachment" => ReturnedOutgoingInvoiceAttachment::with('user')->latest()->where('returned_incoming_invoice_id', $file)->when(Request::input('search'), function ($query, $search) {
+            "attachment" => ReturnedOutgoingInvoiceAttachment::with('user')->latest()->where('returned_outgoing_invoice_id', $file)->when(Request::input('search'), function ($query, $search) {
                 $query->where('title', 'like', "%{$search}%");
             })->paginate()->withQueryString(),
             "filters" => $search
@@ -48,7 +48,7 @@ class ReturnedOutgoingInvoiceAttachmentController extends Controller
      */
     public function store(StoreReturnedOutgoingInvoiceAttachmentRequest $request)
     {
-        $attachment_path = $request["attachment"]->store('attachment/returned_incoming_invoice', 'public');
+        $attachment_path = $request["attachment"]->store('attachment/returned_outgoing_invoice', 'public');
         ReturnedOutgoingInvoiceAttachment::create([
             'attachment' =>  $attachment_path,
             'returned_outgoing_invoice_id' => $request->id,

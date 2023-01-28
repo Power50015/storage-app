@@ -86,18 +86,20 @@ class OutgoingInvoiceController extends Controller
             'date' => Carbon::parse($request->date),
             'people_id' => $request->people_id,
             'warehouse_id' => $request->warehouse_id,
-            'total' => $totalPrice - $request->discount,
+            'total' => $totalPrice,
             'user_id' => Auth::id()
         ]);
 
-        if ($request->cash_id) {
-            $cash = Cash::find($request->cash_id);
-            $cash->available = $cash->available +  $totalPrice;
-            $cash->save();
-        } else {
-            $people = People::find($request->people_id);
-            $people->balance = $people->balance -  $totalPrice;
-            $people->save();
+        if ($request->people_id) {
+            if ($request->cash_id) {
+                $cash = Cash::find($request->cash_id);
+                $cash->available = $cash->available +  $totalPrice;
+                $cash->save();
+            } else {
+                $people = People::find($request->people_id);
+                $people->balance = $people->balance -  $totalPrice;
+                $people->save();
+            }
         }
 
         // Save The Content Of Incoming Invoice
@@ -204,6 +206,7 @@ class OutgoingInvoiceController extends Controller
     public function update(UpdateOutgoingInvoiceRequest $request, OutgoingInvoice $outgoingInvoice)
     {
         $totalPrice = 0;
+
         if (!is_null($request["content"]))
             for ($i = 0; $i <  count($request["content"]); $i++)
                 $totalPrice = $totalPrice + ($request["content"][$i]["price"] * $request["content"][$i]["quantity"]);
@@ -211,6 +214,7 @@ class OutgoingInvoiceController extends Controller
             for ($i = 0; $i <  count($request["kit"]); $i++)
                 $totalPrice = $totalPrice + ($request["kit"][$i]["price"] * $request["kit"][$i]["quantity"]);
 
+        $totalPrice = $totalPrice - $request->discount;
 
         if ($outgoingInvoice->cash_id) {
             $cash = Cash::find($outgoingInvoice->cash_type);
@@ -221,8 +225,6 @@ class OutgoingInvoiceController extends Controller
             $people->balance = $people->balance +  $outgoingInvoice->total;
             $people->save();
         }
-
-        $totalPrice = $totalPrice - $request->discount;
 
         // Make The Blance Agane
         if ($request->cash_id) {
@@ -235,29 +237,30 @@ class OutgoingInvoiceController extends Controller
             $people->save();
         }
 
-        $oldContent = OutgoingInvoiceContent::where('outgoing_invoice_id', $outgoingInvoice->id)->get();
+
+        $oldContent = OutgoingInvoiceContent::where('outgoing_invoice_id',  $outgoingInvoice->id)->get();
         for ($i = 0; $i <  count($oldContent); $i++) {
             $product = Product::find($oldContent[$i]["product_id"]);
-            $product->stock = $product->stock - $oldContent[$i]["quantity"];
+            $product->stock = $product->stock + $oldContent[$i]["quantity"];
             $product->save();
         }
 
         $oldKit = OutgoingInvoiceKit::where('outgoing_invoice_id', $outgoingInvoice->id)->get();
         for ($i = 0; $i <  count($oldKit); $i++) {
             $kit = Kit::find($oldKit[$i]["kit_id"]);
-            $kit->stock = $kit->stock - $oldKit[$i]["quantity"];
+            $kit->stock = $kit->stock + $oldKit[$i]["quantity"];
             $kit->save();
         }
-
 
         $outgoingInvoice->pay_type = $request->pay_type;
         $outgoingInvoice->cash_id = $request->cash_id;
         $outgoingInvoice->discount = $request->discount;
         $outgoingInvoice->date = $request->date;
-        $outgoingInvoice->total = $totalPrice - $request->discount;
+        $outgoingInvoice->total = $totalPrice;
         $outgoingInvoice->people_id = $request->people_id;
         $outgoingInvoice->warehouse_id = $request->warehouse_id;
         $outgoingInvoice->save();
+
         OutgoingInvoiceContent::where('outgoing_invoice_id', $outgoingInvoice->id)->delete();
         OutgoingInvoiceKit::where('outgoing_invoice_id', $outgoingInvoice->id)->delete();
 

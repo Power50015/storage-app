@@ -164,6 +164,8 @@ class TransferController extends Controller
                     'quantity' => $request["content"][$i]["quantity"],
                     'transfer_id' => $transfer['id'],
                     'user_id' => Auth::id(),
+                    'warehouse_from_id' => $request->warehouse_from_id,
+                    'warehouse_to_id' => $request->warehouse_to_id,
                 ]);
             }
         // Save The Kit Of Transfer
@@ -173,7 +175,9 @@ class TransferController extends Controller
                     'kit_id' => $request["kit"][$i]["kit_id"],
                     'quantity' => $request["kit"][$i]["quantity"],
                     'transfer_id' => $transfer['id'],
-                    'user_id' => Auth::id()
+                    'user_id' => Auth::id(),
+                    'warehouse_from_id' => $request->warehouse_from_id,
+                    'warehouse_to_id' => $request->warehouse_to_id,
                 ]);
             }
 

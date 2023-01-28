@@ -68,7 +68,7 @@
                 : 'hover:text-[#009ef7]'
             ">
             <i class="fa-solid fa-file-lines"></i>
-            <span class="mx-3">الفاوتير الوارده</span>
+            <span class="mx-3">الفواتير الوارده</span>
             </Link>
           </li>
           <li class="mx-5">
@@ -78,7 +78,7 @@
                 : 'hover:text-[#009ef7]'
             ">
             <i class="fa-solid fa-file-invoice"></i>
-            <span class="mx-3">الفاوتير الصادرة</span>
+            <span class="mx-3">الفواتير الصادرة</span>
             </Link>
           </li>
           <li class="mx-5">

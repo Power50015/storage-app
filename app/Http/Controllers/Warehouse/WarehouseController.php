@@ -116,7 +116,7 @@ class WarehouseController extends Controller
         $warehouse->name = $request->name;
         $warehouse->address = $request->address;
         $warehouse->save();
-        return Redirect::back();
+        return Redirect::route('warehouse.show', $warehouse->id);
     }
 
     /**

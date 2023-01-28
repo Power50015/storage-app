@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('tag')->nullable();
             $table->text('note');
             $table->foreignId('user_id');
-            $table->foreignId('returned_incoming_invoice_id');
+            $table->foreignId('returned_outgoing_invoice_id');
         });
     }
 

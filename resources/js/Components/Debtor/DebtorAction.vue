@@ -74,7 +74,7 @@
     </div>
     <div v-if="item.dataType == 'ReturnedIncomingInvoice'">
       <Link
-        :href="route('returned-outgoing-invoice.show', item.id)"
+        :href="route('returned-incoming-invoice.show', item.id)"
         class="
           w-full
           flex

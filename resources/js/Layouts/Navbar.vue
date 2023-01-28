@@ -88,7 +88,7 @@
           title="دفعه مدين">
         <i class="fa-solid fa-hand-holding-dollar"></i>
         </Link>
-        <Link :href="route('expense.index')" class="px-3 dark:text-[#565674] dark:hover:text-[#009ef7]" title="مصاريف">
+        <Link :href="route('expense.create')" class="px-3 dark:text-[#565674] dark:hover:text-[#009ef7]" title="مصاريف">
         <i class="fa-solid fa-coins"></i>
         </Link>
         <button class="px-3 text-slate-600 dark:text-slate-100" title="الوضع المظلم" @click="toggleDarkMode">

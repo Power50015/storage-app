@@ -202,81 +202,82 @@ function print() {
 }
 
 function ContentName(item) {
+
   var name = item.product.name;
+
   if (item.product.product_brand) {
-    name = name + " - " + item.product.product_brand.name;
+    name = name + "-" + item.product.product_brand.name;
   }
   if (item.product.product_category) {
-    name = name + " - " + item.product.product_category.name;
+    name = name + item.product.product_category.name + "-";
   }
   if (item.product.product_type) {
-    name = name + " - " + item.product.product_type.name;
+    name = name + item.product.product_type.name + "-";
   }
   if (item.product.product_collection) {
-    name = name + " - " + item.product.product_collection.name;
+    name = name + item.product.product_collection.name + "-";
   }
   if (item.product.product_model) {
-    name = name + " - " + item.product.product_model.name;
+    name = name + item.product.product_model.name + "-";
   }
   if (item.product.product_color) {
-    name = name + " - " + item.product.product_color.name;
+    name = name + item.product.product_color.name + "-";
   }
   if (item.product.product_material) {
-    name = name + " - " + item.product.product_material.name;
+    name = name + item.product.product_material.name + "-";
   }
   if (item.product.product_country) {
-    name = name + " - " + item.product.product_country.name;
+    name = name + item.product.product_country.name + "-";
   }
   if (item.product.sku) {
-    name = name + " - " + item.product.sku;
+    name = name + item.product.sku;
   }
   return name;
 }
-
 function KitName(item) {
   var name = item.kit.title;
   if (item.kit.product) {
-    name = name + " - " + item.kit.product.name;
+    name = name + "-" + item.kit.product.name;
     if (item.kit.product.product_collection)
-      name = name + " - " + item.kit.product.product_collection.name;
+      name = name + "-" + item.kit.product.product_collection.name;
     if (item.kit.product.product_model)
-      name = name + " - " + item.kit.product.product_model.name;
+      name = name + "-" + item.kit.product.product_model.name;
     if (item.kit.product.product_brand)
-      name = name + " - " + item.kit.product.product_brand.name;
+      name = name + "-" + item.kit.product.product_brand.name;
     if (item.kit.product.product_category)
-      name = name + " - " + item.kit.product.product_category.name;
+      name = name + "-" + item.kit.product.product_category.name;
     if (item.kit.product.product_type)
-      name = name + " - " + item.kit.product.product_type.name;
+      name = name + "-" + item.kit.product.product_type.name;
     if (item.kit.product.product_color)
-      name = name + " - " + item.kit.product.product_color.name;
+      name = name + "-" + item.kit.product.product_color.name;
     if (item.kit.product.product_material)
-      name = name + " - " + item.kit.product.product_material.name;
+      name = name + "-" + item.kit.product.product_material.name;
     if (item.kit.product.product_country)
-      name = name + " - " + item.kit.product.product_country.name;
+      name = name + "-" + item.kit.product.product_country.name;
   } else {
     if (item.kit.product_brand) {
-      name = name + " - " + item.kit.product_brand.name;
+      name = name + "-" + item.kit.product_brand.name;
     }
     if (item.kit.product_category) {
-      name = name + " - " + item.kit.product_category.name;
+      name = name + item.kit.product_category.name + "-";
     }
     if (item.kit.product_type) {
-      name = name + " - " + item.kit.product_type.name;
+      name = name + item.kit.product_type.name + "-";
     }
     if (item.kit.product_collection) {
-      name = name + " - " + item.kit.product_collection.name;
+      name = name + item.kit.product_collection.name + "-";
     }
     if (item.kit.product_model) {
-      name = name + " - " + item.kit.product_model.name;
+      name = name + item.kit.product_model.name + "-";
     }
     if (item.kit.product_color) {
-      name = name + " - " + item.kit.product_color.name;
+      name = name + item.kit.product_color.name + "-";
     }
     if (item.kit.product_material) {
-      name = name + " - " + item.kit.product_material.name;
+      name = name + item.kit.product_material.name + "-";
     }
     if (item.kit.product_country) {
-      name = name + " - " + item.kit.product_country.name;
+      name = name + item.kit.product_country.name + "-";
     }
   }
   return name;

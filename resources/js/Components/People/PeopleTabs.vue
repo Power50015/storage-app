@@ -64,13 +64,13 @@
     <div>
       <people-action :id="id" v-if="tab == 'actionData'" />
       <people-action-details :id="id" v-if="tab == 'PeopleActionDetails'" />
-      <note-board v-if="tab == 'note'" :id="props.id" url="kit-note" />
+      <note-board v-if="tab == 'note'" :id="props.id" url="people-note" />
       <file-board
         v-if="tab == 'attachment'"
         :id="props.id"
-        url="kit-attachment"
+        url="people-attachment"
       />
-      <image-board v-if="tab == 'image'" :id="props.id" url="kit-image" />
+      <image-board v-if="tab == 'image'" :id="props.id" url="people-image" />
     </div>
   </template>
   <script setup>

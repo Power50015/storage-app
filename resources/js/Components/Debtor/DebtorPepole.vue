@@ -1,17 +1,11 @@
-    <template>
+<template>
   <div class="flex justify-between items-start">
     <h2 class="font-bold text-2xl">المدينون</h2>
-    <InputText
-      v-model="inputText"
-      placeholder="بحث ...."
-      @input="getPeopleData((reload = true))"
-    />
+    <InputText v-model="inputText" placeholder="بحث ...." @input="getPeopleData((reload = true))" />
   </div>
   <div v-for="item in people" :key="item.index">
     <div class="flex justify-between items-center md:flex-row flex-col">
-      <Link
-        :href="route('people.show', item.id)"
-        class="
+      <Link :href="route('people.show', item.id)" class="
           w-full
           cursor-pointer
           hover:text-[#0095e8]
@@ -26,10 +20,9 @@
           items-center
           md:flex-row
           flex-col
-        "
-      >
-        <h2 class="">{{ item.name }}</h2>
-        <h2 class="">{{ item.balance }}</h2>
+        ">
+      <h2 class="">{{ item.name }}</h2>
+      <h2 class="">{{ item.balance * -1 }}</h2>
       </Link>
     </div>
   </div>

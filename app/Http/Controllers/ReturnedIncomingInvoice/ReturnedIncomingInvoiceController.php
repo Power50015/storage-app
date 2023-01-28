@@ -96,11 +96,11 @@ class ReturnedIncomingInvoiceController extends Controller
 
         if ($request->cash_id) {
             $cash = Cash::find($request->cash_id);
-            $cash->available = $cash->available +  $totalPrice;
+            $cash->available = $cash->available -  $totalPrice;
             $cash->save();
         } else {
             $people = People::find($request->people_id);
-            $people->balance = $people->balance -  $totalPrice;
+            $people->balance = $people->balance +  $totalPrice;
             $people->save();
         }
 
@@ -221,11 +221,11 @@ class ReturnedIncomingInvoiceController extends Controller
         // Undo The Blance of invoice
         if ($returnedIncomingInvoice->cash_id) {
             $cash = Cash::find($returnedIncomingInvoice->cash_id);
-            $cash->available = $cash->available -  $returnedIncomingInvoice->total;
+            $cash->available = $cash->available +  $returnedIncomingInvoice->total;
             $cash->save();
         } else {
             $people = People::find($returnedIncomingInvoice->people_id);
-            $people->balance = $people->balance +  $returnedIncomingInvoice->total;
+            $people->balance = $people->balance -  $returnedIncomingInvoice->total;
             $people->save();
         }
 

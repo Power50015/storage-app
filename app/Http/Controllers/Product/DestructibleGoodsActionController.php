@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\DestructibleGoodsAction;
 use App\Http\Requests\Product\StoreDestructibleGoodsActionRequest;
 use App\Http\Requests\Product\UpdateDestructibleGoodsActionRequest;
+use App\Models\Product\DestructibleGoods;
+use App\Models\Product\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -32,7 +34,7 @@ class DestructibleGoodsActionController extends Controller
                 }
             }
             if (isset($ids))
-                return ["DestructibleGoodsAction"=>DestructibleGoodsAction::with('destructible_goods', 'user', 'destructible_goods.product', 'destructible_goods.warehouse')->whereIn('id',  $ids)->paginate()];
+                return ["DestructibleGoodsAction" => DestructibleGoodsAction::with('destructible_goods', 'user', 'destructible_goods.product', 'destructible_goods.warehouse')->whereIn('id',  $ids)->paginate()];
             else return [];
         } else {
             $data = DestructibleGoodsAction::where('action', '==', 0)->get();
@@ -43,8 +45,7 @@ class DestructibleGoodsActionController extends Controller
                     $ids[] = $row[0]['id'];
                 }
             }
-            return ["DestructibleGoodsAction"=>DestructibleGoodsAction::with('destructible_goods', 'user', 'destructible_goods.product', 'destructible_goods.warehouse')->whereIn('id',  $ids)->paginate()];
-
+            return ["DestructibleGoodsAction" => DestructibleGoodsAction::with('destructible_goods', 'user', 'destructible_goods.product', 'destructible_goods.warehouse')->whereIn('id',  $ids)->paginate()];
         }
     }
 
@@ -66,6 +67,12 @@ class DestructibleGoodsActionController extends Controller
      */
     public function store(StoreDestructibleGoodsActionRequest $request)
     {
+        $destructibleGoods = DestructibleGoods::find($request->destructible_goods_id);
+
+        $product = Product::find($destructibleGoods->product_id);
+        $product->destructible =  $product->destructible - 1;
+        $product->save();
+
         DestructibleGoodsAction::create([
             "title" => $request->title,
             "description" => $request->description,

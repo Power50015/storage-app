@@ -25,7 +25,7 @@ class UpdateWarehouseStockRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'warehouses' => 'required',
+            'warehouse_id' => 'required',
             'date' => 'required|date',
             'content' => $this->request->all()["kit"] == [] ? 'required' : '',
             'content.*.product_id' => $this->request->all()["kit"] == [] ? 'required|numeric' : '',

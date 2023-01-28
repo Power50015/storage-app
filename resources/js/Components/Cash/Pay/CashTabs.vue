@@ -38,9 +38,9 @@
 import { ref } from "@vue/runtime-core";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
-import NoteBoard from "../Board/NoteBoard.vue";
-import FileBoard from "../Board/FileBoard.vue";
-import ImageBoard from "../Board/ImageBoard.vue";
+import NoteBoard from "../../Board/NoteBoard.vue";
+import FileBoard from "../../Board/FileBoard.vue";
+import ImageBoard from "../../Board/ImageBoard.vue";
 const tab = ref("note");
 
 const props = defineProps(["id"]);

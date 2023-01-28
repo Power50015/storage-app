@@ -6,7 +6,7 @@
         <CardPrimary>
           <h4 class="mb-3">إجمالى الديون</h4>
           <h4 class="text-xl font-bold">
-            {{ (props.creditor_total * -1).toFixed(2)}}
+            {{ (props.creditor_total).toFixed(2)}}
           </h4>
         </CardPrimary>
         <CardInfo>

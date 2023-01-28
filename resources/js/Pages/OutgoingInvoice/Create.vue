@@ -234,7 +234,7 @@ if (props.invoice) {
       },
       {
         index: 2,
-        linkTitle: " تعديل فاتوره صادره " + props.invoice[0].number,
+        linkTitle: " تعديل فاتوره صادره " + props.invoice[0].id,
         linkRoute: "#",
       },
     ])
