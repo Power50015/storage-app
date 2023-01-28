@@ -25,7 +25,7 @@ class StoreProductBrandRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:product_brands,name',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|size:5120',
             'product_country_id' => 'required',
 
         ];
@@ -41,7 +41,8 @@ class StoreProductBrandRequest extends FormRequest
         return [
             'name.required' => 'يجب إدخال أسم الماركه',
             'name.unique' => 'يجب أن يكون أسم الماركه فريد',
-            'image.*' => 'يجب إدخال صوره للماركه',
+            'image.*' => 'يجب إدخال صوره',
+            'image.size' => 'يجب إدخال صوره اقل من 5 ميجا',
             'product_country_id.required' => 'يجب إدخال بلد الماركه',
         ];
     }

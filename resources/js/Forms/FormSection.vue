@@ -1,8 +1,7 @@
 <template>
   <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div
-        class="
+      <div class="
           dark:bg-[#1e1e2d]
           bg-white
           dark:text-white
@@ -11,15 +10,19 @@
           shadow-xl
           rounded-md
           p-4
-        "
-      >
+        ">
         <h2 class="title font-bold mb-4" v-if="title">{{ title }}</h2>
         <form @submit.prevent="submit" autocomplete="off" enctype="multipart/form-data">
           <slot />
-          <btn-primary element="button" type="submit" customClass="w-full">{{
+          <btn-primary element="button" type="submit" customClass="w-full" v-if="!loading">{{
             btnTitle
           }}</btn-primary>
-          <slot name="footer"/>
+          <div v-else>
+            <div class="w-full bg-gray-200 max-w-sm my-12 mx-auto rounded-lg overflow-hidden border border-gray-300">
+              <div class="bg-[#0095E8] text-xs leading-none py-1" :style="`width: ${loadingProgress}%`"></div>
+            </div>
+          </div>
+          <slot name="footer" />
         </form>
       </div>
     </div>
@@ -60,12 +63,20 @@ const props = defineProps({
 
 const emit = defineEmits(["FormSuccess"]);
 
+const loading = ref(false);
+const loadingProgress = ref(0);
+
 const submit = () => {
+
+  loading.value = true;
   const form = useForm(props.formData);
   form.post(
     form.id ? route(props.formRoute, form.id) : route(props.formRoute),
     {
-      onProgress: (progress) => {},
+      onProgress: (progress) => {
+        loadingProgress.value = progress.percentage;
+        console.log(loadingProgress.value);
+      },
       onSuccess: () => {
         createToast(
           {
@@ -85,14 +96,15 @@ const submit = () => {
         if (!form._method) {
           if (document.getElementsByClassName("ql-editor")[0])
             document.getElementsByClassName("ql-editor")[0].innerHTML = null;
-          for (const [key, value] of Object.entries(props.formData)) {
-            props.formData[key] = null;
-          }
+          // for (const [key, value] of Object.entries(props.formData)) {
+          //   props.formData[key] = null;
+          // }
+          loading.value = false;
         }
         // Reset Any Model
         if (props.formData["modelToggle"])
           props.formData["modelToggle"] = false;
-          emit("FormSuccess");
+        emit("FormSuccess");
       },
       onError: (errors) => {
         for (const key in errors) {
@@ -108,8 +120,13 @@ const submit = () => {
             }
           );
         }
+        loading.value = false;
+        loadingProgress.value = 0;
       },
-      onFinish: () => {},
+      onFinish: () => {
+        loading.value = false;
+        loadingProgress.value = 0;
+      },
     }
   );
 };

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWarehouseStockImageRequest extends FormRequest
 {
-   /**
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -24,7 +24,7 @@ class StoreWarehouseStockImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'required|file|mimes:jpeg,jpg,png,gif,svg'
+            'image' => 'required|file|mimes:jpeg,jpg,png,gif,svg|size:5120'
         ];
     }
     /**
@@ -36,7 +36,8 @@ class StoreWarehouseStockImageRequest extends FormRequest
     {
 
         return [
-            'image.required' => 'يجب إدخال صوره  ',
+            'image.*' => 'يجب إدخال صوره',
+            'image.size' => 'يجب إدخال صوره اقل من 5 ميجا',
         ];
     }
 }

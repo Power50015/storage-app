@@ -49,7 +49,7 @@
                 <div class="mr-2">
                   <img class="w-6 h-6 rounded-full" :src="item.user.profile_photo_url" />
                 </div>
-                <Link :href="route('cash.show', item.id)" class="hover:text-[#009ef7]">
+                <Link :href="route('myProfile', item.user.id)" class="hover:text-[#009ef7]">
                 <h6 class="mx-2">{{ item.user.name }}</h6>
                 <h6 class="mx-2">
                   {{

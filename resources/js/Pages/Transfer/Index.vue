@@ -107,7 +107,7 @@
                   />
                 </div>
                 <Link
-                  :href="route('transfer.show', item.id)"
+                :href="route('myProfile', item.user.id)"
                   class="hover:text-[#009ef7]"
                 >
                   <h6 class="mx-2">{{ item.user.name }}</h6>

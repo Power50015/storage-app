@@ -36,7 +36,7 @@ class StoreProductRequest extends FormRequest
             'description' => 'nullable',
             'sku' => 'nullable',
             'price' => 'nullable',
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif,svg'
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif,svg|size:5120'
         ];
     }
     /**
@@ -54,7 +54,8 @@ class StoreProductRequest extends FormRequest
             'product_color_id.*' => 'يجب إدخال لون المنتج',
             'product_material_id.*' => 'يجب إدخال خامه المنتج',
             'product_country_id.*' => 'يجب إدخال بلد المنتج',
-            'image.*' => 'يجب إدخال صوره المنتج',
+            'image.*' => 'يجب إدخال صوره',
+            'image.size' => 'يجب إدخال صوره اقل من 5 ميجا',
         ];
     }
 }

@@ -26,7 +26,7 @@ class StorePeopleRequest extends FormRequest
         return [
             'name' => 'required|unique:people,name',
             'phone' => 'nullable|numeric|unique:people,phone',
-            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg'
+            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|size:5120'
         ];
     }
     /**
@@ -42,7 +42,8 @@ class StorePeopleRequest extends FormRequest
             'name.unique' => 'يجب أن يكون أسم الشركه فريد',
             'phone.numeric' => 'يجب أن يكون رقم الشركه رقم',
             'phone.unique' => 'يجب أن يكون رقم الشركه فريد',
-            'logo.image' => 'يجب إدخال شعار الشركه',
+            'logo.*' => 'يجب إدخال الشعار',
+            'logo.size' => 'يجب إدخال الشعار اقل من 5 ميجا',
         ];
     }
 }

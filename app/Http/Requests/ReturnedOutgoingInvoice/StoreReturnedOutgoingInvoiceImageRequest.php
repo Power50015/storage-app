@@ -24,7 +24,7 @@ class StoreReturnedOutgoingInvoiceImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'required|file|mimes:jpeg,jpg,png,gif,svg'
+            'image' => 'required|file|mimes:jpeg,jpg,png,gif,svg|size:5120'
         ];
     }
     /**
@@ -36,7 +36,8 @@ class StoreReturnedOutgoingInvoiceImageRequest extends FormRequest
     {
 
         return [
-            'image.required' => 'يجب إدخال صوره  ',
+            'image.*' => 'يجب إدخال صوره',
+            'image.size' => 'يجب إدخال صوره اقل من 5 ميجا',
         ];
     }
 }

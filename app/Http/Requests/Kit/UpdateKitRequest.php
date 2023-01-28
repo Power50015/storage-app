@@ -26,7 +26,7 @@ class UpdateKitRequest extends FormRequest
         return [
             'title' => 'required',
             'kit' => 'nullable|numeric',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|size:5120',
             'attachment' => 'nullable|array',
             'attachment.*.attachment' => 'nullable|file|mimes:jpeg,jpg,png,gif,svg,bmp,doc,docx,pdf,tif,tiff,xlsx,xls,csv',
         ];
@@ -43,7 +43,8 @@ class UpdateKitRequest extends FormRequest
             'kit.numeric' => 'يجب إدخال المنتج',
             'attachment.*' => 'يجب ملفات قطعه الغيار ',
             'attachment.*.*' => 'يجب ملفات قطعه الغيار ',
-            'image.image' => 'يجب إدخال صوره قطعه الغيار',
+            'image.*' => 'يجب إدخال صوره',
+            'image.size' => 'يجب إدخال صوره اقل من 5 ميجا',
         ];
     }
 }

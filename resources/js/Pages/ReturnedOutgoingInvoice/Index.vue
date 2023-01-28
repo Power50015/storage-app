@@ -74,7 +74,7 @@
             <td class="py-3 px-6 text-center">
               <div class="text-md text-[#50cd89] text-center">
                 <div class="pb-2">إجمالى بعد الخصم</div>
-                {{ item.total }}
+                {{ item.total * -1 }}
               </div>
             </td>
 
@@ -83,7 +83,7 @@
                 <div class="mr-2">
                   <img class="w-6 h-6 rounded-full" :src="item.user.profile_photo_url" />
                 </div>
-                <Link :href="route('returned-outgoing-invoice.show', item.id)" class="hover:text-[#009ef7]">
+                <Link :href="route('myProfile', item.user.id)" class="hover:text-[#009ef7]">
                 <h6 class="mx-2">{{ item.user.name }}</h6>
                 <h6 class="mx-2">
                   {{
