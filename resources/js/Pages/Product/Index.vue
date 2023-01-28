@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="المنتجات">
     <SectionTemplate>
-      <div class="grid lg:grid-cols-6 grid-cols-2 gap-2">
+      <div class="grid lg:grid-cols-6 grid-cols-1 gap-1.5">
         <btn-primary :element="Link" :to="route('product-category.index')">
           <div class="flex flex-col items-center justify-center text-center">
             <h4 class="mb-3">عدد الأقسام</h4>

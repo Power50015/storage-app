@@ -2,7 +2,7 @@
   <AppLayout title="الكاش">
     <SectionTemplate class="pb-0">
       <h2 class="font-bold text-xl mb-5">بيانات الكاش</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid lg:grid-cols-2  grid-cols-1 gap-1.5">
         <div>
           <btn-info :element="Link" :to="route('cash.create')" class="mb-3">
             أضف كاش
@@ -11,8 +11,8 @@
             أضف مبلغ للكاش
           </btn-success>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <CardWarning class="mx-3">
+        <div class="grid lg:grid-cols-2  grid-cols-1 gap-1.5">
+          <CardWarning >
             <h4 class="mb-3">عدد طرق الكاش المتاحه</h4>
             <h4 class="text-xl font-bold">{{ totalCashesWay }}</h4>
           </CardWarning>
@@ -28,7 +28,7 @@
       <InputText v-model="search" placeholder="بحث ...." />
       <table class="min-w-max w-full table-auto mt-5">
         <tbody>
-          <tr class="text-right" v-for="item in cash.data" :key="item.index">
+          <tr class="text-right flex flex-col lg:flex-row items-start lg:items-center" v-for="item in cash.data" :key="item.index">
             <td class="py-3 px-6 whitespace-nowrap text-right">
               <div class="flex items-center justify-start">
                 <Link :href="route('cash.show', item.id)" class="hover:text-[#009ef7]">

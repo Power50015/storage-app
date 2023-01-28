@@ -2,8 +2,8 @@
     <AppLayout title="لوحه التحكم">
         <SectionTemplate class="pb-0">
             <h2 class="font-bold text-xl mb-5">بيانات الكاش</h2>
-            <div class="grid grid-cols-2 gap-2">
-                <CardWarning class="mx-3">
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-1.5">
+                <CardWarning>
                     <h4 class="mb-3">عدد طرق الكاش المتاحه</h4>
                     <h4 class="text-xl font-bold">{{ totalCashesWay }}</h4>
                 </CardWarning>
@@ -15,7 +15,7 @@
         </SectionTemplate>
         <SectionTemplate class="pb-0">
             <h2 class="font-bold text-xl mb-5">الفواتير الصادره</h2>
-            <div class="grid grid-cols-5 gap-3">
+            <div class="grid lg:grid-cols-5 grid-cols-1 gap-1.5">
                 <CardPrimary>
                     <h4 class="mb-3">الفواتير اليوم</h4>
                     <h4 class="text-xl font-bold">
@@ -49,9 +49,8 @@
             </div>
         </SectionTemplate>
         <SectionTemplate class="pb-0">
-
             <h2 class="font-bold text-xl mb-5">الفواتير الوارده</h2>
-            <div class="grid grid-cols-5 gap-3">
+            <div class="grid lg:grid-cols-5 grid-cols-1 gap-1.5">
                 <CardPrimary>
                     <h4 class="mb-3">الفواتير اليوم</h4>
                     <h4 class="text-xl font-bold">
@@ -86,7 +85,7 @@
         </SectionTemplate>
         <SectionTemplate class="pb-0">
             <h2 class="font-bold text-xl mb-5">المصروفات</h2>
-            <div class="grid grid-cols-5 gap-3">
+            <div class="grid lg:grid-cols-5 grid-cols-1 gap-1.5">
                 <CardPrimary>
                     <h4 class="mb-3">مصروفات اليوم</h4>
                     <h4 class="text-xl font-bold">
@@ -122,7 +121,7 @@
     </AppLayout>
 </template>
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AppLayout from "@/Layouts/AppLayout.vue";
 import SectionTemplate from "@/Components/SectionTemplate.vue";
 import CardPrimary from "@/Components/Cards/Statistics/CardPrimary.vue";
 import CardInfo from "@/Components/Cards/Statistics/CardInfo.vue";

@@ -2,7 +2,7 @@
   <AppLayout title="قطع الغيار">
     <SectionTemplate class="pb-0">
       <h2 class="font-bold text-xl mb-5">قطع الغيار</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-1.5">
         <CardPrimary>
           <h4 class="mb-3">قطع الغيار المسجله</h4>
           <h4 class="text-xl font-bold">
@@ -68,60 +68,12 @@
                   />
                 </div>
                 <div>
+                  
                   <h3 class="text-[#009ef7] mt-4">{{ i.title }}</h3>
                   <h3 class="mt-1 text-sm text-[#009ef7]" v-if="i.product">
-                    {{ i.product.name }} |
-                    <template v-if="i.product.product_collection">
-                      {{ i.product.product_collection.name }} |
-                    </template>
-                    <template v-if="i.product_model">
-                      {{ i.product.product_model.name }}
-                    </template>
-                    <template v-if="i.product.product_brand">
-                      {{ i.product.product_brand.name }} |
-                    </template>
-                    <template v-if="i.product.product_category">
-                      {{ i.product.product_category.name }} |
-                    </template>
-                    <template v-if="i.product.product_type">
-                      {{ i.product.product_type.name }} |
-                    </template>
-                    <template v-if="i.product.product_color">
-                      {{ i.product.product_color.name }} |
-                    </template>
-                    <template v-if="i.product.product_material">
-                      {{ i.product.product_material.name }} |
-                    </template>
-                    <template v-if="i.product.product_country">
-                      {{ i.product.product_country.name }}
-                    </template>
+                    {{ KitName(i) }}
                   </h3>
-                  <h3 class="mt-1 text-sm text-[#009ef7]" v-else>
-                    <template v-if="i.product_collection">
-                      {{ i.product_collection.name }} |
-                    </template>
-                    <template v-if="i.product_model">
-                      {{ i.product_model.name }}
-                    </template>
-                    <template v-if="i.product_brand">
-                      {{ i.product_brand.name }} |
-                    </template>
-                    <template v-if="i.product_category">
-                      {{ i.product_category.name }} |
-                    </template>
-                    <template v-if="i.product_type">
-                      {{ i.product_type.name }} |
-                    </template>
-                    <template v-if="i.product_color">
-                      {{ i.product_color.name }} |
-                    </template>
-                    <template v-if="i.product_material">
-                      {{ i.product_material.name }} |
-                    </template>
-                    <template v-if="i.product_country">
-                      {{ i.product_country.name }}
-                    </template>
-                  </h3>
+                  
                 </div>
                 <p class="mt-1 mb-4 text-lg font-medium">
                   المتاح : {{ i.stock }}
@@ -177,4 +129,53 @@ watch(search, (value) => {
     }
   );
 });
+
+function KitName(item) {
+  var name = item.title;
+  if (item.product) {
+    name = name + "-" + item.product.name;
+    if (item.product.product_collection)
+      name = name + "-" + item.product.product_collection.name;
+    if (item.product.product_model)
+      name = name + "-" + item.product.product_model.name;
+    if (item.product.product_brand)
+      name = name + "-" + item.product.product_brand.name;
+    if (item.product.product_category)
+      name = name + "-" + item.product.product_category.name;
+    if (item.product.product_type)
+      name = name + "-" + item.product.product_type.name;
+    if (item.product.product_color)
+      name = name + "-" + item.product.product_color.name;
+    if (item.product.product_material)
+      name = name + "-" + item.product.product_material.name;
+    if (item.product.product_country)
+      name = name + "-" + item.product.product_country.name;
+  } else {
+    if (item.product_brand) {
+      name = name + "-" + item.product_brand.name;
+    }
+    if (item.product_category) {
+      name = name + item.product_category.name + "-";
+    }
+    if (item.product_type) {
+      name = name + item.product_type.name + "-";
+    }
+    if (item.product_collection) {
+      name = name + item.product_collection.name + "-";
+    }
+    if (item.product_model) {
+      name = name + item.product_model.name + "-";
+    }
+    if (item.product_color) {
+      name = name + item.product_color.name + "-";
+    }
+    if (item.product_material) {
+      name = name + item.product_material.name + "-";
+    }
+    if (item.product_country) {
+      name = name + item.product_country.name + "-";
+    }
+  }
+  return name;
+}
 </script>

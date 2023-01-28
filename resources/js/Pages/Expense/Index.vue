@@ -2,7 +2,7 @@
     <AppLayout title="المصروفات">
         <SectionTemplate class="pb-0">
             <h2 class="font-bold text-xl mb-5">المصروفات</h2>
-            <div class="grid grid-cols-5 gap-3">
+            <div class="grid lg:grid-cols-5 grid-cols-1 gap-1.5">
                 <CardPrimary>
                     <h4 class="mb-3">مصروفات اليوم</h4>
                     <h4 class="text-xl font-bold">
@@ -45,7 +45,7 @@
             <InputText v-model="search" placeholder="بحث ...." />
             <table class="min-w-max w-full table-auto mt-5">
                 <tbody>
-                    <tr class="text-right" v-for="item in expense_data.data" :key="item.index">
+                    <tr class="text-right flex flex-col	lg:flex-row	items-start lg:items-center	lg:justify-between" v-for="item in expense_data.data" :key="item.index">
                         <td class="py-3 px-6 whitespace-nowrap text-right">
                             <Link :href="route('expense.show', item.id)" class="data hover:text-[#009ef7]">
                             <h3 class="pb-2"> بند المصروف : {{ item.title }}</h3>

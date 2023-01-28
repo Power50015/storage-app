@@ -2,7 +2,7 @@
   <AppLayout title="دائنون">
     <SectionTemplate class="pb-0">
       <h2 class="font-bold text-xl mb-5">دائنون</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-1.5">
         <CardPrimary>
           <h4 class="mb-3">إجمالى الديون</h4>
           <h4 class="text-xl font-bold">

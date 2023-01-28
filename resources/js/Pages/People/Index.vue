@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="الشركات">
     <SectionTemplate class="pb-0">
-      <div class="grid grid-cols-3 gap-3">
+      <div class="grid lg:grid-cols-3  grid-cols-1 gap-1.5">
         <CardPrimary>
           <h4 class="mb-3"> الشركات</h4>
           <h4 class="text-xl font-bold">

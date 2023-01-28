@@ -2,7 +2,7 @@
   <AppLayout title="النقلات">
     <SectionTemplate class="pb-0">
       <h2 class="font-bold text-xl mb-5">النقلات</h2>
-      <div class="grid grid-cols-5 gap-3">
+      <div class="grid lg:grid-cols-5 grid-cols-1 gap-1.5">
         <CardPrimary>
           <h4 class="mb-3">النقلات اليوم</h4>
           <h4 class="text-xl font-bold">
@@ -45,8 +45,7 @@
       <InputText v-model="search" placeholder="بحث ...." />
       <table class="min-w-max w-full table-auto mt-5">
         <tbody>
-          <tr
-            class="text-right"
+          <tr class="text-right flex flex-col lg:flex-row items-start lg:items-center"
             v-for="item in transfer_data.data"
             :key="item.index"
           >

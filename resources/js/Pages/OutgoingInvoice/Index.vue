@@ -2,7 +2,7 @@
   <AppLayout title="الفواتير الصادره">
     <SectionTemplate class="pb-0">
       <h2 class="font-bold text-xl mb-5">الفواتير الصادره</h2>
-      <div class="grid grid-cols-5 gap-3">
+      <div class="grid lg:grid-cols-5 grid-cols-1 gap-1.5">
         <CardPrimary>
           <h4 class="mb-3">الفواتير اليوم</h4>
           <h4 class="text-xl font-bold">
@@ -46,7 +46,7 @@
       <table class="min-w-max w-full table-auto mt-5">
         <tbody>
           <tr
-            class="text-right"
+            class="text-right flex flex-col lg:flex-row items-start lg:items-center"
             v-for="item in outgoing_invoices.data"
             :key="item.index"
           >

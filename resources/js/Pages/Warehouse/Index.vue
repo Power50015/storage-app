@@ -2,12 +2,12 @@
   <AppLayout title="المخازن">
     <SectionTemplate class="pb-0">
       <h2 class="font-bold text-xl mb-5">بيانات المخازن</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-1.5">
         <div>
           <btn-info
             :element="Link"
             :to="route('warehouse.create')"
-            class="mb-3"
+            class="mb-2"
           >
             أضف مخزن
           </btn-info>
@@ -15,8 +15,8 @@
             أضف مخزون
           </btn-primary>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <CardWarning class="mx-3">
+        <div class="grid lg:grid-cols-2 grid-cols-1 gap-1.5">
+          <CardWarning >
             <h4 class="mb-3">عدد المخازن</h4>
             <h4 class="text-xl font-bold">{{ totalWarehouse }}</h4>
           </CardWarning>
