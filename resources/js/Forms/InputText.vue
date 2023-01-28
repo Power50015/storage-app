@@ -2,7 +2,7 @@
   <div class="mb-5">
     <FromLabel v-if="title" :title="title" :require="require" :error="error" />
     <input
-      type="text"
+      :type="type"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       class="
@@ -32,7 +32,8 @@ defineProps({
   title: { type: String, default: "" },
   error: { type: String, default: "" },
   require: {  default: false },
-  placeholder:{default: ""}
+  placeholder:{default: ""},
+  type: { type: String, default: "text" },
 });
 defineEmits(["update:modelValue"]);
 </script>

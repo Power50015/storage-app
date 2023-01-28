@@ -7,6 +7,7 @@ import JetFormSection from '@/Jetstream/FormSection.vue';
 import JetInput from '@/Jetstream/Input.vue';
 import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
+import InputText from "@/Forms/InputText.vue";
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
@@ -40,60 +41,39 @@ const updatePassword = () => {
 <template>
     <JetFormSection @submitted="updatePassword">
         <template #title>
-            Update Password
+            تحديث كلمه المرور
         </template>
 
         <template #description>
-            Ensure your account is using a long, random password to stay secure.
+            تأكد من أن حسابك يستخدم كلمة مرور طويلة وعشوائية للبقاء آمنًا.
         </template>
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="current_password" value="Current Password" />
-                <JetInput
-                    id="current_password"
-                    ref="currentPasswordInput"
-                    v-model="form.current_password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="current-password"
-                />
-                <JetInputError :message="form.errors.current_password" class="mt-2" />
-            </div>
+                <InputText type="password" id="name" v-model="form.current_password" title="كلمه المرور الحاليه"
+                    :error="form.errors.current_password" :require="true" />
 
-            <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="password" value="New Password" />
-                <JetInput
-                    id="password"
-                    ref="passwordInput"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-                <JetInputError :message="form.errors.password" class="mt-2" />
             </div>
-
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="password_confirmation" value="Confirm Password" />
-                <JetInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-                <JetInputError :message="form.errors.password_confirmation" class="mt-2" />
+
+                <InputText type="password" id="name" v-model="form.password" title="كلمه المرور الجديده"
+                    :error="form.errors.password" :require="true" />
+
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputText type="password" id="name" v-model="form.password_confirmation"
+                    title="اعاده كتابه كلمه المرور الجديده" :error="form.errors.password" :require="true" />
             </div>
         </template>
 
         <template #actions>
             <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                تم الحفظ
             </JetActionMessage>
 
-            <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+            <JetButton :class="{ 'opacity-25': form.processing }"
+                class="btn text-white bg-[#009ef7] hover:bg-[#0095e8] focus:bg-[#0095e8]" :disabled="form.processing">
+                أحفظ
             </JetButton>
         </template>
     </JetFormSection>
